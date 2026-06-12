@@ -1,1 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Program Head</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+  :root {
+    --accent: #6c63ff;
+    --accent-light: #f0eeff;
+    --orange: #f97316;
+    --purple: #7c3aed;
+  }
+
+  body { background: #f0f2f5; font-size: 13px; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 200px;
+    min-height: 100vh;
+    background: #fff;
+    border-right: 1px solid #e8e8e8;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .avatar-sm {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 600;
+  }
+  .s-nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 16px; color: #555; font-size: 12px;
+    text-decoration: none; border-radius: 0 20px 20px 0;
+    margin-right: 8px; transition: background .15s, color .15s;
+  }
+  .s-nav-item:hover { background: #f5f5f5; color: #333; }
+  .s-nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .s-nav-item i { font-size: 13px; width: 16px; }
+  .nav-label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px 4px; }
+
+  .instructor-avatar { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; }
+  .av1 { background: linear-gradient(135deg,#a78bfa,#7c3aed); }
+  .av2 { background: linear-gradient(135deg,#fbbf24,#f59e0b); }
+  .av3 { background: linear-gradient(135deg,#34d399,#059669); }
+  .av4 { background: linear-gradient(135deg,#60a5fa,#2563eb); }
+  .av5 { background: linear-gradient(135deg,#f87171,#dc2626); }
+
+  /* Notifications panel */
+  .notif-panel {
+    width: 220px; background: #fff;
+    border-right: 1px solid #e8e8e8;
+    flex-shrink: 0; position: sticky;
+    top: 0; height: 100vh; overflow-y: auto;
+  }
+  .notif-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent-light); display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .notif-icon i { font-size: 13px; color: var(--accent); }
+
+  /* Search box */
+  .search-box {
+    display: flex; align-items: center;
+    background: #f5f5f5; border: 1px solid #e8e8e8;
+    border-radius: 6px; padding: 5px 10px; gap: 6px;
+  }
+  .search-box input { background: none; border: none; outline: none; font-size: 12px; width: 120px; }
+  .shortcut { background: #eee; border-radius: 3px; padding: 1px 4px; font-size: 10px; color: #888; }
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: 6px; background: #f5f5f5;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #666; font-size: 14px; border: none;
+    text-decoration: none; transition: background .15s;
+  }
+  .icon-btn:hover { background: #ebebeb; color: #333; }
+
+  /* Stat cards */
+  .stat-card { background: #fff; border-radius: 12px; border: 1px solid #efefef; }
+  .stat-card.purple-tint { background: #f8f7ff; }
+  .stat-value { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+
+  /* Table card */
+  .table-card { background: #fff; border-radius: 12px; border: 1px solid #efefef; }
+
+  /* Avatar initials for table */
+  .ph-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+
+  .badge-active {
+    background: #dcfce7; color: #16a34a;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px; display: inline-block;
+  }
+  .badge-inactive {
+    background: #fee2e2; color: #dc2626;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px; display: inline-block;
+  }
+  .badge-pending {
+    background: #fef9c3; color: #ca8a04;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px; display: inline-block;
+  }
+
+  /* Table tweaks */
+  .ph-table thead th {
+    font-size: 10.5px; color: #999; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px;
+    border-bottom: 1px solid #f0f0f0; padding: 10px 12px;
+    background: #fafafa;
+  }
+  .ph-table tbody td {
+    font-size: 12px; color: #333;
+    padding: 10px 12px; vertical-align: middle;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .ph-table tbody tr:last-child td { border-bottom: none; }
+  .ph-table tbody tr:hover td { background: #fafafa; }
+
+  /* Action icon buttons in table */
+  .tbl-btn {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; border: 1px solid #e8e8e8; background: #fff;
+    color: #666; cursor: pointer; transition: background .15s;
+    text-decoration: none;
+  }
+  .tbl-btn:hover { background: #f5f5f5; color: #333; }
+  .tbl-btn.edit:hover { background: #f0eeff; color: var(--accent); border-color: #d0c9ff; }
+  .tbl-btn.del:hover  { background: #fff1f1; color: #dc2626; border-color: #fecaca; }
+
+  /* Pagination */
+  .page-btn {
+    width: 26px; height: 26px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; border: 1px solid #e8e8e8; background: #fff;
+    color: #555; text-decoration: none; transition: background .15s;
+  }
+  .page-btn:hover { background: #f5f5f5; }
+  .page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+  /* Modal */
+  .modal-header-custom { background: var(--accent-light); border-bottom: 1px solid #ddd8ff; }
+  .modal-title-custom { color: var(--accent); font-weight: 700; font-size: 14px; }
+  .form-label { font-size: 11.5px; font-weight: 600; color: #555; }
+  .form-control, .form-select {
+    font-size: 12px; border-radius: 8px;
+    border: 1px solid #e8e8e8; padding: 7px 10px;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,.1);
+  }
+
+  /* Filter bar */
+  .filter-bar { background: #fff; border-radius: 10px; border: 1px solid #efefef; }
+</style>
+</head>
+<body>
+
+<div class="d-flex" style="min-height:100vh;">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar d-flex flex-column py-3">
+
+    <div class="d-flex align-items-center gap-2 px-3 pb-3 border-bottom">
+      <div class="avatar-sm">A</div>
+      <span class="fw-semibold" style="font-size:13px;">Admin</span>
+    </div>
+
+    <div class="d-flex gap-3 px-3 py-2">
+      <span style="font-size:11px;color:#333;font-weight:500;cursor:pointer;">Favorites</span>
+      <span style="font-size:11px;color:#999;cursor:pointer;">Recently</span>
+    </div>
+
+    <div class="nav-label">Dashboards</div>
+    <a href="index.html" class="s-nav-item">
+      <i class="bi bi-grid-fill"></i> Dashboard
+    </a>
+
+    <div class="nav-label mt-1">Manage</div>
+    <a href="manage-program-head.html" class="s-nav-item active"><i class="bi bi-person-badge"></i> Program Head</a>
+    <a href="manage-secretary.html"    class="s-nav-item"><i class="bi bi-briefcase"></i> Secretary</a>
+    <a href="manage-ins.html"          class="s-nav-item"><i class="bi bi-person-video3"></i> Instructors</a>
+    <a href="manage-students.html"     class="s-nav-item"><i class="bi bi-mortarboard"></i> Students</a>
+    <a href="manage-subject-codes.html"class="s-nav-item"><i class="bi bi-journal-bookmark"></i> Subject Codes</a>
+
+    <div class="nav-label mt-1">Pages</div>
+    <a href="#" class="s-nav-item"><i class="bi bi-person-lines-fill"></i> User Profile</a>
+    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">User Accounts</a>
+    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">Subject Codes</a>
+    <a href="#" class="s-nav-item"><i class="bi bi-person-circle"></i> Account</a>
+
+    <div class="px-3 mt-2">
+      <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;padding:8px 0 6px;">Instructors</div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av1 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av2 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av3 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av4 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av5 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="d-flex flex-grow-1 overflow-hidden">
+
+    <!-- NOTIFICATIONS PANEL -->
+    <div class="notif-panel p-3">
+      <h3 class="fw-semibold mb-3" style="font-size:13px;">Notifications</h3>
+
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">New Program Head</div>
+          <div style="font-size:10px;color:#aaa;">Just now</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">Account updated</div>
+          <div style="font-size:10px;color:#aaa;">59 minutes ago</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">New user</div>
+          <div style="font-size:10px;color:#aaa;">12 hours ago</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">Role assigned</div>
+          <div style="font-size:10px;color:#aaa;">Today, 11:59 AM</div>
+        </div>
+      </div>
+
+      <div class="fw-semibold mb-2" style="font-size:11px;color:#333;">Activities</div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av1 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Profile updated</div><div style="font-size:10px;color:#aaa;">Just now</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av2 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Added program</div><div style="font-size:10px;color:#aaa;">59 minutes ago</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av3 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Account created</div><div style="font-size:10px;color:#aaa;">12 hours ago</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av4 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Role changed</div><div style="font-size:10px;color:#aaa;">Today, 11:59 AM</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av5 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Profile reviewed</div><div style="font-size:10px;color:#aaa;">Feb 2, 2026</div></div></div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="flex-grow-1 overflow-y-auto p-3 p-lg-4">
+
+      <!-- TOP NAV -->
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <div class="d-flex align-items-center gap-2" style="font-size:12px;color:#888;">
+          <i class="bi bi-grid"></i>
+          <span>Dashboards</span>
+          <span style="color:#ccc;">/</span>
+          <span>Manage</span>
+          <span style="color:#ccc;">/</span>
+          <span class="fw-medium text-dark">Program Head</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <div class="search-box">
+            <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
+            <input type="text" placeholder="Search">
+            <span class="shortcut">/</span>
+          </div>
+          <a href="#" class="icon-btn"><i class="bi bi-sun"></i></a>
+          <a href="#" class="icon-btn"><i class="bi bi-clock"></i></a>
+          <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
+          <a href="#" class="icon-btn"><i class="bi bi-grid"></i></a>
+        </div>
+      </div>
+
+      <!-- PAGE HEADER -->
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+          <h2 class="fw-semibold m-0" style="font-size:15px;">Program Head Management</h2>
+          <p class="text-muted m-0" style="font-size:11px;">Manage all program head accounts and their assigned departments.</p>
+        </div>
+        <button class="btn btn-sm text-white d-flex align-items-center gap-1" style="background:var(--accent);font-size:12px;border-radius:8px;" data-bs-toggle="modal" data-bs-target="#addPHModal">
+          <i class="bi bi-plus-lg"></i> Add Program Head
+        </button>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar p-3 mb-3 d-flex align-items-center gap-3 flex-wrap">
+        <div class="search-box" style="width:220px;">
+          <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
+          <input type="text" placeholder="Search program head..." style="width:100%;">
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-building" style="font-size:12px;color:#aaa;"></i>
+          <span style="font-size:12px;color:#555;font-weight:500;">College of Criminal Justice Education</span>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-card mb-3 overflow-hidden">
+        <div class="table-responsive">
+          <table class="table ph-table mb-0">
+            <thead>
+              <tr>
+                <th style="width:36px;">
+                  <input class="form-check-input" type="checkbox" style="border-radius:4px;">
+                </th>
+                <th>Program Head</th>
+                <th>Employee ID</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th style="text-align:center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Row 1 -->
+              <tr>
+                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ph-avatar av1" style="width:32px;height:32px;font-size:11px;">MA</div>
+                    <div>
+                      <div class="fw-semibold" style="font-size:12px;">Maria Santos</div>
+                      <div style="font-size:10px;color:#aaa;">Joined Jan 2024</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#777;">EMP-0021</td>
+                
+                <td style="color:#777;">m.santos@school.edu</td>
+                <td style="color:#777;">09171234567</td>
+                <td><span class="badge-active">Active</span></td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center gap-1">
+                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr>
+                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ph-avatar av2" style="width:32px;height:32px;font-size:11px;">JR</div>
+                    <div>
+                      <div class="fw-semibold" style="font-size:12px;">Jose Reyes</div>
+                      <div style="font-size:10px;color:#aaa;">Joined Mar 2023</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#777;">EMP-0018</td>
+                
+                <td style="color:#777;">j.reyes@school.edu</td>
+                <td style="color:#777;">09189876543</td>
+                <td><span class="badge-active">Active</span></td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center gap-1">
+                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr>
+                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ph-avatar av3" style="width:32px;height:32px;font-size:11px;">AL</div>
+                    <div>
+                      <div class="fw-semibold" style="font-size:12px;">Ana Lim</div>
+                      <div style="font-size:10px;color:#aaa;">Joined Jun 2022</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#777;">EMP-0014</td>
+                
+                <td style="color:#777;">a.lim@school.edu</td>
+                <td style="color:#777;">09201122334</td>
+                <td><span class="badge-pending">Pending</span></td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center gap-1">
+                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr>
+                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ph-avatar av4" style="width:32px;height:32px;font-size:11px;">RC</div>
+                    <div>
+                      <div class="fw-semibold" style="font-size:12px;">Ricardo Cruz</div>
+                      <div style="font-size:10px;color:#aaa;">Joined Sep 2021</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#777;">EMP-0009</td>
+                <td>
+                  <div style="font-size:12px;">College of Arts & Sciences</div>
+                  
+                </td>
+                <td style="color:#777;">r.cruz@school.edu</td>
+                <td style="color:#777;">09155566778</td>
+                <td><span class="badge-active">Active</span></td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center gap-1">
+                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 5 -->
+              <tr>
+                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ph-avatar av5" style="width:32px;height:32px;font-size:11px;">GP</div>
+                    <div>
+                      <div class="fw-semibold" style="font-size:12px;">Gloria Pascual</div>
+                      <div style="font-size:10px;color:#aaa;">Joined Feb 2020</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#777;">EMP-0005</td>
+                
+                <td style="color:#777;">g.pascual@school.edu</td>
+                <td style="color:#777;">09279998887</td>
+                <td><span class="badge-inactive">Inactive</span></td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center gap-1">
+                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 6 -->
+              <tr>
+                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ph-avatar" style="background:linear-gradient(135deg,#34d399,#059669);width:32px;height:32px;font-size:11px;">BT</div>
+                    <div>
+                      <div class="fw-semibold" style="font-size:12px;">Ben Torres</div>
+                      <div style="font-size:10px;color:#aaa;">Joined Nov 2023</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#777;">EMP-0022</td>
+                
+                <td style="color:#777;">b.torres@school.edu</td>
+                <td style="color:#777;">09334455667</td>
+                <td><span class="badge-active">Active</span></td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center gap-1">
+                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="d-flex justify-content-end py-1">
+        <div class="d-flex gap-1">
+          <a href="#" class="page-btn">‹</a>
+          <a href="#" class="page-btn active">1</a>
+          <a href="#" class="page-btn">2</a>
+          <a href="#" class="page-btn">3</a>
+          <a href="#" class="page-btn">›</a>
+        </div>
+      </div>
+
+    </div><!-- end content -->
+  </div><!-- end main -->
+</div><!-- end wrapper -->
+
+
+<!-- ══ ADD PROGRAM HEAD MODAL ══ -->
+<div class="modal fade" id="addPHModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12);">
+      <div class="modal-header modal-header-custom px-4 py-3">
+        <h5 class="modal-title-custom d-flex align-items-center gap-2">
+          <i class="bi bi-person-badge-fill"></i> Add Program Head
+        </h5>
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+      </div>
+<div class="modal-body px-4 py-3">
+  <div class="row g-3">
+
+    <!-- Employee ID -->
+    <div class="col-12">
+      <label class="form-label">Employee ID</label>
+      <input type="text" class="form-control" placeholder="e.g. EMP-0021">
+    </div>
+
+    <!-- First Name -->
+    <div class="col-12 col-sm-6">
+      <label class="form-label">First Name</label>
+      <input type="text" class="form-control" placeholder="e.g. Maria">
+    </div>
+
+    <!-- Middle Name -->
+    <div class="col-12 col-sm-6">
+      <label class="form-label">Middle Name</label>
+      <input type="text" class="form-control" placeholder="e.g. Cruz">
+    </div>
+
+    <!-- Last Name -->
+    <div class="col-12 col-sm-6">
+      <label class="form-label">Last Name</label>
+      <input type="text" class="form-control" placeholder="e.g. Santos">
+    </div>
+
+    <!-- Suffix -->
+    <div class="col-12 col-sm-6">
+      <label class="form-label">Suffix <span class="text-muted fw-normal">(optional)</span></label>
+      <select class="form-select">
+        <option value="" selected>None</option>
+        <option>Jr.</option>
+        <option>Sr.</option>
+        <option>II</option>
+        <option>III</option>
+        <option>IV</option>
+      </select>
+    </div>
+
+    <!-- Gmail -->
+    <div class="col-12">
+      <label class="form-label">Gmail</label>
+      <input type="email" class="form-control" placeholder="e.g. name@gmail.com">
+    </div>
+
+    <!-- Phone Number -->
+    <div class="col-12">
+      <label class="form-label">Phone Number</label>
+      <input type="text" class="form-control" placeholder="e.g. 09XXXXXXXXX">
+    </div>
+
+  </div>
+</div>
+      <div class="modal-footer px-4 py-3 border-top" style="border-color:#f0f0f0!important;">
+        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal" style="font-size:12px;border-radius:8px;">Cancel</button>
+        <button type="button" class="btn btn-sm text-white" style="background:var(--accent);font-size:12px;border-radius:8px;">
+          <i class="bi bi-plus-lg me-1"></i>Add Program Head
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT PROGRAM HEAD MODAL ══ -->
+<div class="modal fade" id="editPHModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12);">
+      <div class="modal-header modal-header-custom px-4 py-3">
+        <h5 class="modal-title-custom d-flex align-items-center gap-2">
+          <i class="bi bi-pencil-square"></i> Edit Program Head
+        </h5>
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" value="Maria">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" value="Santos">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Employee ID</label>
+            <input type="text" class="form-control" value="EMP-0021">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Contact Number</label>
+            <input type="text" class="form-control" value="09171234567">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" value="m.santos@school.edu">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Department</label>
+            <select class="form-select">
+              <option selected>College of Engineering</option>
+              <option>College of Education</option>
+              <option>College of Business</option>
+              <option>College of Arts & Sciences</option>
+              <option>College of Nursing</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Assigned Programs</label>
+            <input type="text" class="form-control" value="BSCS, BSIT">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Status</label>
+            <select class="form-select">
+              <option selected>Active</option>
+              <option>Inactive</option>
+              <option>Pending</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer px-4 py-3 border-top" style="border-color:#f0f0f0!important;">
+        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal" style="font-size:12px;border-radius:8px;">Cancel</button>
+        <button type="button" class="btn btn-sm text-white" style="background:var(--accent);font-size:12px;border-radius:8px;">
+          <i class="bi bi-check-lg me-1"></i>Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIEW PROGRAM HEAD MODAL ══ -->
+<div class="modal fade" id="viewPHModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12);">
+      <div class="modal-header modal-header-custom px-4 py-3">
+        <h5 class="modal-title-custom d-flex align-items-center gap-2">
+          <i class="bi bi-person-circle"></i> Program Head Profile
+        </h5>
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+        <!-- Profile header -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="ph-avatar av1" style="width:52px;height:52px;font-size:16px;font-weight:700;">MA</div>
+          <div>
+            <div class="fw-bold" style="font-size:15px;">Maria Santos</div>
+            <div style="font-size:11px;color:#888;">Program Head · College of Engineering</div>
+            <span class="badge-active mt-1 d-inline-block">Active</span>
+          </div>
+        </div>
+        <hr style="border-color:#f0f0f0;margin:0 0 14px;">
+        <!-- Details grid -->
+        <div class="row g-2" style="font-size:12px;">
+          <div class="col-5 text-muted">Employee ID</div>
+          <div class="col-7 fw-medium">EMP-0021</div>
+          <div class="col-5 text-muted">Email</div>
+          <div class="col-7 fw-medium">m.santos@school.edu</div>
+          <div class="col-5 text-muted">Contact</div>
+          <div class="col-7 fw-medium">09171234567</div>
+          <div class="col-5 text-muted">Department</div>
+          <div class="col-7 fw-medium">College of Engineering</div>
+          <div class="col-5 text-muted">Programs</div>
+          <div class="col-7 fw-medium">BSCS, BSIT</div>
+          <div class="col-5 text-muted">Date Joined</div>
+          <div class="col-7 fw-medium">January 2024</div>
+        </div>
+      </div>
+      <div class="modal-footer px-4 py-3 border-top" style="border-color:#f0f0f0!important;">
+        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal" style="font-size:12px;border-radius:8px;">Close</button>
+        <button type="button" class="btn btn-sm text-white" style="background:var(--accent);font-size:12px;border-radius:8px;" data-bs-toggle="modal" data-bs-target="#editPHModal">
+          <i class="bi bi-pencil me-1"></i>Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
