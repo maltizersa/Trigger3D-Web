@@ -12,268 +12,108 @@
     --accent-light: #f0eeff;
     --orange: #f97316;
     --purple: #7c3aed;
-    --border: #e8e8e8;
-    --bg: #f0f2f5;
-    --text-muted: #888;
-    --text-sm: 12px;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    font-size: 13px;
-    color: #333;
-    min-height: 100vh;
-  }
+  body { background: #f0f2f5; font-size: 13px; }
 
-  /* ── LAYOUT WRAPPER ── */
-  .app-wrapper { display: flex; min-height: 100vh; }
-
-  /* ── SIDEBAR ── */
+  /* Sidebar */
   .sidebar {
     width: 200px;
+    min-height: 100vh;
     background: #fff;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 16px 0;
+    border-right: 1px solid #e8e8e8;
     flex-shrink: 0;
     position: sticky;
     top: 0;
     height: 100vh;
     overflow-y: auto;
   }
-
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 16px 16px;
-    border-bottom: 1px solid #f0f0f0;
-  }
   .avatar-sm {
-    width: 28px; height: 28px;
-    border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     background: var(--accent);
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 11px; font-weight: 600; flex-shrink: 0;
+    color: #fff; font-size: 11px; font-weight: 600;
   }
-  .sidebar-header span { font-weight: 600; font-size: 13px; }
-
-  .sidebar-tabs { display: flex; gap: 12px; padding: 10px 16px; }
-  .sidebar-tabs label {
-    font-size: 11px; color: #999; cursor: pointer;
-    transition: color .15s;
-  }
-  /* CSS-only tabs using radio inputs */
-  .tab-radio { display: none; }
-  #tab-fav:checked ~ * .tab-label-fav,
-  #tab-rec:checked ~ * .tab-label-rec {
-    color: #333; font-weight: 500;
-  }
-  .sidebar-tabs label:hover { color: #555; }
-
-  .nav-label {
-    font-size: 10px; color: #aaa;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    padding: 10px 16px 4px;
-  }
-  .manage-group { padding-bottom: 8px; }
-
   .s-nav-item {
     display: flex; align-items: center; gap: 8px;
-    padding: 7px 16px; cursor: pointer; color: #555;
-    font-size: 12px; text-decoration: none;
-    transition: background .15s, color .15s;
-    border-radius: 0 20px 20px 0;
-    margin-right: 8px;
+    padding: 7px 16px; color: #555; font-size: 12px;
+    text-decoration: none; border-radius: 0 20px 20px 0;
+    margin-right: 8px; transition: background .15s, color .15s;
   }
   .s-nav-item:hover { background: #f5f5f5; color: #333; }
   .s-nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
-  .s-nav-item i { font-size: 13px; width: 16px; flex-shrink: 0; }
+  .s-nav-item i { font-size: 13px; width: 16px; }
+  .nav-label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px 4px; }
 
-  .instructor-list { padding: 0 16px; }
-  .instructor-list .section-title {
-    font-size: 11px; color: #aaa;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    padding: 8px 0 6px;
-  }
-  .instructor-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
   .instructor-avatar { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; }
-
   .av1 { background: linear-gradient(135deg,#a78bfa,#7c3aed); }
   .av2 { background: linear-gradient(135deg,#fbbf24,#f59e0b); }
   .av3 { background: linear-gradient(135deg,#34d399,#059669); }
   .av4 { background: linear-gradient(135deg,#60a5fa,#2563eb); }
   .av5 { background: linear-gradient(135deg,#f87171,#dc2626); }
 
-  /* ── MAIN ── */
-  .main { flex: 1; display: flex; overflow: hidden; }
-
-  /* ── NOTIFICATIONS PANEL ── */
+  /* Notifications panel */
   .notif-panel {
     width: 220px; background: #fff;
-    border-right: 1px solid var(--border);
-    padding: 16px; overflow-y: auto; flex-shrink: 0;
-    position: sticky; top: 0; height: 100vh;
+    border-right: 1px solid #e8e8e8;
+    flex-shrink: 0; position: sticky;
+    top: 0; height: 100vh; overflow-y: auto;
   }
-  .notif-panel h3 { font-size: 13px; font-weight: 600; margin-bottom: 14px; }
-  .notif-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
   .notif-icon {
     width: 28px; height: 28px; border-radius: 50%;
-    background: var(--accent-light);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 2px;
+    background: var(--accent-light); display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
   }
   .notif-icon i { font-size: 13px; color: var(--accent); }
-  .notif-text { font-size: 11.5px; color: #333; font-weight: 500; line-height: 1.3; }
-  .notif-time { font-size: 10px; color: #aaa; margin-top: 2px; }
-  .section-divider { font-size: 11px; font-weight: 600; color: #333; margin: 14px 0 10px; }
-  .activity-item { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .activity-name { font-size: 11.5px; font-weight: 500; color: #333; }
-  .activity-time { font-size: 10px; color: #aaa; }
 
-  /* ── CONTENT ── */
-  .content { flex: 1; overflow-y: auto; padding: 16px 20px; }
-
-  /* TOP NAV */
-  .top-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #efefef;
-  }
-  .breadcrumb-custom { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
-  .breadcrumb-custom .current { color: #333; font-weight: 500; }
-  .breadcrumb-custom .sep { color: #ccc; }
-  .top-actions { display: flex; align-items: center; gap: 10px; }
+  /* Search box */
   .search-box {
     display: flex; align-items: center;
-    background: #f5f5f5; border: 1px solid var(--border);
+    background: #f5f5f5; border: 1px solid #e8e8e8;
     border-radius: 6px; padding: 5px 10px; gap: 6px;
   }
-  .search-box input {
-    background: none; border: none; outline: none;
-    font-size: 12px; width: 120px; color: #333;
-  }
-  .search-box input::placeholder { color: #bbb; }
-  .shortcut {
-    background: #eee; border-radius: 3px;
-    padding: 1px 4px; font-size: 10px; color: #888;
-  }
+  .search-box input { background: none; border: none; outline: none; font-size: 12px; width: 120px; }
+  .shortcut { background: #eee; border-radius: 3px; padding: 1px 4px; font-size: 10px; color: #888; }
   .icon-btn {
-    width: 28px; height: 28px; border-radius: 6px;
-    background: #f5f5f5; display: flex; align-items: center;
-    justify-content: center; cursor: pointer; color: #666;
-    font-size: 14px; border: none; transition: background .15s;
-    text-decoration: none;
+    width: 28px; height: 28px; border-radius: 6px; background: #f5f5f5;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #666; font-size: 14px; border: none;
+    text-decoration: none; transition: background .15s;
   }
   .icon-btn:hover { background: #ebebeb; color: #333; }
 
-  /* SECTION HEADER */
-  .section-header {
-    display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 12px;
-  }
-  .section-header h2 { font-size: 15px; font-weight: 600; }
-  .date-btn {
-    display: flex; align-items: center; gap: 4px;
-    font-size: 12px; color: #555; background: #fff;
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: 4px 10px; cursor: pointer;
-  }
-
-  /* STAT CARDS */
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px; margin-bottom: 20px;
-  }
-  .stat-card {
-    background: #fff; border-radius: 12px;
-    padding: 16px; border: 1px solid #efefef;
-  }
+  /* Stat cards */
+  .stat-card { background: #fff; border-radius: 12px; border: 1px solid #efefef; }
   .stat-card.purple-tint { background: #f8f7ff; }
-  .stat-label { font-size: 11px; color: #888; margin-bottom: 6px; }
   .stat-value { font-size: 22px; font-weight: 700; color: #1a1a2e; }
-  .stat-change {
-    font-size: 11px; margin-top: 4px;
-    display: flex; align-items: center; gap: 3px;
-  }
-  .stat-change.up { color: #22c55e; }
-  .stat-change.down { color: #ef4444; }
 
-  /* CHARTS ROW */
-  .charts-row {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 16px; margin-bottom: 20px;
-  }
-  .chart-card {
-    background: #fff; border-radius: 12px;
-    padding: 16px; border: 1px solid #efefef;
-  }
-  .chart-title { font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+  /* Chart card */
+  .chart-card { background: #fff; border-radius: 12px; border: 1px solid #efefef; }
 
-  /* BAR CHART */
-  .bar-chart-wrap { display: flex; }
-  .y-axis {
-    display: flex; flex-direction: column;
-    justify-content: space-between;
-    height: 130px; margin-right: 6px;
-  }
-  .y-axis span { font-size: 10px; color: #bbb; }
-  .bar-chart {
-    display: flex; align-items: flex-end;
-    gap: 10px; height: 130px;
-    padding: 0 4px; flex: 1;
-  }
-  .bar-group {
-    display: flex; flex-direction: column;
-    align-items: center; gap: 4px;
-    flex: 1; height: 100%; justify-content: flex-end;
-  }
+  /* Bar chart */
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 130px; padding: 0 4px; flex: 1; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; height: 100%; justify-content: flex-end; }
   .bar { border-radius: 4px 4px 0 0; width: 100%; }
-  .bar-label { font-size: 10px; color: #aaa; }
+  .y-axis { display: flex; flex-direction: column; justify-content: space-between; height: 130px; margin-right: 6px; }
+  .y-axis span { font-size: 10px; color: #bbb; }
 
-  /* DONUT */
-  .donut-wrap { display: flex; align-items: center; gap: 16px; }
-  .legend { display: flex; flex-direction: column; gap: 8px; }
-  .legend-item {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    gap: 20px; font-size: 11.5px;
-  }
+  /* Donut legend */
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .legend-label { color: #555; flex: 1; }
-  .legend-pct { color: #333; font-weight: 500; }
 
-  /* SUBJECT SECTION */
-  .subject-section h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
-  .course-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px; margin-bottom: 14px;
-  }
+  /* Course cards */
   .course-card {
-    background: #fff; border-radius: 12px;
-    border: 1px solid #efefef; overflow: hidden;
-    transition: box-shadow .2s, transform .2s;
+    background: #fff; border-radius: 12px; border: 1px solid #efefef;
+    overflow: hidden; transition: box-shadow .2s, transform .2s;
   }
   .course-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); transform: translateY(-2px); }
-  .course-thumbnail {
-    height: 80px; display: flex;
-    align-items: center; overflow: hidden;
-  }
+  .course-thumbnail { height: 80px; display: flex; align-items: center; overflow: hidden; }
   .thumb-yellow  { background: linear-gradient(135deg,#fef3c7,#fde68a); }
   .thumb-purple  { background: linear-gradient(135deg,#ede9fe,#c4b5fd); }
   .thumb-pink    { background: linear-gradient(135deg,#fce7f3,#fbcfe8); }
   .thumb-violet  { background: linear-gradient(135deg,#f3e8ff,#e9d5ff); }
-
-  .thumb-inner { display: flex; align-items: center; gap: 8px; padding: 8px 12px; width: 100%; }
   .thumb-icon {
     width: 40px; height: 40px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .thumb-icon i { font-size: 18px; color: #fff; }
   .icon-orange  { background: #f97316; }
@@ -281,511 +121,390 @@
   .icon-pink    { background: #ec4899; }
   .icon-violet  { background: #8b5cf6; border-radius: 50% !important; }
 
-  .thumb-text-title { font-size: 12px; font-weight: 700; line-height: 1.2; }
-  .thumb-text-desc  { font-size: 10px; color: #666; margin-top: 2px; line-height: 1.3; }
-  .c-orange  { color: #f97316; }
-  .c-purple  { color: #7c3aed; }
-  .c-pink    { color: #ec4899; }
-
-  .course-info { padding: 10px 12px; }
-  .course-name { font-size: 12.5px; font-weight: 600; margin-bottom: 4px; }
-  .course-meta {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 10px; color: #888; margin-bottom: 8px;
-  }
-  .course-actions { display: flex; gap: 6px; }
-
-  .btn-sm-orange {
-    background: var(--orange); color: #fff;
-    font-size: 10.5px; font-weight: 500;
-    border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;
-    transition: opacity .15s;
-  }
-  .btn-sm-orange:hover { opacity: .85; }
-  .btn-sm-purple {
-    background: var(--purple); color: #fff;
-    font-size: 10.5px; font-weight: 500;
-    border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;
-    transition: opacity .15s;
-  }
-  .btn-sm-purple:hover { opacity: .85; }
-  .btn-sm-gray {
-    background: #f5f5f5; color: #555;
-    font-size: 10.5px; font-weight: 500;
-    border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;
-    transition: background .15s;
-  }
-  .btn-sm-gray:hover { background: #ebebeb; }
-
-  /* PAGINATION */
-  .pagination-row {
-    display: flex; align-items: center;
-    justify-content: space-between; padding: 4px 0;
-  }
-  .show-label {
-    font-size: 12px; color: #555;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .select-sm {
-    border: 1px solid var(--border); border-radius: 5px;
-    padding: 3px 6px; font-size: 12px; color: #333; background: #fff;
-  }
-  .page-btns { display: flex; gap: 4px; }
-  .page-btn {
-    width: 26px; height: 26px; border-radius: 5px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; cursor: pointer;
-    border: 1px solid var(--border); background: #fff; color: #555;
-    text-decoration: none; transition: background .15s;
-  }
-  .page-btn:hover { background: #f5f5f5; }
-  .page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
-
-  /* UXM SPECIAL CARD */
   .uxm-badge {
     font-size: 10px; color: #ec4899; font-weight: 600;
     background: #fce7f3; display: inline-block;
-    padding: 2px 6px; border-radius: 3px; margin-bottom: 4px;
+    padding: 2px 6px; border-radius: 3px;
   }
   .uxm-title { font-size: 13px; font-weight: 700; color: #ec4899; line-height: 1.2; }
-  .uxm-desc  { font-size: 10px; color: #666; margin-top: 2px; line-height: 1.3; }
-  .uxm-pad   { padding: 10px 12px; width: 100%; }
+
+  /* Pagination */
+  .page-btn {
+    width: 26px; height: 26px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; border: 1px solid #e8e8e8; background: #fff;
+    color: #555; text-decoration: none; transition: background .15s;
+  }
+  .page-btn:hover { background: #f5f5f5; }
+  .page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
 </style>
 </head>
 <body>
 
-<div class="app-wrapper">
+<div class="d-flex" style="min-height:100vh;">
 
-<!-- ══════════════════════════════════════
-     SIDEBAR
-══════════════════════════════════════ -->
-<aside class="sidebar">
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar d-flex flex-column py-3">
 
-  <div class="sidebar-header">
-    <div class="avatar-sm">A</div>
-    <span>Admin</span>
-  </div>
+    <div class="d-flex align-items-center gap-2 px-3 pb-3 border-bottom">
+      <div class="avatar-sm">A</div>
+      <span class="fw-semibold" style="font-size:13px;">Admin</span>
+    </div>
 
-  <!-- CSS-only tab toggle via checkbox trick -->
-  <div class="sidebar-tabs">
-    <span style="font-size:11px;color:#333;font-weight:500;cursor:pointer;">Favorites</span>
-    <span style="font-size:11px;color:#999;cursor:pointer;">Recently</span>
-  </div>
+    <div class="d-flex gap-3 px-3 py-2">
+      <span style="font-size:11px;color:#333;font-weight:500;cursor:pointer;">Favorites</span>
+      <span style="font-size:11px;color:#999;cursor:pointer;">Recently</span>
+    </div>
 
-  <div class="nav-label">Dashboards</div>
-  <div class="manage-group">
+    <div class="nav-label">Dashboards</div>
     <a href="index.html" class="s-nav-item active">
       <i class="bi bi-grid-fill"></i> Dashboard
     </a>
-  </div>
 
-  <div class="nav-label">Manage</div>
-  <div class="manage-group">
-    <a href="manage-program-head.html" class="s-nav-item">
-      <i class="bi bi-person-badge"></i> Program Head
-    </a>
-    <a href="manage-secretary.html" class="s-nav-item">
-      <i class="bi bi-briefcase"></i> Secretary
-    </a>
-    <a href="manage-ins.html" class="s-nav-item">
-      <i class="bi bi-person-video3"></i> Instructors
-    </a>
-    <a href="manage-students.html" class="s-nav-item">
-      <i class="bi bi-mortarboard"></i> Students
-    </a>
-    <a href="manage-subject-codes.html" class="s-nav-item">
-      <i class="bi bi-journal-bookmark"></i> Subject Codes
-    </a>
-  </div>
+    <div class="nav-label mt-1">Manage</div>
+    <a href="manage-program-head.html" class="s-nav-item"><i class="bi bi-person-badge"></i> Program Head</a>
+    <a href="manage-secretary.html"    class="s-nav-item"><i class="bi bi-briefcase"></i> Secretary</a>
+    <a href="manage-ins.html"          class="s-nav-item"><i class="bi bi-person-video3"></i> Instructors</a>
+    <a href="manage-students.html"     class="s-nav-item"><i class="bi bi-mortarboard"></i> Students</a>
+    <a href="manage-subject-codes.html"class="s-nav-item"><i class="bi bi-journal-bookmark"></i> Subject Codes</a>
 
-  <div class="nav-label">Pages</div>
-  <div class="manage-group">
-    <a href="#" class="s-nav-item">
-      <i class="bi bi-person-lines-fill"></i> User Profile
-    </a>
+    <div class="nav-label mt-1">Pages</div>
+    <a href="#" class="s-nav-item"><i class="bi bi-person-lines-fill"></i> User Profile</a>
     <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">User Accounts</a>
     <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">Subject Codes</a>
-    <a href="#" class="s-nav-item">
-      <i class="bi bi-person-circle"></i> Account
-    </a>
-  </div>
+    <a href="#" class="s-nav-item"><i class="bi bi-person-circle"></i> Account</a>
 
-  <div class="instructor-list">
-    <div class="section-title">Instructors</div>
-    <div class="instructor-item">
-      <div class="av1 instructor-avatar"></div>
-      <span style="font-size:12px;color:#444;">Don Don</span>
+    <div class="px-3 mt-2">
+      <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;padding:8px 0 6px;">Instructors</div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av1 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av2 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av3 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av4 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+      <div class="d-flex align-items-center gap-2 py-1"><div class="av5 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
     </div>
-    <div class="instructor-item">
-      <div class="av2 instructor-avatar"></div>
-      <span style="font-size:12px;color:#444;">Don Don</span>
-    </div>
-    <div class="instructor-item">
-      <div class="av3 instructor-avatar"></div>
-      <span style="font-size:12px;color:#444;">Don Don</span>
-    </div>
-    <div class="instructor-item">
-      <div class="av4 instructor-avatar"></div>
-      <span style="font-size:12px;color:#444;">Don Don</span>
-    </div>
-    <div class="instructor-item">
-      <div class="av5 instructor-avatar"></div>
-      <span style="font-size:12px;color:#444;">Don Don</span>
-    </div>
-  </div>
-</aside>
+  </aside>
 
-<!-- ══════════════════════════════════════
-     MAIN
-══════════════════════════════════════ -->
-<div class="main">
+  <!-- ── MAIN ── -->
+  <div class="d-flex flex-grow-1 overflow-hidden">
 
-  <!-- NOTIFICATIONS PANEL -->
-  <div class="notif-panel">
-    <h3>Notifications</h3>
+    <!-- NOTIFICATIONS PANEL -->
+    <div class="notif-panel p-3">
+      <h3 class="fw-semibold mb-3" style="font-size:13px;">Notifications</h3>
 
-    <div class="notif-item">
-      <div class="notif-icon"><i class="bi bi-person-fill"></i></div>
-      <div>
-        <div class="notif-text">Students Progress</div>
-        <div class="notif-time">Just now</div>
-      </div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-icon"><i class="bi bi-person-fill"></i></div>
-      <div>
-        <div class="notif-text">New user</div>
-        <div class="notif-time">59 minutes ago</div>
-      </div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-icon"><i class="bi bi-person-fill"></i></div>
-      <div>
-        <div class="notif-text">New user</div>
-        <div class="notif-time">12 hours ago</div>
-      </div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-icon"><i class="bi bi-person-fill"></i></div>
-      <div>
-        <div class="notif-text">New user</div>
-        <div class="notif-time">Today, 11:59 AM</div>
-      </div>
-    </div>
-
-    <div class="section-divider">Activities</div>
-    <div class="activity-item">
-      <div class="av1 instructor-avatar"></div>
-      <div>
-        <div class="activity-name">Top 1 Assembly</div>
-        <div class="activity-time">Just now</div>
-      </div>
-    </div>
-    <div class="activity-item">
-      <div class="av2 instructor-avatar"></div>
-      <div>
-        <div class="activity-name">Top 1 Assembly</div>
-        <div class="activity-time">59 minutes ago</div>
-      </div>
-    </div>
-    <div class="activity-item">
-      <div class="av3 instructor-avatar"></div>
-      <div>
-        <div class="activity-name">Top 1 Assembly</div>
-        <div class="activity-time">12 hours ago</div>
-      </div>
-    </div>
-    <div class="activity-item">
-      <div class="av4 instructor-avatar"></div>
-      <div>
-        <div class="activity-name">Top 1 Assembly</div>
-        <div class="activity-time">Today, 11:59 AM</div>
-      </div>
-    </div>
-    <div class="activity-item">
-      <div class="av5 instructor-avatar"></div>
-      <div>
-        <div class="activity-name">Top 1 Assembly</div>
-        <div class="activity-time">Feb 2, 2026</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTENT -->
-  <div class="content">
-
-    <!-- TOP NAV -->
-    <div class="top-nav">
-      <div class="breadcrumb-custom">
-        <i class="bi bi-grid" style="color:#888;"></i>
-        <span>Dashboards</span>
-        <span class="sep">/</span>
-        <span class="current">Default</span>
-      </div>
-      <div class="top-actions">
-        <div class="search-box">
-          <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
-          <input type="text" placeholder="Search">
-          <span class="shortcut">/</span>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">Students Progress</div>
+          <div style="font-size:10px;color:#aaa;">Just now</div>
         </div>
-        <a href="#" class="icon-btn"><i class="bi bi-sun"></i></a>
-        <a href="#" class="icon-btn"><i class="bi bi-clock"></i></a>
-        <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
-        <a href="#" class="icon-btn"><i class="bi bi-grid"></i></a>
       </div>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">New user</div>
+          <div style="font-size:10px;color:#aaa;">59 minutes ago</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">New user</div>
+          <div style="font-size:10px;color:#aaa;">12 hours ago</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-start gap-2 mb-3">
+        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="fw-medium" style="font-size:11.5px;">New user</div>
+          <div style="font-size:10px;color:#aaa;">Today, 11:59 AM</div>
+        </div>
+      </div>
+
+      <div class="fw-semibold mb-2" style="font-size:11px;color:#333;">Activities</div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av1 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Top 1 Assembly</div><div style="font-size:10px;color:#aaa;">Just now</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av2 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Top 1 Assembly</div><div style="font-size:10px;color:#aaa;">59 minutes ago</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av3 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Top 1 Assembly</div><div style="font-size:10px;color:#aaa;">12 hours ago</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av4 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Top 1 Assembly</div><div style="font-size:10px;color:#aaa;">Today, 11:59 AM</div></div></div>
+      <div class="d-flex align-items-center gap-2 mb-3"><div class="av5 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Top 1 Assembly</div><div style="font-size:10px;color:#aaa;">Feb 2, 2026</div></div></div>
     </div>
 
-    <!-- OVERVIEW -->
-    <div class="section-header">
-      <h2>Overview</h2>
-      <div class="date-btn"><i class="bi bi-calendar3" style="font-size:11px;"></i> Today <i class="bi bi-chevron-down" style="font-size:10px;"></i></div>
-    </div>
+    <!-- CONTENT -->
+    <div class="flex-grow-1 overflow-y-auto p-3 p-lg-4">
 
-    <!-- STAT CARDS -->
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Total Users</div>
-        <div class="stat-value">7,265</div>
-        <div class="stat-change up"><i class="bi bi-arrow-up-right"></i> +11.01%</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Instructors</div>
-        <div class="stat-value">3,671</div>
-        <div class="stat-change down"><i class="bi bi-arrow-down-right"></i> -0.03%</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Active Subject Codes</div>
-        <div class="stat-value">156</div>
-        <div class="stat-change up"><i class="bi bi-arrow-up-right"></i> +15.03%</div>
-      </div>
-      <div class="stat-card purple-tint">
-        <div class="stat-label">Students Enrolled</div>
-        <div class="stat-value">2,318</div>
-        <div class="stat-change up"><i class="bi bi-arrow-up-right"></i> +6.08%</div>
-      </div>
-    </div>
-
-    <!-- CHARTS ROW -->
-    <div class="charts-row">
-      <!-- BAR CHART -->
-      <div class="chart-card">
-        <div class="chart-title">Student Progress Summary</div>
-        <div class="bar-chart-wrap">
-          <div class="y-axis">
-            <span>100</span><span>75</span><span>50</span><span>0</span>
+      <!-- TOP NAV -->
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <div class="d-flex align-items-center gap-2" style="font-size:12px;color:#888;">
+          <i class="bi bi-grid"></i>
+          <span>Dashboards</span>
+          <span style="color:#ccc;">/</span>
+          <span class="fw-medium text-dark">Default</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <div class="search-box">
+            <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
+            <input type="text" placeholder="Search">
+            <span class="shortcut">/</span>
           </div>
-          <div class="bar-chart">
-            <div class="bar-group">
-              <div class="bar" style="height:55%;background:#06b6d4;"></div>
-              <div class="bar-label">Block 1</div>
+          <a href="#" class="icon-btn"><i class="bi bi-sun"></i></a>
+          <a href="#" class="icon-btn"><i class="bi bi-clock"></i></a>
+          <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
+          <a href="#" class="icon-btn"><i class="bi bi-grid"></i></a>
+        </div>
+      </div>
+
+      <!-- OVERVIEW HEADER -->
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="fw-semibold m-0" style="font-size:15px;">Overview</h2>
+        <button class="btn btn-sm btn-white border d-flex align-items-center gap-1" style="font-size:12px;color:#555;">
+          <i class="bi bi-calendar3" style="font-size:11px;"></i> Today <i class="bi bi-chevron-down" style="font-size:10px;"></i>
+        </button>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+          <div class="stat-card p-3">
+            <div class="text-muted mb-1" style="font-size:11px;">Total Users</div>
+            <div class="stat-value">7,265</div>
+            <div class="d-flex align-items-center gap-1 mt-1 text-success" style="font-size:11px;">
+              <i class="bi bi-arrow-up-right"></i> +11.01%
             </div>
-            <div class="bar-group">
-              <div class="bar" style="height:90%;background:#14b8a6;"></div>
-              <div class="bar-label">Block 2</div>
+          </div>
+        </div>
+        <div class="col-6 col-xl-3">
+          <div class="stat-card p-3">
+            <div class="text-muted mb-1" style="font-size:11px;">Instructors</div>
+            <div class="stat-value">3,671</div>
+            <div class="d-flex align-items-center gap-1 mt-1 text-danger" style="font-size:11px;">
+              <i class="bi bi-arrow-down-right"></i> -0.03%
             </div>
-            <div class="bar-group">
-              <div class="bar" style="height:68%;background:#1e293b;"></div>
-              <div class="bar-label">Block 3</div>
+          </div>
+        </div>
+        <div class="col-6 col-xl-3">
+          <div class="stat-card p-3">
+            <div class="text-muted mb-1" style="font-size:11px;">Active Subject Codes</div>
+            <div class="stat-value">156</div>
+            <div class="d-flex align-items-center gap-1 mt-1 text-success" style="font-size:11px;">
+              <i class="bi bi-arrow-up-right"></i> +15.03%
             </div>
-            <div class="bar-group">
-              <div class="bar" style="height:95%;background:#3b82f6;"></div>
-              <div class="bar-label">Block 4</div>
-            </div>
-            <div class="bar-group">
-              <div class="bar" style="height:42%;background:#a78bfa;"></div>
-              <div class="bar-label">Block 5</div>
-            </div>
-            <div class="bar-group">
-              <div class="bar" style="height:78%;background:#22c55e;"></div>
-              <div class="bar-label">Block 6</div>
+          </div>
+        </div>
+        <div class="col-6 col-xl-3">
+          <div class="stat-card purple-tint p-3">
+            <div class="text-muted mb-1" style="font-size:11px;">Students Enrolled</div>
+            <div class="stat-value">2,318</div>
+            <div class="d-flex align-items-center gap-1 mt-1 text-success" style="font-size:11px;">
+              <i class="bi bi-arrow-up-right"></i> +6.08%
             </div>
           </div>
         </div>
       </div>
 
-      <!-- DONUT CHART -->
-      <div class="chart-card">
-        <div class="chart-title">By Blocks</div>
-        <div class="donut-wrap">
-          <svg width="110" height="110" viewBox="0 0 110 110">
-            <circle cx="55" cy="55" r="38" fill="none" stroke="#e8e8e8" stroke-width="18"/>
-            <circle cx="55" cy="55" r="38" fill="none" stroke="#1e293b" stroke-width="18" stroke-dasharray="26.7 211.9" stroke-dashoffset="0" transform="rotate(-90 55 55)"/>
-            <circle cx="55" cy="55" r="38" fill="none" stroke="#a5b4fc" stroke-width="18" stroke-dasharray="33.2 205.4" stroke-dashoffset="-26.7" transform="rotate(-90 55 55)"/>
-            <circle cx="55" cy="55" r="38" fill="none" stroke="#6c63ff" stroke-width="18" stroke-dasharray="54.4 184.2" stroke-dashoffset="-59.9" transform="rotate(-90 55 55)"/>
-            <circle cx="55" cy="55" r="38" fill="none" stroke="#c7d2fe" stroke-width="18" stroke-dasharray="124.3 114.3" stroke-dashoffset="-114.3" transform="rotate(-90 55 55)"/>
-            <circle cx="55" cy="55" r="28" fill="white"/>
-          </svg>
-          <div class="legend">
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#c7d2fe;"></div>
-              <span class="legend-label">Block 1</span>
-              <span class="legend-pct">52.1%</span>
+      <!-- CHARTS ROW -->
+      <div class="row g-3 mb-4">
+        <!-- Bar Chart -->
+        <div class="col-12 col-lg-8">
+          <div class="chart-card p-3 h-100">
+            <div class="fw-semibold mb-3" style="font-size:13px;">Student Progress Summary</div>
+            <div class="d-flex">
+              <div class="y-axis">
+                <span>100</span><span>75</span><span>50</span><span>0</span>
+              </div>
+              <div class="bar-chart">
+                <div class="bar-group"><div class="bar" style="height:55%;background:#06b6d4;"></div><div style="font-size:10px;color:#aaa;">Block 1</div></div>
+                <div class="bar-group"><div class="bar" style="height:90%;background:#14b8a6;"></div><div style="font-size:10px;color:#aaa;">Block 2</div></div>
+                <div class="bar-group"><div class="bar" style="height:68%;background:#1e293b;"></div><div style="font-size:10px;color:#aaa;">Block 3</div></div>
+                <div class="bar-group"><div class="bar" style="height:95%;background:#3b82f6;"></div><div style="font-size:10px;color:#aaa;">Block 4</div></div>
+                <div class="bar-group"><div class="bar" style="height:42%;background:#a78bfa;"></div><div style="font-size:10px;color:#aaa;">Block 5</div></div>
+                <div class="bar-group"><div class="bar" style="height:78%;background:#22c55e;"></div><div style="font-size:10px;color:#aaa;">Block 6</div></div>
+              </div>
             </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#6c63ff;"></div>
-              <span class="legend-label">Block 2</span>
-              <span class="legend-pct">22.8%</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#a5b4fc;"></div>
-              <span class="legend-label">Block 3</span>
-              <span class="legend-pct">13.9%</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#1e293b;"></div>
-              <span class="legend-label">Other</span>
-              <span class="legend-pct">11.2%</span>
+          </div>
+        </div>
+
+        <!-- Donut Chart -->
+        <div class="col-12 col-lg-4">
+          <div class="chart-card p-3 h-100">
+            <div class="fw-semibold mb-3" style="font-size:13px;">By Blocks</div>
+            <div class="d-flex align-items-center gap-3">
+              <svg width="110" height="110" viewBox="0 0 110 110" style="flex-shrink:0;">
+                <circle cx="55" cy="55" r="38" fill="none" stroke="#e8e8e8" stroke-width="18"/>
+                <circle cx="55" cy="55" r="38" fill="none" stroke="#1e293b" stroke-width="18" stroke-dasharray="26.7 211.9" stroke-dashoffset="0" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="38" fill="none" stroke="#a5b4fc" stroke-width="18" stroke-dasharray="33.2 205.4" stroke-dashoffset="-26.7" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="38" fill="none" stroke="#6c63ff" stroke-width="18" stroke-dasharray="54.4 184.2" stroke-dashoffset="-59.9" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="38" fill="none" stroke="#c7d2fe" stroke-width="18" stroke-dasharray="124.3 114.3" stroke-dashoffset="-114.3" transform="rotate(-90 55 55)"/>
+                <circle cx="55" cy="55" r="28" fill="white"/>
+              </svg>
+              <div class="d-flex flex-column gap-2 w-100">
+                <div class="d-flex align-items-center justify-content-between gap-2" style="font-size:11.5px;">
+                  <div class="d-flex align-items-center gap-2"><div class="legend-dot" style="background:#c7d2fe;"></div><span class="text-secondary">Block 1</span></div>
+                  <span class="fw-medium">52.1%</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between gap-2" style="font-size:11.5px;">
+                  <div class="d-flex align-items-center gap-2"><div class="legend-dot" style="background:#6c63ff;"></div><span class="text-secondary">Block 2</span></div>
+                  <span class="fw-medium">22.8%</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between gap-2" style="font-size:11.5px;">
+                  <div class="d-flex align-items-center gap-2"><div class="legend-dot" style="background:#a5b4fc;"></div><span class="text-secondary">Block 3</span></div>
+                  <span class="fw-medium">13.9%</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between gap-2" style="font-size:11.5px;">
+                  <div class="d-flex align-items-center gap-2"><div class="legend-dot" style="background:#1e293b;"></div><span class="text-secondary">Other</span></div>
+                  <span class="fw-medium">11.2%</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- SUBJECT CODE MANAGEMENT -->
-    <div class="subject-section">
-      <h2>Subject Code Management</h2>
-      <div class="course-grid">
+      <!-- SUBJECT CODE MANAGEMENT -->
+      <h2 class="fw-semibold mb-3" style="font-size:15px;">Subject Code Management</h2>
+
+      <div class="row g-3 mb-3">
 
         <!-- Card 1 -->
-        <div class="course-card">
-          <div class="course-thumbnail thumb-yellow">
-            <div class="thumb-inner">
-              <div class="thumb-icon icon-orange">
-                <i class="bi bi-grid-3x3-gap-fill"></i>
-              </div>
-              <div>
-                <div class="thumb-text-title c-orange">Color Styles</div>
-                <div class="thumb-text-desc">Let's learn about colors, color contrast and color styles.</div>
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="course-card h-100">
+            <div class="course-thumbnail thumb-yellow">
+              <div class="d-flex align-items-center gap-2 p-2 w-100">
+                <div class="thumb-icon icon-orange"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#f97316;">Color Styles</div>
+                  <div style="font-size:10px;color:#666;">Let's learn about colors, color contrast and color styles.</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="course-info">
-            <div class="course-name">Color styles – 02</div>
-            <div class="course-meta">
-              <span><i class="bi bi-clock"></i> 1:30hrs</span>
-              <span><i class="bi bi-collection"></i> 02 Lessons</span>
-            </div>
-            <div class="course-actions">
-              <button class="btn-sm-orange">Assign Instructor</button>
-              <button class="btn-sm-gray"><i class="bi bi-download"></i> Download</button>
+            <div class="p-3">
+              <div class="fw-semibold mb-1" style="font-size:12.5px;">Color styles – 02</div>
+              <div class="d-flex gap-3 text-muted mb-2" style="font-size:10px;">
+                <span><i class="bi bi-clock"></i> 1:30hrs</span>
+                <span><i class="bi bi-collection"></i> 02 Lessons</span>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm text-white" style="background:#f97316;font-size:10.5px;">Assign Instructor</button>
+                <button class="btn btn-sm btn-light" style="font-size:10.5px;"><i class="bi bi-download"></i> Download</button>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Card 2 -->
-        <div class="course-card">
-          <div class="course-thumbnail thumb-purple">
-            <div class="thumb-inner">
-              <div class="thumb-icon icon-purple">
-                <i class="bi bi-check2-square"></i>
-              </div>
-              <div>
-                <div class="thumb-text-title c-purple">Design Thinking Project</div>
-                <div class="thumb-text-desc">A project to unlearn and learn the fundamentals of design</div>
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="course-card h-100">
+            <div class="course-thumbnail thumb-purple">
+              <div class="d-flex align-items-center gap-2 p-2 w-100">
+                <div class="thumb-icon icon-purple"><i class="bi bi-check2-square"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#7c3aed;">Design Thinking Project</div>
+                  <div style="font-size:10px;color:#666;">A project to unlearn and learn the fundamentals of design</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="course-info">
-            <div class="course-name">Design Thinking</div>
-            <div class="course-meta">
-              <span><i class="bi bi-clock"></i> 2:30hrs</span>
-              <span><i class="bi bi-collection"></i> 01 Lessons</span>
-            </div>
-            <div class="course-actions">
-              <button class="btn-sm-orange">Assign Instructor</button>
-              <button class="btn-sm-gray"><i class="bi bi-download"></i> Download</button>
+            <div class="p-3">
+              <div class="fw-semibold mb-1" style="font-size:12.5px;">Design Thinking</div>
+              <div class="d-flex gap-3 text-muted mb-2" style="font-size:10px;">
+                <span><i class="bi bi-clock"></i> 2:30hrs</span>
+                <span><i class="bi bi-collection"></i> 01 Lessons</span>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm text-white" style="background:#f97316;font-size:10.5px;">Assign Instructor</button>
+                <button class="btn btn-sm btn-light" style="font-size:10.5px;"><i class="bi bi-download"></i> Download</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Card 3 — UXM special layout -->
-        <div class="course-card">
-          <div class="course-thumbnail thumb-pink">
-            <div class="uxm-pad">
-              <div class="uxm-badge">UXM Project Workbook</div>
-              <div class="uxm-title">Constructing Visual Design from Briefs</div>
-              <div class="uxm-desc">Making visually looking good UI screens from problem statement briefs</div>
+        <!-- Card 3 — UXM -->
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="course-card h-100">
+            <div class="course-thumbnail thumb-pink">
+              <div class="p-2 w-100">
+                <div class="uxm-badge mb-1">UXM Project Workbook</div>
+                <div class="uxm-title">Constructing Visual Design from Briefs</div>
+                <div style="font-size:10px;color:#666;margin-top:2px;line-height:1.3;">Making visually looking good UI screens from problem statement briefs</div>
+              </div>
             </div>
-          </div>
-          <div class="course-info">
-            <div class="course-name">Visual Designs Briefs</div>
-            <div class="course-meta">
-              <span><i class="bi bi-clock"></i> 3:30hrs</span>
-              <span><i class="bi bi-collection"></i> 05 Lessons</span>
-            </div>
-            <div class="course-actions">
-              <button class="btn-sm-purple"><i class="bi bi-play-fill"></i> Watch Now</button>
-              <button class="btn-sm-gray"><i class="bi bi-download"></i> Download</button>
+            <div class="p-3">
+              <div class="fw-semibold mb-1" style="font-size:12.5px;">Visual Designs Briefs</div>
+              <div class="d-flex gap-3 text-muted mb-2" style="font-size:10px;">
+                <span><i class="bi bi-clock"></i> 3:30hrs</span>
+                <span><i class="bi bi-collection"></i> 05 Lessons</span>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm text-white" style="background:#7c3aed;font-size:10.5px;"><i class="bi bi-play-fill"></i> Watch Now</button>
+                <button class="btn btn-sm btn-light" style="font-size:10.5px;"><i class="bi bi-download"></i> Download</button>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Card 4 -->
-        <div class="course-card">
-          <div class="course-thumbnail thumb-violet">
-            <div class="thumb-inner">
-              <div class="thumb-icon icon-violet">
-                <i class="bi bi-lightbulb-fill"></i>
-              </div>
-              <div>
-                <div class="thumb-text-title c-purple">Curiosity for Terminology</div>
-                <div class="thumb-text-desc">Understanding various visual design terms</div>
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="course-card h-100">
+            <div class="course-thumbnail thumb-violet">
+              <div class="d-flex align-items-center gap-2 p-2 w-100">
+                <div class="thumb-icon icon-violet"><i class="bi bi-lightbulb-fill"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#7c3aed;">Curiosity for Terminology</div>
+                  <div style="font-size:10px;color:#666;">Understanding various visual design terms</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="course-info">
-            <div class="course-name">Curiosity for terminology</div>
-            <div class="course-meta">
-              <span><i class="bi bi-clock"></i> 4:00hrs</span>
-              <span><i class="bi bi-collection"></i> 02 Lessons</span>
-            </div>
-            <div class="course-actions">
-              <button class="btn-sm-purple"><i class="bi bi-play-fill"></i> Watch Now</button>
-              <button class="btn-sm-gray"><i class="bi bi-download"></i> Download</button>
+            <div class="p-3">
+              <div class="fw-semibold mb-1" style="font-size:12.5px;">Curiosity for terminology</div>
+              <div class="d-flex gap-3 text-muted mb-2" style="font-size:10px;">
+                <span><i class="bi bi-clock"></i> 4:00hrs</span>
+                <span><i class="bi bi-collection"></i> 02 Lessons</span>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm text-white" style="background:#7c3aed;font-size:10.5px;"><i class="bi bi-play-fill"></i> Watch Now</button>
+                <button class="btn btn-sm btn-light" style="font-size:10.5px;"><i class="bi bi-download"></i> Download</button>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Card 5 -->
-        <div class="course-card">
-          <div class="course-thumbnail thumb-yellow">
-            <div class="thumb-inner">
-              <div class="thumb-icon icon-orange">
-                <i class="bi bi-grid-3x3-gap-fill"></i>
-              </div>
-              <div>
-                <div class="thumb-text-title c-orange">Color Styles</div>
-                <div class="thumb-text-desc">Let's learn about color, color contrast and color styles.</div>
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="course-card h-100">
+            <div class="course-thumbnail thumb-yellow">
+              <div class="d-flex align-items-center gap-2 p-2 w-100">
+                <div class="thumb-icon icon-orange"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#f97316;">Color Styles</div>
+                  <div style="font-size:10px;color:#666;">Let's learn about color, color contrast and color styles.</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="course-info">
-            <div class="course-name">Color styles – 01</div>
-            <div class="course-meta">
-              <span><i class="bi bi-clock"></i> 2:30hrs</span>
-              <span><i class="bi bi-collection"></i> 02 Lessons</span>
-            </div>
-            <div class="course-actions">
-              <button class="btn-sm-purple"><i class="bi bi-play-fill"></i> Watch Now</button>
-              <button class="btn-sm-gray"><i class="bi bi-download"></i> Download</button>
+            <div class="p-3">
+              <div class="fw-semibold mb-1" style="font-size:12.5px;">Color styles – 01</div>
+              <div class="d-flex gap-3 text-muted mb-2" style="font-size:10px;">
+                <span><i class="bi bi-clock"></i> 2:30hrs</span>
+                <span><i class="bi bi-collection"></i> 02 Lessons</span>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm text-white" style="background:#7c3aed;font-size:10.5px;"><i class="bi bi-play-fill"></i> Watch Now</button>
+                <button class="btn btn-sm btn-light" style="font-size:10.5px;"><i class="bi bi-download"></i> Download</button>
+              </div>
             </div>
           </div>
         </div>
 
-      </div><!-- end course-grid -->
+      </div><!-- end row -->
 
       <!-- PAGINATION -->
-      <div class="pagination-row">
-        <div class="show-label">
+      <div class="d-flex align-items-center justify-content-between py-1">
+        <div class="d-flex align-items-center gap-2" style="font-size:12px;color:#555;">
           Show
-          <select class="select-sm">
+          <select class="form-select form-select-sm" style="width:auto;">
             <option>2</option>
             <option>5</option>
             <option selected>10</option>
           </select>
           Row
         </div>
-        <div class="page-btns">
+        <div class="d-flex gap-1">
           <a href="#" class="page-btn">‹</a>
           <a href="#" class="page-btn active">1</a>
           <a href="#" class="page-btn">2</a>
@@ -793,11 +512,10 @@
         </div>
       </div>
 
-    </div><!-- end subject-section -->
+    </div><!-- end content -->
+  </div><!-- end main -->
+</div><!-- end wrapper -->
 
-  </div><!-- end content -->
-</div><!-- end main -->
-</div><!-- end app-wrapper -->
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
