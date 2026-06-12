@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Instructors</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+  :root {
+    --accent: #6c63ff;
+    --accent-light: #f0eeff;
+    --orange: #f97316;
+    --border: #e8e8e8;
+    --bg: #f0f2f5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); font-size: 13px; color: #333; min-height: 100vh;
+  }
+  .app-wrapper { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 200px; background: #fff; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; padding: 16px 0; flex-shrink: 0;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  .sidebar-header { display: flex; align-items: center; gap: 8px; padding: 0 16px 16px; border-bottom: 1px solid #f0f0f0; }
+  .avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .sidebar-header span { font-weight: 600; font-size: 13px; }
+  .sidebar-tabs { display: flex; gap: 12px; padding: 10px 16px; }
+  .sidebar-tabs span { font-size: 11px; color: #999; cursor: pointer; }
+  .sidebar-tabs span.active { color: #333; font-weight: 500; }
+  .nav-label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px 4px; }
+  .manage-group { padding-bottom: 8px; }
+  .s-nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; cursor: pointer; color: #555; font-size: 12px; text-decoration: none; transition: background .15s; border-radius: 0 20px 20px 0; margin-right: 8px; }
+  .s-nav-item:hover { background: #f5f5f5; color: #333; }
+  .s-nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .s-nav-item i { font-size: 13px; width: 16px; flex-shrink: 0; }
+  .instructor-list { padding: 0 16px; }
+  .instructor-list .section-title { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0 6px; }
+  .instructor-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+  .i-av { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; }
+  .av1 { background: linear-gradient(135deg,#a78bfa,#7c3aed); }
+  .av2 { background: linear-gradient(135deg,#fbbf24,#f59e0b); }
+  .av3 { background: linear-gradient(135deg,#34d399,#059669); }
+  .av4 { background: linear-gradient(135deg,#60a5fa,#2563eb); }
+  .av5 { background: linear-gradient(135deg,#f87171,#dc2626); }
+
+  /* MAIN */
+  .main { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+  /* TOP NAV */
+  .top-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #efefef; }
+  .breadcrumb-custom { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+  .breadcrumb-custom .current { color: #333; font-weight: 500; }
+  .breadcrumb-custom .sep { color: #ccc; }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .search-box { display: flex; align-items: center; background: #f5f5f5; border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; gap: 6px; }
+  .search-box input { background: none; border: none; outline: none; font-size: 12px; width: 120px; color: #333; }
+  .search-box input::placeholder { color: #bbb; }
+  .shortcut { background: #eee; border-radius: 3px; padding: 1px 4px; font-size: 10px; color: #888; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 6px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #666; font-size: 14px; text-decoration: none; transition: background .15s; }
+  .icon-btn:hover { background: #ebebeb; color: #333; }
+
+  /* ── CONTENT GRID ── */
+  .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* CARD BASE */
+  .card-box { background: #fff; border-radius: 14px; border: 1px solid var(--border); padding: 18px; }
+
+  /* RECENT ENROLLED CLASSES */
+  .rec-classes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .rec-classes-header h3 { font-size: 14px; font-weight: 600; }
+  .rec-classes-header .header-right { display: flex; align-items: center; gap: 10px; }
+  .rec-classes-header .all-label { font-size: 12px; color: #333; font-weight: 500; }
+  .icon-circle { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #555; font-size: 12px; text-decoration: none; }
+
+  .class-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 10px; }
+  .class-item:last-child { margin-bottom: 0; }
+  .class-item.active-class { border-color: var(--orange); }
+  .class-thumb { width: 40px; height: 40px; border-radius: 10px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; color: #555; }
+  .class-info { flex: 1; }
+  .class-name { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+  .class-name.orange { color: var(--orange); }
+  .class-meta { display: flex; align-items: center; gap: 14px; font-size: 11px; color: #666; }
+  .class-meta span { display: flex; align-items: center; gap: 4px; }
+  .class-meta i { font-size: 11px; color: #888; }
+
+  /* UPCOMING LESSON */
+  .upcoming-header { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+  .lesson-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+  .lesson-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .lesson-icon { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .lesson-icon i { font-size: 15px; color: #333; }
+  .lesson-info { flex: 1; }
+  .lesson-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .lesson-time { font-size: 11.5px; color: #777; }
+  .btn-join-solid { background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 7px 18px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn-join-outline { background: #fff; color: var(--orange); border: 1.5px solid var(--orange); border-radius: 8px; padding: 6px 17px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+
+  /* BOTTOM ROW */
+  .bottom-grid { display: grid; grid-template-columns: 220px 1fr 200px; gap: 16px; margin-bottom: 16px; }
+
+  /* RECENT ENROLLED COURSE */
+  .rec-course-label { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .course-mini-card { background: #f9f9f9; border-radius: 10px; padding: 12px; }
+  .course-mini-edit { width: 28px; height: 28px; border-radius: 6px; background: #fff; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #555; font-size: 12px; margin-bottom: 8px; }
+  .course-mini-name { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .progress-bar-wrap { background: #e5e7eb; border-radius: 20px; height: 5px; margin-bottom: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 5px; background: var(--orange); border-radius: 20px; width: 47%; }
+  .progress-label { font-size: 10.5px; color: #888; text-align: right; }
+
+  /* YOUR RESOURCES */
+  .resources-label { font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+  .resource-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+  .resource-item:last-of-type { border-bottom: none; }
+  .res-icon { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; flex-shrink: 0; }
+  .res-icon.pdf { background: #ef4444; }
+  .res-icon.img { background: #22c55e; }
+  .res-icon.fig { background: #3b82f6; }
+  .res-body { flex: 1; min-width: 0; }
+  .res-name { font-size: 12px; font-weight: 500; margin-bottom: 1px; }
+  .res-desc { font-size: 10px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+  .res-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+  .res-size { font-size: 10px; color: #888; }
+  .res-action { font-size: 10.5px; color: var(--orange); font-weight: 500; cursor: pointer; text-decoration: none; }
+  .res-action.cancel { color: #888; }
+  .res-progress { height: 3px; background: var(--orange); border-radius: 2px; width: 100%; margin-top: 4px; }
+  .see-more-btn { display: block; text-align: center; background: #fff4ed; color: var(--orange); font-size: 12px; font-weight: 500; border: none; border-radius: 8px; padding: 8px; width: 100%; margin-top: 10px; cursor: pointer; text-decoration: none; }
+
+  /* CALENDAR */
+  .cal-box { padding: 14px; }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-month { font-size: 12px; font-weight: 600; color: var(--orange); }
+  .cal-nav { background: none; border: none; color: #888; cursor: pointer; font-size: 13px; padding: 0 2px; }
+  .cal-nav:hover { color: #333; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; }
+  .cal-day-label { font-size: 9.5px; color: #aaa; text-align: center; padding: 2px 0 4px; font-weight: 500; }
+  .cal-day { font-size: 11px; text-align: center; padding: 4px 2px; border-radius: 50%; color: #444; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin: 1px auto; }
+  .cal-day:hover { background: #f5f5f5; }
+  .cal-day.other-month { color: #ddd; }
+  .cal-day.today { background: var(--orange); color: #fff; font-weight: 700; }
+  .cal-day.has-event { font-weight: 700; color: var(--orange); }
+  .cal-day.has-event.today { color: #fff; }
+
+  /* TABLE SECTION */
+  .table-section-grid { display: grid; grid-template-columns: 1fr 200px; gap: 16px; }
+  .table-card { background: #fff; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 11px; color: #888; font-weight: 500; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid #f7f7f7; transition: background .12s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #fafafa; }
+  tbody td { padding: 10px 14px; font-size: 12px; vertical-align: middle; color: #444; }
+  .td-link { color: #888; font-size: 11.5px; text-decoration: none; }
+  .td-link:hover { color: var(--orange); text-decoration: underline; }
+  .td-submitted { color: #888; font-size: 11.5px; }
+
+  /* PAGINATION ROW */
+  .pagination-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-top: 1px solid #f0f0f0; }
+  .show-label { font-size: 12px; color: #555; display: flex; align-items: center; gap: 6px; }
+  .select-sm { border: 1px solid var(--border); border-radius: 5px; padding: 3px 6px; font-size: 12px; color: #333; background: #fff; }
+  .page-btns { display: flex; gap: 3px; }
+  .page-btn { width: 26px; height: 26px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: #fff; color: #555; text-decoration: none; transition: background .15s; }
+  .page-btn:hover { background: #f5f5f5; }
+  .page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .page-btn.dots { border: none; cursor: default; color: #aaa; }
+  .page-btn.dots:hover { background: transparent; }
+
+  /* PERFORMANCE CARD */
+  .perf-card { background: #fff; border-radius: 14px; border: 1px solid var(--border); padding: 16px; }
+  .perf-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .perf-legend { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .perf-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #555; }
+  .perf-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+  .perf-select { border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 11px; color: #555; background: #fff; }
+
+  /* GAUGE */
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; padding: 4px 0 8px; }
+  .gauge-wrap svg { overflow: visible; }
+  .gauge-overall { font-size: 12px; color: #555; margin-top: 6px; text-align: center; }
+  .gauge-overall strong { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="avatar-sm">I</div>
+    <span>Instructor</span>
+  </div>
+  <div class="sidebar-tabs">
+    <span class="active">Favorites</span>
+    <span>Recently</span>
+  </div>
+
+  <div class="nav-label">Overview</div>
+  <div class="manage-group">
+    <a href="#" class="s-nav-item active" style="padding-left:12px;">
+      <i class="bi bi-circle-fill" style="font-size:6px;color:var(--orange);"></i> Overview
+    </a>
+  </div>
+
+  <div class="nav-label">Dashboards</div>
+  <div class="manage-group">
+    <a href="index.html" class="s-nav-item">
+      <i class="bi bi-grid-fill"></i> Overview
+    </a>
+  </div>
+
+  <div class="nav-label">Pages</div>
+  <div class="manage-group">
+    <a href="#" class="s-nav-item">
+      <i class="bi bi-chevron-right" style="font-size:10px;"></i>
+      <i class="bi bi-person-lines-fill"></i> User Profile
+    </a>
+    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">User Accounts</a>
+    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">Subject Codes</a>
+    <a href="#" class="s-nav-item">
+      <i class="bi bi-chevron-right" style="font-size:10px;"></i>
+      <i class="bi bi-person-circle"></i> Account
+    </a>
+  </div>
+
+  <div class="instructor-list">
+    <div class="section-title">Instructors</div>
+    <div class="instructor-item"><div class="i-av av1"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av2"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av3"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av4"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av5"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP NAV -->
+  <div class="top-nav">
+    <div class="breadcrumb-custom">
+      <i class="bi bi-grid" style="color:#888;"></i>
+      <span>Dashboards</span>
+      <span class="sep">/</span>
+      <span class="current">Overview</span>
+    </div>
+    <div class="top-actions">
+      <div class="search-box">
+        <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
+        <input type="text" placeholder="Search">
+        <span class="shortcut">/</span>
+      </div>
+      <a href="#" class="icon-btn"><i class="bi bi-sun"></i></a>
+      <a href="#" class="icon-btn"><i class="bi bi-clock"></i></a>
+      <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
+      <a href="#" class="icon-btn"><i class="bi bi-grid"></i></a>
+    </div>
+  </div>
+
+  <!-- ROW 1: Recent Classes + Upcoming Lesson -->
+  <div class="content-grid">
+
+    <!-- Recent Enrolled Classes -->
+    <div class="card-box">
+      <div class="rec-classes-header">
+        <h3>Recent enrolled classes</h3>
+        <div class="header-right">
+          <span class="all-label">All</span>
+          <a href="#" class="icon-circle"><i class="bi bi-search"></i></a>
+        </div>
+      </div>
+
+      <!-- Class 1 - active/highlighted -->
+      <div class="class-item active-class">
+        <div class="class-thumb">
+          <i class="bi bi-grid-3x3-gap-fill" style="color:var(--orange);font-size:20px;"></i>
+        </div>
+        <div class="class-info">
+          <div class="class-name orange">Firearm Safety</div>
+          <div class="class-meta">
+            <span><i class="bi bi-clock"></i> 5:30hrs</span>
+            <span><i class="bi bi-collection"></i> 05 Lessons</span>
+            <span><i class="bi bi-check-circle"></i> Assignments</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class 2 -->
+      <div class="class-item">
+        <div class="class-thumb">
+          <i class="bi bi-palette" style="color:#888;font-size:20px;"></i>
+        </div>
+        <div class="class-info">
+          <div class="class-name">Firearms Visualization</div>
+          <div class="class-meta">
+            <span><i class="bi bi-clock"></i> 4:00hrs</span>
+            <span><i class="bi bi-collection"></i> 03 Lessons</span>
+            <span><i class="bi bi-check-circle"></i> Assignments</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Lesson -->
+    <div class="card-box">
+      <div class="upcoming-header">Upcoming Lesson</div>
+
+      <div class="lesson-item">
+        <div class="lesson-icon">
+          <i class="bi bi-mortarboard"></i>
+        </div>
+        <div class="lesson-info">
+          <div class="lesson-name">Gun Safety Training</div>
+          <div class="lesson-time">5:30pm</div>
+        </div>
+        <button class="btn-join-solid">Join</button>
+      </div>
+
+      <div class="lesson-item">
+        <div class="lesson-icon">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="lesson-info">
+          <div class="lesson-name">Assemble and Disassemble</div>
+          <div class="lesson-time">9:00pm</div>
+        </div>
+        <button class="btn-join-outline">Join</button>
+      </div>
+    </div>
+
+  </div><!-- end content-grid -->
+
+  <!-- ROW 2: Recent Course + Resources + Calendar -->
+  <div class="bottom-grid">
+
+    <!-- Recent Enrolled Course -->
+    <div class="card-box">
+      <div class="rec-course-label">Recent enrolled course</div>
+      <div class="course-mini-card">
+        <div class="course-mini-edit">
+          <i class="bi bi-pencil"></i>
+        </div>
+        <div class="course-mini-name">Gun Safety Traning</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-label">14/30 class</div>
+      </div>
+    </div>
+
+    <!-- Your Resources -->
+    <div class="card-box">
+      <div class="resources-label">Your Resources</div>
+
+      <!-- Resource 1 - uploading -->
+      <div class="resource-item">
+        <div class="res-icon pdf"><i class="bi bi-file-earmark-pdf"></i></div>
+        <div class="res-body">
+          <div class="res-name">gun-parts.pdf</div>
+          <div class="res-progress"></div>
+        </div>
+        <div class="res-right">
+          <span class="res-size">8.5 MB</span>
+          <a href="#" class="res-action cancel">Cancel</a>
+        </div>
+      </div>
+
+      <!-- Resource 2 -->
+      <div class="resource-item">
+        <div class="res-icon img"><i class="bi bi-file-earmark-image"></i></div>
+        <div class="res-body">
+          <div class="res-name">firearms_tips.png</div>
+          <div class="res-desc">Let's quickly create some realistic and sharp metal gif-pros</div>
+        </div>
+        <div class="res-right">
+          <span class="res-size">576 KB</span>
+          <a href="#" class="res-action">Download</a>
+        </div>
+      </div>
+
+      <!-- Resource 3 -->
+      <div class="resource-item">
+        <div class="res-icon fig"><i class="bi bi-file-earmark-code"></i></div>
+        <div class="res-body">
+          <div class="res-name">basics_of_firearm.fig</div>
+          <div class="res-desc">An introductory guide to the fundamental principles and practices of User Experience (UX) design.</div>
+        </div>
+        <div class="res-right">
+          <span class="res-size">3.5 MB</span>
+          <a href="#" class="res-action">Download</a>
+        </div>
+      </div>
+
+      <a href="#" class="see-more-btn">see more</a>
+    </div>
+
+    <!-- Calendar -->
+    <div class="card-box cal-box">
+      <div class="cal-header">
+        <button class="cal-nav">&#8249;</button>
+        <span class="cal-month">June 2024</span>
+        <button class="cal-nav">&#8250;</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-day-label">SUN</div>
+        <div class="cal-day-label">MON</div>
+        <div class="cal-day-label">TUE</div>
+        <div class="cal-day-label">WED</div>
+        <div class="cal-day-label">THU</div>
+        <div class="cal-day-label">FRI</div>
+        <div class="cal-day-label">SAT</div>
+
+        <!-- Week 0 partial (May overflow) -->
+        <div class="cal-day other-month">30</div>
+        <div class="cal-day other-month">31</div>
+        <div class="cal-day">1</div>
+        <div class="cal-day">2</div>
+        <div class="cal-day">3</div>
+        <div class="cal-day">4</div>
+        <div class="cal-day">5</div>
+
+        <!-- Week 2 -->
+        <div class="cal-day has-event">6</div>
+        <div class="cal-day">7</div>
+        <div class="cal-day">8</div>
+        <div class="cal-day">9</div>
+        <div class="cal-day today">10</div>
+        <div class="cal-day">11</div>
+        <div class="cal-day">12</div>
+
+        <!-- Week 3 -->
+        <div class="cal-day has-event">13</div>
+        <div class="cal-day">14</div>
+        <div class="cal-day">15</div>
+        <div class="cal-day">16</div>
+        <div class="cal-day">17</div>
+        <div class="cal-day">18</div>
+        <div class="cal-day">19</div>
+
+        <!-- Week 4 -->
+        <div class="cal-day has-event">20</div>
+        <div class="cal-day">21</div>
+        <div class="cal-day">22</div>
+        <div class="cal-day">23</div>
+        <div class="cal-day">24</div>
+        <div class="cal-day">25</div>
+        <div class="cal-day">26</div>
+
+        <!-- Week 5 -->
+        <div class="cal-day has-event">27</div>
+        <div class="cal-day">28</div>
+        <div class="cal-day">29</div>
+        <div class="cal-day">30</div>
+      </div>
+    </div>
+
+  </div><!-- end bottom-grid -->
+
+  <!-- ROW 3: Table + Performance -->
+  <div class="table-section-grid">
+
+    <!-- Activity Table -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Subject Code</th>
+            <th>Activity Type</th>
+            <th>Timestamp</th>
+            <th>View Profile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><span class="td-submitted">Submitted</span></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination-row">
+        <div class="show-label">
+          Show
+          <select class="select-sm">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+          </select>
+          Row
+        </div>
+        <div class="page-btns">
+          <a href="#" class="page-btn"><i class="bi bi-chevron-left" style="font-size:10px;"></i></a>
+          <a href="#" class="page-btn active">1</a>
+          <a href="#" class="page-btn">2</a>
+          <a href="#" class="page-btn">3</a>
+          <a href="#" class="page-btn">4</a>
+          <a href="#" class="page-btn">5</a>
+          <span class="page-btn dots">…</span>
+          <a href="#" class="page-btn">10</a>
+          <a href="#" class="page-btn"><i class="bi bi-chevron-right" style="font-size:10px;"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Card -->
+    <div class="perf-card">
+      <div class="perf-title">Performance</div>
+      <div class="perf-legend">
+        <div class="perf-legend-item">
+          <div class="perf-dot"></div>
+          <span>Assignment Submission<br>Performance</span>
+        </div>
+        <select class="perf-select">
+          <option>Monthly</option>
+          <option>Weekly</option>
+          <option>Yearly</option>
+        </select>
+      </div>
+
+      <!-- Gauge SVG -->
+      <div class="gauge-wrap">
+        <svg width="140" height="90" viewBox="0 0 140 90">
+          <!-- Background arc -->
+          <path d="M 15 80 A 55 55 0 0 1 125 80"
+            fill="none" stroke="#f0f0f0" stroke-width="14" stroke-linecap="round"/>
+          <!-- Orange arc (~80%) -->
+          <path d="M 15 80 A 55 55 0 0 1 125 80"
+            fill="none" stroke="#f97316" stroke-width="14" stroke-linecap="round"
+            stroke-dasharray="150 173" stroke-dashoffset="0"/>
+          <!-- Needle dot -->
+          <circle cx="110" cy="38" r="5" fill="#f97316"/>
+          <circle cx="110" cy="38" r="2.5" fill="#fff"/>
+        </svg>
+        <div class="gauge-overall">Overall: <strong>8.966</strong></div>
+      </div>
+    </div>
+
+  </div><!-- end table-section-grid -->
+
+</div><!-- end main -->
+</div><!-- end app-wrapper -->
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Instructors</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+  :root {
+    --accent: #6c63ff;
+    --accent-light: #f0eeff;
+    --orange: #f97316;
+    --border: #e8e8e8;
+    --bg: #f0f2f5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); font-size: 13px; color: #333; min-height: 100vh;
+  }
+  .app-wrapper { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 200px; background: #fff; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; padding: 16px 0; flex-shrink: 0;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  .sidebar-header { display: flex; align-items: center; gap: 8px; padding: 0 16px 16px; border-bottom: 1px solid #f0f0f0; }
+  .avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .sidebar-header span { font-weight: 600; font-size: 13px; }
+  .sidebar-tabs { display: flex; gap: 12px; padding: 10px 16px; }
+  .sidebar-tabs span { font-size: 11px; color: #999; cursor: pointer; }
+  .sidebar-tabs span.active { color: #333; font-weight: 500; }
+  .nav-label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px 4px; }
+  .manage-group { padding-bottom: 8px; }
+  .s-nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; cursor: pointer; color: #555; font-size: 12px; text-decoration: none; transition: background .15s; border-radius: 0 20px 20px 0; margin-right: 8px; }
+  .s-nav-item:hover { background: #f5f5f5; color: #333; }
+  .s-nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .s-nav-item i { font-size: 13px; width: 16px; flex-shrink: 0; }
+  .instructor-list { padding: 0 16px; }
+  .instructor-list .section-title { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0 6px; }
+  .instructor-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+  .i-av { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; }
+  .av1 { background: linear-gradient(135deg,#a78bfa,#7c3aed); }
+  .av2 { background: linear-gradient(135deg,#fbbf24,#f59e0b); }
+  .av3 { background: linear-gradient(135deg,#34d399,#059669); }
+  .av4 { background: linear-gradient(135deg,#60a5fa,#2563eb); }
+  .av5 { background: linear-gradient(135deg,#f87171,#dc2626); }
+
+  /* MAIN */
+  .main { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+  /* TOP NAV */
+  .top-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #efefef; }
+  .breadcrumb-custom { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+  .breadcrumb-custom .current { color: #333; font-weight: 500; }
+  .breadcrumb-custom .sep { color: #ccc; }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .search-box { display: flex; align-items: center; background: #f5f5f5; border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; gap: 6px; }
+  .search-box input { background: none; border: none; outline: none; font-size: 12px; width: 120px; color: #333; }
+  .search-box input::placeholder { color: #bbb; }
+  .shortcut { background: #eee; border-radius: 3px; padding: 1px 4px; font-size: 10px; color: #888; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 6px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #666; font-size: 14px; text-decoration: none; transition: background .15s; }
+  .icon-btn:hover { background: #ebebeb; color: #333; }
+
+  /* ── CONTENT GRID ── */
+  .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* CARD BASE */
+  .card-box { background: #fff; border-radius: 14px; border: 1px solid var(--border); padding: 18px; }
+
+  /* RECENT ENROLLED CLASSES */
+  .rec-classes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .rec-classes-header h3 { font-size: 14px; font-weight: 600; }
+  .rec-classes-header .header-right { display: flex; align-items: center; gap: 10px; }
+  .rec-classes-header .all-label { font-size: 12px; color: #333; font-weight: 500; }
+  .icon-circle { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #555; font-size: 12px; text-decoration: none; }
+
+  .class-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 10px; }
+  .class-item:last-child { margin-bottom: 0; }
+  .class-item.active-class { border-color: var(--orange); }
+  .class-thumb { width: 40px; height: 40px; border-radius: 10px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; color: #555; }
+  .class-info { flex: 1; }
+  .class-name { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+  .class-name.orange { color: var(--orange); }
+  .class-meta { display: flex; align-items: center; gap: 14px; font-size: 11px; color: #666; }
+  .class-meta span { display: flex; align-items: center; gap: 4px; }
+  .class-meta i { font-size: 11px; color: #888; }
+
+  /* UPCOMING LESSON */
+  .upcoming-header { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+  .lesson-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
+  .lesson-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .lesson-icon { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .lesson-icon i { font-size: 15px; color: #333; }
+  .lesson-info { flex: 1; }
+  .lesson-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .lesson-time { font-size: 11.5px; color: #777; }
+  .btn-join-solid { background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 7px 18px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn-join-outline { background: #fff; color: var(--orange); border: 1.5px solid var(--orange); border-radius: 8px; padding: 6px 17px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+
+  /* BOTTOM ROW */
+  .bottom-grid { display: grid; grid-template-columns: 220px 1fr 200px; gap: 16px; margin-bottom: 16px; }
+
+  /* RECENT ENROLLED COURSE */
+  .rec-course-label { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .course-mini-card { background: #f9f9f9; border-radius: 10px; padding: 12px; }
+  .course-mini-edit { width: 28px; height: 28px; border-radius: 6px; background: #fff; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #555; font-size: 12px; margin-bottom: 8px; }
+  .course-mini-name { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .progress-bar-wrap { background: #e5e7eb; border-radius: 20px; height: 5px; margin-bottom: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 5px; background: var(--orange); border-radius: 20px; width: 47%; }
+  .progress-label { font-size: 10.5px; color: #888; text-align: right; }
+
+  /* YOUR RESOURCES */
+  .resources-label { font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+  .resource-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+  .resource-item:last-of-type { border-bottom: none; }
+  .res-icon { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; flex-shrink: 0; }
+  .res-icon.pdf { background: #ef4444; }
+  .res-icon.img { background: #22c55e; }
+  .res-icon.fig { background: #3b82f6; }
+  .res-body { flex: 1; min-width: 0; }
+  .res-name { font-size: 12px; font-weight: 500; margin-bottom: 1px; }
+  .res-desc { font-size: 10px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+  .res-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+  .res-size { font-size: 10px; color: #888; }
+  .res-action { font-size: 10.5px; color: var(--orange); font-weight: 500; cursor: pointer; text-decoration: none; }
+  .res-action.cancel { color: #888; }
+  .res-progress { height: 3px; background: var(--orange); border-radius: 2px; width: 100%; margin-top: 4px; }
+  .see-more-btn { display: block; text-align: center; background: #fff4ed; color: var(--orange); font-size: 12px; font-weight: 500; border: none; border-radius: 8px; padding: 8px; width: 100%; margin-top: 10px; cursor: pointer; text-decoration: none; }
+
+  /* CALENDAR */
+  .cal-box { padding: 14px; }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-month { font-size: 12px; font-weight: 600; color: var(--orange); }
+  .cal-nav { background: none; border: none; color: #888; cursor: pointer; font-size: 13px; padding: 0 2px; }
+  .cal-nav:hover { color: #333; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; }
+  .cal-day-label { font-size: 9.5px; color: #aaa; text-align: center; padding: 2px 0 4px; font-weight: 500; }
+  .cal-day { font-size: 11px; text-align: center; padding: 4px 2px; border-radius: 50%; color: #444; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin: 1px auto; }
+  .cal-day:hover { background: #f5f5f5; }
+  .cal-day.other-month { color: #ddd; }
+  .cal-day.today { background: var(--orange); color: #fff; font-weight: 700; }
+  .cal-day.has-event { font-weight: 700; color: var(--orange); }
+  .cal-day.has-event.today { color: #fff; }
+
+  /* TABLE SECTION */
+  .table-section-grid { display: grid; grid-template-columns: 1fr 200px; gap: 16px; }
+  .table-card { background: #fff; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 11px; color: #888; font-weight: 500; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid #f7f7f7; transition: background .12s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #fafafa; }
+  tbody td { padding: 10px 14px; font-size: 12px; vertical-align: middle; color: #444; }
+  .td-link { color: #888; font-size: 11.5px; text-decoration: none; }
+  .td-link:hover { color: var(--orange); text-decoration: underline; }
+  .td-submitted { color: #888; font-size: 11.5px; }
+
+  /* PAGINATION ROW */
+  .pagination-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-top: 1px solid #f0f0f0; }
+  .show-label { font-size: 12px; color: #555; display: flex; align-items: center; gap: 6px; }
+  .select-sm { border: 1px solid var(--border); border-radius: 5px; padding: 3px 6px; font-size: 12px; color: #333; background: #fff; }
+  .page-btns { display: flex; gap: 3px; }
+  .page-btn { width: 26px; height: 26px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: #fff; color: #555; text-decoration: none; transition: background .15s; }
+  .page-btn:hover { background: #f5f5f5; }
+  .page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .page-btn.dots { border: none; cursor: default; color: #aaa; }
+  .page-btn.dots:hover { background: transparent; }
+
+  /* PERFORMANCE CARD */
+  .perf-card { background: #fff; border-radius: 14px; border: 1px solid var(--border); padding: 16px; }
+  .perf-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .perf-legend { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .perf-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #555; }
+  .perf-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+  .perf-select { border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 11px; color: #555; background: #fff; }
+
+  /* GAUGE */
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; padding: 4px 0 8px; }
+  .gauge-wrap svg { overflow: visible; }
+  .gauge-overall { font-size: 12px; color: #555; margin-top: 6px; text-align: center; }
+  .gauge-overall strong { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="avatar-sm">I</div>
+    <span>Instructor</span>
+  </div>
+  <div class="sidebar-tabs">
+    <span class="active">Favorites</span>
+    <span>Recently</span>
+  </div>
+
+  <div class="nav-label">Overview</div>
+  <div class="manage-group">
+    <a href="#" class="s-nav-item active" style="padding-left:12px;">
+      <i class="bi bi-circle-fill" style="font-size:6px;color:var(--orange);"></i> Overview
+    </a>
+  </div>
+
+  <div class="nav-label">Dashboards</div>
+  <div class="manage-group">
+    <a href="index.html" class="s-nav-item">
+      <i class="bi bi-grid-fill"></i> Overview
+    </a>
+  </div>
+
+  <div class="nav-label">Pages</div>
+  <div class="manage-group">
+    <a href="#" class="s-nav-item">
+      <i class="bi bi-chevron-right" style="font-size:10px;"></i>
+      <i class="bi bi-person-lines-fill"></i> User Profile
+    </a>
+    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">User Accounts</a>
+    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">Subject Codes</a>
+    <a href="#" class="s-nav-item">
+      <i class="bi bi-chevron-right" style="font-size:10px;"></i>
+      <i class="bi bi-person-circle"></i> Account
+    </a>
+  </div>
+
+  <div class="instructor-list">
+    <div class="section-title">Instructors</div>
+    <div class="instructor-item"><div class="i-av av1"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av2"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av3"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av4"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+    <div class="instructor-item"><div class="i-av av5"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP NAV -->
+  <div class="top-nav">
+    <div class="breadcrumb-custom">
+      <i class="bi bi-grid" style="color:#888;"></i>
+      <span>Dashboards</span>
+      <span class="sep">/</span>
+      <span class="current">Overview</span>
+    </div>
+    <div class="top-actions">
+      <div class="search-box">
+        <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
+        <input type="text" placeholder="Search">
+        <span class="shortcut">/</span>
+      </div>
+      <a href="#" class="icon-btn"><i class="bi bi-sun"></i></a>
+      <a href="#" class="icon-btn"><i class="bi bi-clock"></i></a>
+      <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
+      <a href="#" class="icon-btn"><i class="bi bi-grid"></i></a>
+    </div>
+  </div>
+
+  <!-- ROW 1: Recent Classes + Upcoming Lesson -->
+  <div class="content-grid">
+
+    <!-- Recent Enrolled Classes -->
+    <div class="card-box">
+      <div class="rec-classes-header">
+        <h3>Recent enrolled classes</h3>
+        <div class="header-right">
+          <span class="all-label">All</span>
+          <a href="#" class="icon-circle"><i class="bi bi-search"></i></a>
+        </div>
+      </div>
+
+      <!-- Class 1 - active/highlighted -->
+      <div class="class-item active-class">
+        <div class="class-thumb">
+          <i class="bi bi-grid-3x3-gap-fill" style="color:var(--orange);font-size:20px;"></i>
+        </div>
+        <div class="class-info">
+          <div class="class-name orange">Firearm Safety</div>
+          <div class="class-meta">
+            <span><i class="bi bi-clock"></i> 5:30hrs</span>
+            <span><i class="bi bi-collection"></i> 05 Lessons</span>
+            <span><i class="bi bi-check-circle"></i> Assignments</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class 2 -->
+      <div class="class-item">
+        <div class="class-thumb">
+          <i class="bi bi-palette" style="color:#888;font-size:20px;"></i>
+        </div>
+        <div class="class-info">
+          <div class="class-name">Firearms Visualization</div>
+          <div class="class-meta">
+            <span><i class="bi bi-clock"></i> 4:00hrs</span>
+            <span><i class="bi bi-collection"></i> 03 Lessons</span>
+            <span><i class="bi bi-check-circle"></i> Assignments</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Lesson -->
+    <div class="card-box">
+      <div class="upcoming-header">Upcoming Lesson</div>
+
+      <div class="lesson-item">
+        <div class="lesson-icon">
+          <i class="bi bi-mortarboard"></i>
+        </div>
+        <div class="lesson-info">
+          <div class="lesson-name">Gun Safety Training</div>
+          <div class="lesson-time">5:30pm</div>
+        </div>
+        <button class="btn-join-solid">Join</button>
+      </div>
+
+      <div class="lesson-item">
+        <div class="lesson-icon">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="lesson-info">
+          <div class="lesson-name">Assemble and Disassemble</div>
+          <div class="lesson-time">9:00pm</div>
+        </div>
+        <button class="btn-join-outline">Join</button>
+      </div>
+    </div>
+
+  </div><!-- end content-grid -->
+
+  <!-- ROW 2: Recent Course + Resources + Calendar -->
+  <div class="bottom-grid">
+
+    <!-- Recent Enrolled Course -->
+    <div class="card-box">
+      <div class="rec-course-label">Recent enrolled course</div>
+      <div class="course-mini-card">
+        <div class="course-mini-edit">
+          <i class="bi bi-pencil"></i>
+        </div>
+        <div class="course-mini-name">Gun Safety Traning</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-label">14/30 class</div>
+      </div>
+    </div>
+
+    <!-- Your Resources -->
+    <div class="card-box">
+      <div class="resources-label">Your Resources</div>
+
+      <!-- Resource 1 - uploading -->
+      <div class="resource-item">
+        <div class="res-icon pdf"><i class="bi bi-file-earmark-pdf"></i></div>
+        <div class="res-body">
+          <div class="res-name">gun-parts.pdf</div>
+          <div class="res-progress"></div>
+        </div>
+        <div class="res-right">
+          <span class="res-size">8.5 MB</span>
+          <a href="#" class="res-action cancel">Cancel</a>
+        </div>
+      </div>
+
+      <!-- Resource 2 -->
+      <div class="resource-item">
+        <div class="res-icon img"><i class="bi bi-file-earmark-image"></i></div>
+        <div class="res-body">
+          <div class="res-name">firearms_tips.png</div>
+          <div class="res-desc">Let's quickly create some realistic and sharp metal gif-pros</div>
+        </div>
+        <div class="res-right">
+          <span class="res-size">576 KB</span>
+          <a href="#" class="res-action">Download</a>
+        </div>
+      </div>
+
+      <!-- Resource 3 -->
+      <div class="resource-item">
+        <div class="res-icon fig"><i class="bi bi-file-earmark-code"></i></div>
+        <div class="res-body">
+          <div class="res-name">basics_of_firearm.fig</div>
+          <div class="res-desc">An introductory guide to the fundamental principles and practices of User Experience (UX) design.</div>
+        </div>
+        <div class="res-right">
+          <span class="res-size">3.5 MB</span>
+          <a href="#" class="res-action">Download</a>
+        </div>
+      </div>
+
+      <a href="#" class="see-more-btn">see more</a>
+    </div>
+
+    <!-- Calendar -->
+    <div class="card-box cal-box">
+      <div class="cal-header">
+        <button class="cal-nav">&#8249;</button>
+        <span class="cal-month">June 2024</span>
+        <button class="cal-nav">&#8250;</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-day-label">SUN</div>
+        <div class="cal-day-label">MON</div>
+        <div class="cal-day-label">TUE</div>
+        <div class="cal-day-label">WED</div>
+        <div class="cal-day-label">THU</div>
+        <div class="cal-day-label">FRI</div>
+        <div class="cal-day-label">SAT</div>
+
+        <!-- Week 0 partial (May overflow) -->
+        <div class="cal-day other-month">30</div>
+        <div class="cal-day other-month">31</div>
+        <div class="cal-day">1</div>
+        <div class="cal-day">2</div>
+        <div class="cal-day">3</div>
+        <div class="cal-day">4</div>
+        <div class="cal-day">5</div>
+
+        <!-- Week 2 -->
+        <div class="cal-day has-event">6</div>
+        <div class="cal-day">7</div>
+        <div class="cal-day">8</div>
+        <div class="cal-day">9</div>
+        <div class="cal-day today">10</div>
+        <div class="cal-day">11</div>
+        <div class="cal-day">12</div>
+
+        <!-- Week 3 -->
+        <div class="cal-day has-event">13</div>
+        <div class="cal-day">14</div>
+        <div class="cal-day">15</div>
+        <div class="cal-day">16</div>
+        <div class="cal-day">17</div>
+        <div class="cal-day">18</div>
+        <div class="cal-day">19</div>
+
+        <!-- Week 4 -->
+        <div class="cal-day has-event">20</div>
+        <div class="cal-day">21</div>
+        <div class="cal-day">22</div>
+        <div class="cal-day">23</div>
+        <div class="cal-day">24</div>
+        <div class="cal-day">25</div>
+        <div class="cal-day">26</div>
+
+        <!-- Week 5 -->
+        <div class="cal-day has-event">27</div>
+        <div class="cal-day">28</div>
+        <div class="cal-day">29</div>
+        <div class="cal-day">30</div>
+      </div>
+    </div>
+
+  </div><!-- end bottom-grid -->
+
+  <!-- ROW 3: Table + Performance -->
+  <div class="table-section-grid">
+
+    <!-- Activity Table -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Subject Code</th>
+            <th>Activity Type</th>
+            <th>Timestamp</th>
+            <th>View Profile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><span class="td-submitted">Submitted</span></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+          <tr>
+            <td>Retual Retual</td>
+            <td>C101</td>
+            <td>Submitted Assessment</td>
+            <td>1:00 PM</td>
+            <td><a href="#" class="td-link">Upload</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination-row">
+        <div class="show-label">
+          Show
+          <select class="select-sm">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+          </select>
+          Row
+        </div>
+        <div class="page-btns">
+          <a href="#" class="page-btn"><i class="bi bi-chevron-left" style="font-size:10px;"></i></a>
+          <a href="#" class="page-btn active">1</a>
+          <a href="#" class="page-btn">2</a>
+          <a href="#" class="page-btn">3</a>
+          <a href="#" class="page-btn">4</a>
+          <a href="#" class="page-btn">5</a>
+          <span class="page-btn dots">…</span>
+          <a href="#" class="page-btn">10</a>
+          <a href="#" class="page-btn"><i class="bi bi-chevron-right" style="font-size:10px;"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Card -->
+    <div class="perf-card">
+      <div class="perf-title">Performance</div>
+      <div class="perf-legend">
+        <div class="perf-legend-item">
+          <div class="perf-dot"></div>
+          <span>Assignment Submission<br>Performance</span>
+        </div>
+        <select class="perf-select">
+          <option>Monthly</option>
+          <option>Weekly</option>
+          <option>Yearly</option>
+        </select>
+      </div>
+
+      <!-- Gauge SVG -->
+      <div class="gauge-wrap">
+        <svg width="140" height="90" viewBox="0 0 140 90">
+          <!-- Background arc -->
+          <path d="M 15 80 A 55 55 0 0 1 125 80"
+            fill="none" stroke="#f0f0f0" stroke-width="14" stroke-linecap="round"/>
+          <!-- Orange arc (~80%) -->
+          <path d="M 15 80 A 55 55 0 0 1 125 80"
+            fill="none" stroke="#f97316" stroke-width="14" stroke-linecap="round"
+            stroke-dasharray="150 173" stroke-dashoffset="0"/>
+          <!-- Needle dot -->
+          <circle cx="110" cy="38" r="5" fill="#f97316"/>
+          <circle cx="110" cy="38" r="2.5" fill="#fff"/>
+        </svg>
+        <div class="gauge-overall">Overall: <strong>8.966</strong></div>
+      </div>
+    </div>
+
+  </div><!-- end table-section-grid -->
+
+</div><!-- end main -->
+</div><!-- end app-wrapper -->
+</body>
+</html>
