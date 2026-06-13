@@ -49,27 +49,30 @@
     .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
     .page-section { padding-top: 1.5rem; }
 
-    /* PANEL with fused red header banner */
     .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
 
+    /* Panel banner — no icon, text only */
     .panel-banner {
       background: #fff;
       padding: 1rem 1.4rem;
       display: flex; align-items: center; gap: .85rem;
       border-bottom: 1px solid var(--border);
     }
-    .panel-banner .ico-wrap {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: #FDECEA;
-      border: 1px solid #F1948A;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1.1rem; flex-shrink: 0;
-    }
     .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
     .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
 
-    .panel-header { padding: .9rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
-    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    /* Filter row — compact, single line */
+    .panel-header {
+      padding: .75rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; white-space: nowrap; }
+    .filter-controls { display: flex; align-items: center; gap: .4rem; flex-wrap: nowrap; }
     .panel-body { padding: 1.2rem; }
 
     .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
@@ -80,13 +83,14 @@
     .btn-dark:hover { background: #2C3E50; color: #fff; }
     .btn-purple { background: #8E44AD; color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-purple:hover { background: #6C3483; color: #fff; }
+    .btn-teal { background: #16A085; color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-teal:hover { background: #0E6655; color: #fff; }
     .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 
-    .search-wrap { position: relative; max-width: 280px; width: 100%; }
+    .search-wrap { position: relative; width: 220px; }
     .search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
     .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; }
     .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
-    .filter-controls { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
     .role-filter { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 34px; padding: 0 .6rem; color: var(--text-main); }
     .role-filter:focus { outline: none; border-color: var(--red); background: #fff; }
 
@@ -101,6 +105,7 @@
     .badge-inactive   { background: #FDECEA; color: #C0392B; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
     .badge-instructor { background: #FEF9E7; color: #B7770D; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
     .badge-secretary  { background: #F4ECF7; color: #8E44AD; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-dean       { background: #E8F6F3; color: #16A085; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
 
     .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
     .btn-icon.edit   { background: #EBF3FF; color: #2980B9; }
@@ -123,6 +128,8 @@
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .filter-controls { flex-wrap: wrap; }
+      .search-wrap { width: 100%; }
     }
   </style>
 </head>
@@ -155,7 +162,7 @@
     <li>
       <a href="program-head-staff-management.html" class="active">
         <i class="bi bi-person-badge-fill"></i> Staff Management
-        <span class="sidebar-badge">8</span>
+        <span class="sidebar-badge">9</span>
       </a>
     </li>
     <li>
@@ -179,21 +186,21 @@
 
     <div class="panel">
 
-      <!-- RED BANNER HEADER — fused to top of card -->
+      <!-- BANNER — text only, no icon -->
       <div class="panel-banner">
-        <div class="ico-wrap"><i class="bi bi-person-badge-fill"></i></div>
         <div>
           <h2>Staff Management</h2>
-          <p>Manage instructor and secretary accounts</p>
+          <p>Manage dean, instructor, and secretary accounts</p>
         </div>
       </div>
 
-      <!-- FILTER ROW -->
+      <!-- FILTER ROW — role dropdown & search side by side -->
       <div class="panel-header">
         <h5>All Staff Accounts</h5>
         <div class="filter-controls">
           <select class="role-filter" id="roleFilter" onchange="renderTable()">
             <option value="all">All Roles</option>
+            <option value="Dean">Dean</option>
             <option value="Instructor">Instructor</option>
             <option value="Secretary">Secretary</option>
           </select>
@@ -206,6 +213,9 @@
 
       <div class="panel-body">
         <div class="action-bar">
+          <button class="btn-teal" data-bs-toggle="modal" data-bs-target="#addDeanModal">
+            <i class="bi bi-person-workspace"></i> Add Dean
+          </button>
           <button class="btn-dark" data-bs-toggle="modal" data-bs-target="#addInstructorModal">
             <i class="bi bi-person-badge-fill"></i> Add Instructor
           </button>
@@ -243,6 +253,58 @@
 </main>
 
 <div class="fta-toast-stack" id="toastStack"></div>
+
+<!-- MODAL: ADD DEAN -->
+<div class="modal fade" id="addDeanModal" tabindex="-1" aria-labelledby="addDeanLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem">
+        <h5 class="modal-title" id="addDeanLabel" style="font-size:.95rem;font-weight:700">
+          <i class="bi bi-person-workspace me-2" style="color:#16A085"></i>Add Dean
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem">
+        <div class="mb-3">
+          <label class="form-label" style="font-size:.77rem;font-weight:600">Dean ID <span class="text-danger">*</span></label>
+          <input type="text" class="form-control form-control-sm" placeholder="e.g. DEAN-2024-001" style="border-radius:8px;font-size:.82rem" />
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">First Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-sm" placeholder="First name" style="border-radius:8px;font-size:.82rem" />
+          </div>
+          <div class="col-6">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">Middle Name</label>
+            <input type="text" class="form-control form-control-sm" placeholder="Middle name" style="border-radius:8px;font-size:.82rem" />
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-8">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">Last Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-sm" placeholder="Last name" style="border-radius:8px;font-size:.82rem" />
+          </div>
+          <div class="col-4">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">Suffix</label>
+            <input type="text" class="form-control form-control-sm" placeholder="Jr., III" style="border-radius:8px;font-size:.82rem" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" style="font-size:.77rem;font-weight:600">Gmail <span class="text-danger">*</span></label>
+          <input type="email" class="form-control form-control-sm" placeholder="dean@gmail.com" style="border-radius:8px;font-size:.82rem" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" style="font-size:.77rem;font-weight:600">Phone Number <span class="text-danger">*</span></label>
+          <input type="tel" class="form-control form-control-sm" placeholder="09XXXXXXXXX" style="border-radius:8px;font-size:.82rem" />
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-teal" data-bs-dismiss="modal" onclick="showToast('Dean saved (demo only)', 'bi-person-workspace')"><i class="bi bi-check-lg"></i> Save Dean</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL: ADD INSTRUCTOR -->
 <div class="modal fade" id="addInstructorModal" tabindex="-1" aria-labelledby="addInstructorLabel" aria-hidden="true">
@@ -356,20 +418,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script>
   const USERS = [
-    { id:'01', name:'Ana Reyes',        email:'areyes@fta.edu',      role:'Instructor', subject:'FIRE102, FIRE103', status:'Active',   color:'#27AE60', initials:'AR' },
-    { id:'02', name:'Ramon Bautista',   email:'rbautista@fta.edu',   role:'Instructor', subject:'FIRE103',          status:'Inactive', color:'#8E44AD', initials:'RB' },
-    { id:'03', name:'Elena Marquez',    email:'emarquez@fta.edu',    role:'Secretary',  subject:'—',                status:'Active',   color:'#8E44AD', initials:'EM' },
-    { id:'04', name:'Diego Fernandez',  email:'dfernandez@fta.edu',  role:'Instructor', subject:'FIRE101',          status:'Active',   color:'#27AE60', initials:'DF' },
-    { id:'05', name:'Carmela Lopez',    email:'clopez@fta.edu',      role:'Instructor', subject:'FIRE104, FIRE105', status:'Active',   color:'#8E44AD', initials:'CL' },
-    { id:'06', name:'Patricia Aquino',  email:'paquino@fta.edu',     role:'Secretary',  subject:'—',                status:'Active',   color:'#8E44AD', initials:'PA' },
-    { id:'07', name:'Antonio Reyes',    email:'areyes2@fta.edu',     role:'Instructor', subject:'FIRE102',          status:'Active',   color:'#27AE60', initials:'AR' },
-    { id:'08', name:'Grace Villanueva', email:'gvillanueva@fta.edu', role:'Secretary',  subject:'—',                status:'Active',   color:'#8E44AD', initials:'GV' }
+    { id:'01', name:'Dr. Maria Santos',  email:'msantos@fta.edu',     role:'Dean',       subject:'—',                status:'Active',   color:'#16A085', initials:'MS' },
+    { id:'02', name:'Ana Reyes',         email:'areyes@fta.edu',      role:'Instructor', subject:'FIRE102, FIRE103', status:'Active',   color:'#27AE60', initials:'AR' },
+    { id:'03', name:'Ramon Bautista',    email:'rbautista@fta.edu',   role:'Instructor', subject:'FIRE103',          status:'Inactive', color:'#8E44AD', initials:'RB' },
+    { id:'04', name:'Elena Marquez',     email:'emarquez@fta.edu',    role:'Secretary',  subject:'—',                status:'Active',   color:'#8E44AD', initials:'EM' },
+    { id:'05', name:'Diego Fernandez',   email:'dfernandez@fta.edu',  role:'Instructor', subject:'FIRE101',          status:'Active',   color:'#27AE60', initials:'DF' },
+    { id:'06', name:'Carmela Lopez',     email:'clopez@fta.edu',      role:'Instructor', subject:'FIRE104, FIRE105', status:'Active',   color:'#8E44AD', initials:'CL' },
+    { id:'07', name:'Patricia Aquino',   email:'paquino@fta.edu',     role:'Secretary',  subject:'—',                status:'Active',   color:'#8E44AD', initials:'PA' },
+    { id:'08', name:'Antonio Reyes',     email:'areyes2@fta.edu',     role:'Instructor', subject:'FIRE102',          status:'Active',   color:'#27AE60', initials:'AR' },
+    { id:'09', name:'Grace Villanueva',  email:'gvillanueva@fta.edu', role:'Secretary',  subject:'—',                status:'Active',   color:'#8E44AD', initials:'GV' }
   ];
 
   const PAGE_SIZE = 6;
   let currentPage = 1;
 
   function roleBadge(role) {
+    if (role === 'Dean')       return '<span class="badge-dean">Dean</span>';
     if (role === 'Instructor') return '<span class="badge-instructor">Instructor</span>';
     return '<span class="badge-secretary">Secretary</span>';
   }

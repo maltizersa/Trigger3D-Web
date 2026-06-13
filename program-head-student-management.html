@@ -49,27 +49,31 @@
     .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
     .page-section { padding-top: 1.5rem; }
 
-    /* PANEL with fused white banner */
     .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
 
+    /* Banner — no icon */
     .panel-banner {
       background: #fff;
       padding: 1rem 1.4rem;
       display: flex; align-items: center; gap: .85rem;
       border-bottom: 1px solid var(--border);
     }
-    .panel-banner .ico-wrap {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: #FDECEA;
-      border: 1px solid #F1948A;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1.1rem; flex-shrink: 0;
-    }
     .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
     .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
 
-    .panel-header { padding: .9rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
-    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    /* Filter row — compact, single line */
+    .panel-header {
+      padding: .75rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; white-space: nowrap; }
+    .filter-controls { display: flex; align-items: center; gap: .4rem; flex-wrap: nowrap; }
+
     .panel-body { padding: 1.2rem; }
 
     .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
@@ -84,11 +88,10 @@
     .btn-purple:hover { background: #6C3483; color: #fff; }
     .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 
-    .search-wrap { position: relative; max-width: 280px; width: 100%; }
+    .search-wrap { position: relative; width: 220px; }
     .search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
     .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; }
     .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
-    .filter-controls { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
     .role-filter { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 34px; padding: 0 .6rem; color: var(--text-main); }
     .role-filter:focus { outline: none; border-color: var(--red); background: #fff; }
 
@@ -146,6 +149,8 @@
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .filter-controls { flex-wrap: wrap; }
+      .search-wrap { width: 100%; }
     }
   </style>
 </head>
@@ -202,16 +207,15 @@
 
     <div class="panel">
 
-      <!-- WHITE BANNER HEADER — fused to top of card -->
+      <!-- BANNER — text only, no icon -->
       <div class="panel-banner">
-        <div class="ico-wrap"><i class="bi bi-people-fill"></i></div>
         <div>
           <h2>Student Management</h2>
           <p>Manage student accounts</p>
         </div>
       </div>
 
-      <!-- FILTER ROW -->
+      <!-- FILTER ROW — dropdown & search side by side -->
       <div class="panel-header">
         <h5>All Student Accounts</h5>
         <div class="filter-controls">
