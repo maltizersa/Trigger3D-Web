@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module Management — FTA System</title>
+  <title>Module Management — Trigger3D</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
@@ -11,7 +11,6 @@
       --red:        #C0392B;
       --red-dark:   #922B21;
       --red-light:  #F1948A;
-      --white:      #FFFFFF;
       --bg:         #C0392B;
       --sidebar-bg: #FFFFFF;
       --text-main:  #1A2535;
@@ -21,184 +20,109 @@
       --topbar-h:   60px;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    /* TOP BAR — white, matching staff management */
-    .topbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1040;
-      height: var(--topbar-h);
-      background: #FFFFFF;
-      display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-brand {
-      display: flex; align-items: center; gap: .55rem;
-      color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer;
-    }
-    .topbar-brand .icon-box {
-      width: 32px; height: 32px; background: #FDECEA;
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; color: var(--red);
-    }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
     .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
-    .topbar-right .notif-btn {
-      background: #FDECEA; border: none; border-radius: 50%;
-      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1rem; position: relative; cursor: pointer;
-    }
-    .notif-dot {
-      position: absolute; top: 5px; right: 6px;
-      width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff;
-    }
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: var(--red);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A;
-    }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
     .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
     .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
-    .sidebar-toggle {
-      display: none; background: none; border: none;
-      color: var(--red); font-size: 1.3rem; cursor: pointer;
-    }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
 
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030;
-      width: var(--sidebar-w);
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      overflow-y: auto; overflow-x: hidden;
-      transition: transform .25s ease;
-    }
-    .sidebar-label {
-      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--text-muted); padding: 1.1rem 1.1rem .3rem;
-    }
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
     .sidebar-nav { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a {
-      display: flex; align-items: center; gap: .65rem;
-      padding: .6rem 1.1rem; color: var(--text-muted);
-      text-decoration: none; font-size: .85rem; font-weight: 500;
-      border-left: 3px solid transparent;
-      transition: all .15s;
-    }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
     .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
     .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
     .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
-    .sidebar-badge {
-      margin-left: auto; background: var(--red); color: #fff;
-      font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px;
-    }
-    .sidebar-footer {
-      margin-top: auto; padding: 1rem 1.1rem;
-      border-top: 1px solid var(--border);
-    }
-    .sidebar-footer a {
-      display: flex; align-items: center; gap: .55rem;
-      color: var(--text-muted); font-size: .82rem; text-decoration: none;
-    }
+    .sidebar-badge { margin-left: auto; background: var(--red); color: #fff; font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
     .sidebar-footer a:hover { color: var(--red); }
 
-    /* MAIN */
-    .main-content {
-      margin-left: var(--sidebar-w);
-      padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem;
-      transition: margin-left .25s ease;
-      background: transparent;
-    }
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; background: transparent; }
 
-    .page-section { padding-top: 1.5rem; }
-    .section-heading { display: flex; align-items: center; gap: .65rem; margin-bottom: 1.2rem; }
-    .section-heading .ico-wrap {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: #fff; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1.05rem; flex-shrink: 0;
-      border: 1px solid rgba(255,255,255,.5);
-    }
-    .section-heading h2 { font-size: 1.12rem; font-weight: 700; margin: 0; color: #fff; }
-    .section-heading p { font-size: .76rem; margin: 0; color: rgba(255,255,255,.85); }
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
 
-    .panel {
-      background: #fff; border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.12);
-      border: 1px solid rgba(255,255,255,.2); overflow: hidden;
-    }
-    .panel-header {
-      padding: .9rem 1.2rem; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
-    }
-    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    .panel-header { padding: .75rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; white-space: nowrap; }
     .panel-body { padding: 1.2rem; }
 
-    .btn-red {
-      background: var(--red); color: #fff; border: none;
-      font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-red:hover { background: var(--red-dark); color: #fff; }
-    .btn-outline-red {
-      background: transparent; color: var(--red);
-      border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600;
-      padding: .4rem .85rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-outline-red:hover { background: var(--red); color: #fff; }
     .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 
-    .search-wrap { position: relative; max-width: 280px; width: 100%; }
+    .filter-controls { display: flex; align-items: center; gap: .4rem; flex-wrap: nowrap; }
+    .role-filter { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 34px; padding: 0 .6rem; color: var(--text-main); }
+    .role-filter:focus { outline: none; border-color: var(--red); background: #fff; }
+    .search-wrap { position: relative; width: 200px; }
     .search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
-    .search-wrap input {
-      padding-left: 2rem; font-size: .82rem; border-radius: 8px;
-      border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px;
-    }
+    .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; }
     .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
 
     .mgmt-table { width: 100%; font-size: .82rem; border-collapse: collapse; }
-    .mgmt-table thead th {
-      background: #fff; color: var(--text-main);
-      padding: .65rem 1rem; font-weight: 700; font-size: .73rem;
-      letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
-      border-bottom: 2px solid var(--border);
-    }
-    .mgmt-table thead th:first-child { border-radius: 6px 0 0 0; }
-    .mgmt-table thead th:last-child  { border-radius: 0 6px 0 0; }
+    .mgmt-table thead th { background: #fff; color: var(--text-main); padding: .65rem 1rem; font-weight: 700; font-size: .73rem; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; border-bottom: 2px solid var(--border); }
     .mgmt-table tbody tr { border-bottom: 1px solid var(--border); }
     .mgmt-table tbody tr:hover { background: #FEF9F9; }
     .mgmt-table tbody td { padding: .7rem 1rem; vertical-align: middle; }
     .tbl-wrap { overflow-x: auto; }
 
-    .subject-code {
-      display: inline-block; background: var(--red); color: #fff;
-      font-size: .7rem; font-weight: 800; letter-spacing: .07em;
-      padding: .2rem .6rem; border-radius: 6px;
-    }
+    .subject-code { display: inline-block; background: var(--red); color: #fff; font-size: .67rem; font-weight: 800; letter-spacing: .07em; padding: .2rem .6rem; border-radius: 6px; }
 
-    .btn-icon {
-      width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; font-size: .82rem;
-    }
+    .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
     .btn-icon.edit { background: #EBF3FF; color: #2980B9; }
     .btn-icon.del  { background: #FDECEA; color: #C0392B; }
     .btn-icon.dl   { background: #E8F8F2; color: #1A9B59; }
     .btn-icon:hover { filter: brightness(.88); }
 
-    .module-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0;
-    }
+    .module-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
     .module-icon.pdf { background: #FDECEA; color: #C0392B; }
     .module-icon.vid { background: #EBF3FF; color: #2980B9; }
     .module-icon.doc { background: #E8F8F2; color: #1A9B59; }
+
+    /* row checkbox */
+    .row-check { accent-color: var(--red); width: 15px; height: 15px; cursor: pointer; }
+    .selected-row { background: #FEF9F9 !important; }
+
+    /* MODAL */
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-sm-custom { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); padding: .42rem .7rem; width: 100%; background: #F9FAFB; transition: border-color .15s, background .15s; }
+    .form-control-sm-custom:focus { outline: none; border-color: var(--red); background: #fff; }
+    select.form-control-sm-custom { height: 36px; }
+
+    /* DROP ZONE */
+    .drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 1.6rem 1rem; text-align: center; cursor: pointer; transition: .15s; background: #F9FAFB; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--red); background: #FEF9F9; }
+    .drop-zone i { font-size: 1.8rem; color: var(--red); display: block; margin-bottom: .4rem; }
+    .drop-zone .dz-text { font-size: .82rem; font-weight: 600; color: var(--text-main); }
+    .drop-zone .dz-sub  { font-size: .73rem; color: var(--text-muted); margin-top: .2rem; }
+    .drop-zone input[type=file] { display: none; }
+
+    .file-preview { display: none; background: #F9FAFB; border: 1px solid var(--border); border-radius: 8px; padding: .6rem .85rem; margin-top: .6rem; font-size: .82rem; align-items: center; gap: .6rem; }
+    .file-preview.show { display: flex; }
+    .file-preview i { color: var(--red); font-size: 1rem; }
+    .file-preview .fname { font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-preview .fsize { color: var(--text-muted); font-size: .74rem; white-space: nowrap; }
+    .file-preview .rm { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: .85rem; padding: 0; }
+    .file-preview .rm:hover { color: var(--red); }
+
+    .modal-section-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin: 1rem 0 .55rem; }
+
+    /* TOAST */
+    .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1200; display: flex; flex-direction: column; gap: .5rem; }
+    .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
+    .fta-toast.show { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
@@ -208,6 +132,8 @@
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .filter-controls { flex-wrap: wrap; }
+      .search-wrap { width: 100%; }
     }
   </style>
 </head>
@@ -223,15 +149,9 @@
     <div>Trigger3D <small>Admin</small></div>
   </a>
   <div class="topbar-right">
-    <button class="notif-btn">
-      <i class="bi bi-bell"></i>
-      <span class="notif-dot"></span>
-    </button>
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
     <div class="avatar">PH</div>
-    <div class="topbar-user d-none d-sm-block">
-      Maj. R. Santos
-      <small>Program Head</small>
-    </div>
+    <div class="topbar-user d-none d-sm-block">Maj. R. Santos <small>Program Head</small></div>
   </div>
 </header>
 
@@ -241,26 +161,14 @@
   <ul class="sidebar-nav">
     <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
   </ul>
-
   <span class="sidebar-label">Management</span>
   <ul class="sidebar-nav">
-    <li>
-      <a href="program-head-staff-management.html">
-        <i class="bi bi-person-badge-fill"></i> Staff Management
-        <span class="sidebar-badge">8</span>
-      </a>
-    </li>
-    <li>
-      <a href="program-head-student-management.html">
-        <i class="bi bi-people-fill"></i> Student Management
-        <span class="sidebar-badge">10</span>
-      </a>
-    </li>
+    <li><a href="program-head-staff-management.html"><i class="bi bi-person-badge-fill"></i> Staff Management <span class="sidebar-badge">8</span></a></li>
+    <li><a href="program-head-student-management.html"><i class="bi bi-people-fill"></i> Student Management <span class="sidebar-badge">10</span></a></li>
     <li><a href="program-head-subject-management.html"><i class="bi bi-journal-text"></i> Subject Management</a></li>
     <li><a href="program-head-module-management.html" class="active"><i class="bi bi-folder2-open"></i> Module Management</a></li>
     <li><a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
   </ul>
-
   <div class="sidebar-footer">
     <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
   </div>
@@ -268,180 +176,409 @@
 
 <!-- MAIN CONTENT -->
 <main class="main-content">
-  <section id="program-head-module-management" class="page-section">
-    <div class="section-heading">
-      <div class="ico-wrap"><i class="bi bi-folder2-open"></i></div>
+  <div class="panel">
+    <div class="panel-banner">
       <div>
         <h2>Module Management</h2>
         <p>Upload, update, and manage learning content</p>
       </div>
     </div>
 
-    <div class="panel">
-      <div class="panel-header">
-        <h5>All Modules</h5>
-        <div class="d-flex gap-2 flex-wrap">
-          <select style="font-size:.79rem;border-radius:8px;border:1.5px solid var(--border);padding:.3rem .65rem;background:#F9FAFB;">
-            <option>All Subjects</option>
-            <option>FIRE101</option><option>FIRE102</option><option>FIRE103</option>
-          </select>
-          <div class="search-wrap" style="max-width:200px;">
-            <i class="bi bi-search"></i>
-            <input type="search" placeholder="Search modules…" />
-          </div>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="action-bar">
-          <button class="btn-red"><i class="bi bi-cloud-upload-fill"></i> Upload Module</button>
-          <button class="btn-outline-red"><i class="bi bi-cloud-download"></i> Download Selected</button>
-        </div>
-        <div class="tbl-wrap">
-          <table class="mgmt-table">
-            <thead>
-              <tr>
-                <th>#</th><th>Module Name</th><th>Subject</th><th>Uploaded By</th><th>Date</th><th>Size</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="color:var(--text-muted)">01</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="module-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
-                    <div>
-                      <div style="font-weight:600;font-size:.83rem;">Intro to Firearm Safety.pdf</div>
-                      <div style="font-size:.69rem;color:var(--text-muted);">PDF Document</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="subject-code" style="font-size:.67rem;">FIRE101</span></td>
-                <td>Instr. Reyes</td>
-                <td>Jun 1, 2026</td>
-                <td>2.4 MB</td>
-                <td>
-                  <div class="d-flex gap-1">
-                    <button class="btn-icon dl"><i class="bi bi-download"></i></button>
-                    <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">02</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="module-icon vid"><i class="bi bi-play-btn-fill"></i></div>
-                    <div>
-                      <div style="font-weight:600;font-size:.83rem;">Assembly Procedures — Demo.mp4</div>
-                      <div style="font-size:.69rem;color:var(--text-muted);">Video Lecture</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="subject-code" style="font-size:.67rem;">FIRE102</span></td>
-                <td>Instr. Mendoza</td>
-                <td>Jun 3, 2026</td>
-                <td>145 MB</td>
-                <td>
-                  <div class="d-flex gap-1">
-                    <button class="btn-icon dl"><i class="bi bi-download"></i></button>
-                    <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">03</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="module-icon doc"><i class="bi bi-file-earmark-word-fill"></i></div>
-                    <div>
-                      <div style="font-weight:600;font-size:.83rem;">Disassembly Step-by-Step Guide.docx</div>
-                      <div style="font-size:.69rem;color:var(--text-muted);">Word Document</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="subject-code" style="font-size:.67rem;">FIRE103</span></td>
-                <td>Instr. Bautista</td>
-                <td>Jun 5, 2026</td>
-                <td>1.1 MB</td>
-                <td>
-                  <div class="d-flex gap-1">
-                    <button class="btn-icon dl"><i class="bi bi-download"></i></button>
-                    <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">04</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="module-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
-                    <div>
-                      <div style="font-weight:600;font-size:.83rem;">Safety Protocols &amp; Regulations.pdf</div>
-                      <div style="font-size:.69rem;color:var(--text-muted);">PDF Document</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="subject-code" style="font-size:.67rem;">FIRE104</span></td>
-                <td>Instr. Reyes</td>
-                <td>Jun 7, 2026</td>
-                <td>3.8 MB</td>
-                <td>
-                  <div class="d-flex gap-1">
-                    <button class="btn-icon dl"><i class="bi bi-download"></i></button>
-                    <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">05</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="module-icon vid"><i class="bi bi-play-btn-fill"></i></div>
-                    <div>
-                      <div style="font-weight:600;font-size:.83rem;">Live Range Practice — Module 1.mp4</div>
-                      <div style="font-size:.69rem;color:var(--text-muted);">Video Lecture</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="subject-code" style="font-size:.67rem;">FIRE105</span></td>
-                <td>Instr. Mendoza</td>
-                <td>Jun 10, 2026</td>
-                <td>220 MB</td>
-                <td>
-                  <div class="d-flex gap-1">
-                    <button class="btn-icon dl"><i class="bi bi-download"></i></button>
-                    <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-          <span style="font-size:.77rem;color:var(--text-muted);">Showing 1–5 of 47 modules</span>
-          <nav>
-            <ul class="pagination pagination-sm mb-0">
-              <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-              <li class="page-item active"><a class="page-link" href="#" style="background:var(--red);border-color:var(--red);">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">»</a></li>
-            </ul>
-          </nav>
+    <div class="panel-header">
+      <h5>All Modules</h5>
+      <div class="filter-controls">
+        <select class="role-filter" id="subjectFilter" onchange="renderTable()">
+          <option value="all">All Subjects</option>
+          <option value="FIRE101">FIRE101</option>
+          <option value="FIRE102">FIRE102</option>
+          <option value="FIRE103">FIRE103</option>
+          <option value="FIRE104">FIRE104</option>
+          <option value="FIRE105">FIRE105</option>
+        </select>
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="search" id="searchInput" placeholder="Search modules…" oninput="renderTable()" />
         </div>
       </div>
     </div>
-  </section>
+
+    <div class="panel-body">
+      <div class="action-bar">
+        <button class="btn-red" data-bs-toggle="modal" data-bs-target="#uploadModal" onclick="resetUpload()">
+          <i class="bi bi-cloud-upload-fill"></i> Upload Module
+        </button>
+        <button class="btn-outline-red" id="dlSelectedBtn" onclick="downloadSelected()" disabled>
+          <i class="bi bi-cloud-download"></i> Download Selected (<span id="selCount">0</span>)
+        </button>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="mgmt-table">
+          <thead>
+            <tr>
+              <th style="width:36px;"><input type="checkbox" class="row-check" id="checkAll" onclick="toggleAll(this)" /></th>
+              <th>#</th><th>Module Name</th><th>Subject</th><th>Uploaded By</th><th>Date</th><th>Size</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="moduleTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+        <span style="font-size:.77rem;color:var(--text-muted)" id="pageSummary"></span>
+        <nav><ul class="pagination pagination-sm mb-0" id="pagination" style="gap:.2rem"></ul></nav>
+      </div>
+    </div>
+  </div>
 
   <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
-    Trigger3D &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+    Trigger3D Module Management &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
   </div>
 </main>
 
+<div class="fta-toast-stack" id="toastStack"></div>
+
+<!-- ===== MODAL: UPLOAD MODULE ===== -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-cloud-upload-fill me-2" style="color:var(--red)"></i>Upload Module
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+
+        <!-- Drop zone -->
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()"
+          ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+          <input type="file" id="fileInput" accept=".pdf,.mp4,.docx,.pptx,.xlsx" onchange="onFileSelect(this)" />
+          <i class="bi bi-cloud-arrow-up-fill"></i>
+          <div class="dz-text">Click to browse or drag &amp; drop</div>
+          <div class="dz-sub">PDF, MP4, DOCX, PPTX, XLSX — max 500 MB</div>
+        </div>
+        <div class="file-preview" id="filePreview">
+          <i class="bi bi-file-earmark-fill" id="previewIcon"></i>
+          <span class="fname" id="previewName"></span>
+          <span class="fsize" id="previewSize"></span>
+          <button class="rm" onclick="clearFile()" title="Remove"><i class="bi bi-x-lg"></i></button>
+        </div>
+
+        <div class="modal-section-label" style="margin-top:1rem;">Module Details</div>
+
+        <div class="mb-3">
+          <label class="form-label-sm">Module Title <span class="text-danger">*</span></label>
+          <input type="text" id="um_title" class="form-control-sm-custom" placeholder="e.g. Intro to Firearm Safety" />
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label-sm">Subject <span class="text-danger">*</span></label>
+            <select id="um_subject" class="form-control-sm-custom">
+              <option value="">— Select —</option>
+              <option value="FIRE101">FIRE101 — Firearm Fundamentals</option>
+              <option value="FIRE102">FIRE102 — Firearm Assembly</option>
+              <option value="FIRE103">FIRE103 — Firearm Disassembly</option>
+              <option value="FIRE104">FIRE104 — Safety Protocols</option>
+              <option value="FIRE105">FIRE105 — Range Practice</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="form-label-sm">Uploaded By <span class="text-danger">*</span></label>
+            <select id="um_uploader" class="form-control-sm-custom">
+              <option value="">— Select —</option>
+              <option>Instr. Reyes</option>
+              <option>Instr. Mendoza</option>
+              <option>Instr. Bautista</option>
+              <option>Instr. Fernandez</option>
+              <option>Instr. Lopez</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="um_error" style="display:none;font-size:.79rem;color:var(--red);background:#FDECEA;border-radius:8px;padding:.45rem .75rem;">
+          <i class="bi bi-exclamation-circle me-1"></i><span id="um_error_msg"></span>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" onclick="saveModule()"><i class="bi bi-cloud-upload-fill"></i> Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── DATA ── */
+  let MODULES = [
+    { id:1, name:'Intro to Firearm Safety.pdf',          type:'pdf', subject:'FIRE101', uploader:'Instr. Reyes',    date:'Jun 1, 2026',  size:'2.4 MB',  selected:false },
+    { id:2, name:'Assembly Procedures — Demo.mp4',        type:'vid', subject:'FIRE102', uploader:'Instr. Mendoza',  date:'Jun 3, 2026',  size:'145 MB',  selected:false },
+    { id:3, name:'Disassembly Step-by-Step Guide.docx',   type:'doc', subject:'FIRE103', uploader:'Instr. Bautista', date:'Jun 5, 2026',  size:'1.1 MB',  selected:false },
+    { id:4, name:'Safety Protocols & Regulations.pdf',    type:'pdf', subject:'FIRE104', uploader:'Instr. Reyes',    date:'Jun 7, 2026',  size:'3.8 MB',  selected:false },
+    { id:5, name:'Live Range Practice — Module 1.mp4',    type:'vid', subject:'FIRE105', uploader:'Instr. Mendoza',  date:'Jun 10, 2026', size:'220 MB',  selected:false },
+    { id:6, name:'Firearm Parts Diagram.pdf',             type:'pdf', subject:'FIRE101', uploader:'Instr. Reyes',    date:'Jun 2, 2026',  size:'1.8 MB',  selected:false },
+    { id:7, name:'Cleaning & Maintenance Guide.docx',     type:'doc', subject:'FIRE102', uploader:'Instr. Mendoza',  date:'Jun 4, 2026',  size:'0.9 MB',  selected:false },
+    { id:8, name:'Disassembly Quiz — Module 2.pdf',       type:'pdf', subject:'FIRE103', uploader:'Instr. Bautista', date:'Jun 6, 2026',  size:'0.5 MB',  selected:false },
+    { id:9, name:'Range Commands & Procedures.pdf',       type:'pdf', subject:'FIRE105', uploader:'Instr. Mendoza',  date:'Jun 11, 2026', size:'1.2 MB',  selected:false },
+  ];
+  let nextId = 10;
+
+  const PAGE_SIZE = 6;
+  let currentPage = 1;
+
+  /* ── ICONS ── */
+  function typeIcon(t) {
+    if (t==='pdf') return `<div class="module-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>`;
+    if (t==='vid') return `<div class="module-icon vid"><i class="bi bi-play-btn-fill"></i></div>`;
+    return `<div class="module-icon doc"><i class="bi bi-file-earmark-word-fill"></i></div>`;
+  }
+  function typeLabel(t) {
+    if (t==='pdf') return 'PDF Document';
+    if (t==='vid') return 'Video Lecture';
+    return 'Word Document';
+  }
+  function previewIconClass(t) {
+    if (t==='pdf') return 'bi-file-earmark-pdf-fill';
+    if (t==='vid') return 'bi-play-btn-fill';
+    return 'bi-file-earmark-word-fill';
+  }
+  function extToType(ext) {
+    if (['mp4','mov','avi'].includes(ext)) return 'vid';
+    if (['pdf'].includes(ext)) return 'pdf';
+    return 'doc';
+  }
+
+  /* ── FILTER ── */
+  function getFiltered() {
+    const sub = document.getElementById('subjectFilter').value;
+    const q   = document.getElementById('searchInput').value.trim().toLowerCase();
+    return MODULES.filter(m => {
+      const subMatch = sub==='all' || m.subject===sub;
+      const qMatch   = !q || m.name.toLowerCase().includes(q) || m.uploader.toLowerCase().includes(q);
+      return subMatch && qMatch;
+    });
+  }
+
+  /* ── RENDER ── */
+  function renderTable() {
+    const filtered   = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = 1;
+    const start = (currentPage-1)*PAGE_SIZE;
+    const page  = filtered.slice(start, start+PAGE_SIZE);
+
+    const tbody = document.getElementById('moduleTableBody');
+    if (page.length===0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4" style="color:var(--text-muted)">No modules match your search/filter.</td></tr>`;
+    } else {
+      tbody.innerHTML = page.map((m,i) => `
+        <tr class="${m.selected?'selected-row':''}" data-id="${m.id}">
+          <td><input type="checkbox" class="row-check" ${m.selected?'checked':''} onchange="toggleRow(${m.id},this)" /></td>
+          <td style="color:var(--text-muted)">${String(start+i+1).padStart(2,'0')}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              ${typeIcon(m.type)}
+              <div>
+                <div style="font-weight:600;font-size:.83rem;">${m.name}</div>
+                <div style="font-size:.69rem;color:var(--text-muted);">${typeLabel(m.type)}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="subject-code">${m.subject}</span></td>
+          <td>${m.uploader}</td>
+          <td>${m.date}</td>
+          <td>${m.size}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <button class="btn-icon dl" title="Download" onclick="downloadOne('${m.name}')"><i class="bi bi-download"></i></button>
+              <button class="btn-icon edit" title="Edit" onclick="showToast('Editing ${m.name} (demo only)','bi-pencil-fill')"><i class="bi bi-pencil-fill"></i></button>
+              <button class="btn-icon del" title="Delete" onclick="deleteModule(${m.id})"><i class="bi bi-trash-fill"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // summary
+    const total = filtered.length;
+    document.getElementById('pageSummary').textContent = total===0
+      ? 'Showing 0 of 0 modules'
+      : `Showing ${start+1}–${Math.min(start+PAGE_SIZE,total)} of ${total} modules`;
+
+    // pagination
+    const pag = document.getElementById('pagination');
+    let html = `<li class="page-item ${currentPage===1?'disabled':''}"><a class="page-link" href="#" onclick="goTo(${currentPage-1});return false;">«</a></li>`;
+    for (let p=1;p<=totalPages;p++) {
+      html += `<li class="page-item ${p===currentPage?'active':''}"><a class="page-link" href="#" style="${p===currentPage?'background:var(--red);border-color:var(--red)':''}" onclick="goTo(${p});return false;">${p}</a></li>`;
+    }
+    html += `<li class="page-item ${currentPage===totalPages?'disabled':''}"><a class="page-link" href="#" onclick="goTo(${currentPage+1});return false;">»</a></li>`;
+    pag.innerHTML = html;
+
+    // check-all state
+    const visIds = page.map(m=>m.id);
+    const allChecked = visIds.length>0 && visIds.every(id=>MODULES.find(m=>m.id===id)?.selected);
+    document.getElementById('checkAll').checked = allChecked;
+
+    updateDlBtn();
+  }
+
+  function goTo(p) {
+    const totalPages = Math.max(1, Math.ceil(getFiltered().length/PAGE_SIZE));
+    if (p<1||p>totalPages) return;
+    currentPage=p; renderTable();
+  }
+
+  /* ── SELECTION ── */
+  function toggleRow(id, cb) {
+    const m = MODULES.find(x=>x.id===id);
+    if (m) m.selected = cb.checked;
+    const row = cb.closest('tr');
+    row.classList.toggle('selected-row', cb.checked);
+    updateDlBtn();
+    // sync check-all
+    const filtered = getFiltered();
+    const start = (currentPage-1)*PAGE_SIZE;
+    const page  = filtered.slice(start, start+PAGE_SIZE);
+    const allChecked = page.length>0 && page.every(m=>m.selected);
+    document.getElementById('checkAll').checked = allChecked;
+  }
+
+  function toggleAll(cb) {
+    const filtered = getFiltered();
+    const start = (currentPage-1)*PAGE_SIZE;
+    const page  = filtered.slice(start, start+PAGE_SIZE);
+    page.forEach(m => { m.selected = cb.checked; });
+    renderTable();
+    document.getElementById('checkAll').checked = cb.checked;
+  }
+
+  function updateDlBtn() {
+    const count = MODULES.filter(m=>m.selected).length;
+    document.getElementById('selCount').textContent = count;
+    document.getElementById('dlSelectedBtn').disabled = count===0;
+  }
+
+  /* ── DOWNLOAD ── */
+  function downloadOne(name) {
+    showToast(`Downloading "${name}" (demo only)`, 'bi-download');
+  }
+
+  function downloadSelected() {
+    const sel = MODULES.filter(m=>m.selected);
+    if (!sel.length) return;
+    showToast(`Downloading ${sel.length} module${sel.length>1?'s':''} (demo only)`, 'bi-cloud-download');
+    // clear selection
+    MODULES.forEach(m=>m.selected=false);
+    renderTable();
+  }
+
+  /* ── DELETE ── */
+  function deleteModule(id) {
+    const m = MODULES.find(x=>x.id===id);
+    if (!m) return;
+    if (!confirm(`Remove "${m.name}"? (front-end only)`)) return;
+    MODULES = MODULES.filter(x=>x.id!==id);
+    showToast(`"${m.name}" removed (demo only)`, 'bi-trash-fill');
+    renderTable();
+  }
+
+  /* ── UPLOAD MODAL ── */
+  let selectedFile = null;
+
+  function resetUpload() {
+    selectedFile = null;
+    document.getElementById('fileInput').value='';
+    document.getElementById('filePreview').classList.remove('show');
+    document.getElementById('um_title').value='';
+    document.getElementById('um_subject').value='';
+    document.getElementById('um_uploader').value='';
+    document.getElementById('um_error').style.display='none';
+  }
+
+  function onDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('drag-over'); }
+  function onDragLeave(e){ document.getElementById('dropZone').classList.remove('drag-over'); }
+  function onDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) applyFile(file);
+  }
+  function onFileSelect(input) {
+    if (input.files[0]) applyFile(input.files[0]);
+  }
+
+  function applyFile(file) {
+    selectedFile = file;
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const type = extToType(ext);
+    document.getElementById('previewIcon').className = 'bi ' + previewIconClass(type);
+    document.getElementById('previewName').textContent = file.name;
+    document.getElementById('previewSize').textContent = formatSize(file.size);
+    document.getElementById('filePreview').classList.add('show');
+    // auto-fill title from filename
+    if (!document.getElementById('um_title').value) {
+      document.getElementById('um_title').value = file.name.replace(/\.[^.]+$/, '');
+    }
+  }
+
+  function clearFile() {
+    selectedFile = null;
+    document.getElementById('fileInput').value='';
+    document.getElementById('filePreview').classList.remove('show');
+  }
+
+  function formatSize(bytes) {
+    if (bytes >= 1024*1024) return (bytes/(1024*1024)).toFixed(1)+' MB';
+    if (bytes >= 1024)       return (bytes/1024).toFixed(0)+' KB';
+    return bytes+' B';
+  }
+
+  function saveModule() {
+    const title    = document.getElementById('um_title').value.trim();
+    const subject  = document.getElementById('um_subject').value;
+    const uploader = document.getElementById('um_uploader').value;
+    const err      = document.getElementById('um_error');
+    const errMsg   = document.getElementById('um_error_msg');
+
+    if (!selectedFile) { errMsg.textContent='Please select a file to upload.'; err.style.display='block'; return; }
+    if (!title)        { errMsg.textContent='Module title is required.';        err.style.display='block'; return; }
+    if (!subject)      { errMsg.textContent='Please select a subject.';         err.style.display='block'; return; }
+    if (!uploader)     { errMsg.textContent='Please select an instructor.';     err.style.display='block'; return; }
+
+    err.style.display='none';
+    const ext  = selectedFile.name.split('.').pop().toLowerCase();
+    const type = extToType(ext);
+    const today = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+    MODULES.unshift({
+      id: nextId++,
+      name: selectedFile.name,
+      type, subject, uploader,
+      date: today,
+      size: formatSize(selectedFile.size),
+      selected: false
+    });
+
+    bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+    showToast(`"${selectedFile.name}" uploaded (demo only)`, 'bi-cloud-upload-fill');
+    currentPage = 1;
+    renderTable();
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg, icon) {
+    const stack = document.getElementById('toastStack');
+    const el    = document.createElement('div');
+    el.className='fta-toast';
+    el.innerHTML=`<i class="bi ${icon||'bi-info-circle-fill'}"></i><span>${msg}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(()=>el.classList.add('show'));
+    setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),250); },2400);
+  }
+
+  document.addEventListener('DOMContentLoaded', renderTable);
+</script>
 </body>
 </html>
