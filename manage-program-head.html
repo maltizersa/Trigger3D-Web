@@ -119,17 +119,27 @@
       background: transparent;
     }
 
-    /* SECTION HEADING */
-    .page-section { padding-top: 1.5rem; }
-    .section-heading { display: flex; align-items: center; gap: .65rem; margin-bottom: 1.2rem; }
-    .section-heading .ico-wrap {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: #fff; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1.05rem; flex-shrink: 0;
-      border: 1px solid rgba(255,255,255,.5);
+    /* PANEL */
+    .panel {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.2); overflow: hidden;
     }
-    .section-heading h2 { font-size: 1.12rem; font-weight: 700; margin: 0; color: #fff; }
-    .section-heading p { font-size: .76rem; margin: 0; color: rgba(255,255,255,.85); }
+    .panel-banner {
+      background: #fff;
+      padding: 1rem 1.4rem;
+      display: flex; align-items: center; gap: .85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+
+    .panel-header {
+      padding: .75rem 1.2rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+    }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; white-space: nowrap; }
+    .panel-body { padding: 1.2rem; }
 
     /* STAT CARDS */
     .stat-card {
@@ -160,19 +170,6 @@
     .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
     .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
     .stat-card.purple { background: linear-gradient(135deg, #8E44AD, #6C3483); }
-
-    /* PANEL */
-    .panel {
-      background: #fff; border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.12);
-      border: 1px solid rgba(255,255,255,.2); overflow: hidden;
-    }
-    .panel-header {
-      padding: .9rem 1.2rem; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
-    }
-    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
-    .panel-body { padding: 1.2rem; }
 
     /* PROGRESS BAR */
     .prog-bar-wrap { background: #EAECEF; border-radius: 99px; height: 6px; overflow: hidden; }
@@ -207,16 +204,14 @@
       letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
       border-bottom: 2px solid var(--border);
     }
-    .mgmt-table thead th:first-child { border-radius: 6px 0 0 0; }
-    .mgmt-table thead th:last-child  { border-radius: 0 6px 0 0; }
     .mgmt-table tbody tr { border-bottom: 1px solid var(--border); }
     .mgmt-table tbody tr:hover { background: #FEF9F9; }
     .mgmt-table tbody td { padding: .7rem 1rem; vertical-align: middle; }
     .tbl-wrap { overflow-x: auto; }
 
-    .badge-active     { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; }
-    .badge-inprogress { background: #EBF3FF; color: #1565C0; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; }
-    .badge-completed  { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; }
+    .badge-active     { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-inprogress { background: #EBF3FF; color: #1565C0; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-completed  { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
 
     .subject-code {
       display: inline-block; background: var(--red); color: #fff;
@@ -234,6 +229,13 @@
     }
     .btn-icon.view { background: #EBF3FF; color: #2980B9; }
     .btn-icon:hover { filter: brightness(.88); }
+
+    .filter-controls { display: flex; align-items: center; gap: .4rem; flex-wrap: nowrap; }
+    .role-filter, .status-filter {
+      font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border);
+      background: #F9FAFB; height: 34px; padding: 0 .6rem; color: var(--text-main);
+    }
+    .role-filter:focus, .status-filter:focus { outline: none; border-color: var(--red); background: #fff; }
 
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
@@ -309,141 +311,146 @@
 
 <!-- MAIN CONTENT -->
 <main class="main-content">
-  <section id="dashboard" class="page-section">
-    <div class="section-heading">
-      <div class="ico-wrap"><i class="bi bi-grid-1x2-fill"></i></div>
-      <div>
-        <h2>Dashboard</h2>
-        <p>Quick overview of the training management system</p>
-      </div>
-    </div>
 
-    <!-- STAT CARDS -->
-    <div class="row g-3 mb-3">
-      <div class="col-6 col-md-4 col-xl-2">
-        <div class="stat-card red">
-          <i class="bi bi-person-lines-fill card-icon"></i>
-          <div class="stat-value">124</div>
-          <div class="stat-label">Total Students</div>
-          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+6 this month</div>
+  <!-- DASHBOARD PANEL -->
+  <section id="dashboard" class="mb-4">
+    <div class="panel">
+      <div class="panel-banner">
+        <div>
+          <h2>Dashboard</h2>
+          <p>Quick overview of the training management system</p>
         </div>
       </div>
-      <div class="col-6 col-md-4 col-xl-2">
-        <div class="stat-card orange">
-          <i class="bi bi-person-badge-fill card-icon"></i>
-          <div class="stat-value">18</div>
-          <div class="stat-label">Total Instructors</div>
-          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+2 this month</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-4 col-xl-2">
-        <div class="stat-card purple">
-          <i class="bi bi-journal-bookmark-fill card-icon"></i>
-          <div class="stat-value">12</div>
-          <div class="stat-label">Subject Codes</div>
-          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+1 this term</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-4 col-xl-2">
-        <div class="stat-card blue">
-          <i class="bi bi-folder-fill card-icon"></i>
-          <div class="stat-value">47</div>
-          <div class="stat-label">Total Modules</div>
-          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+5 new uploads</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-4 col-xl-2">
-        <div class="stat-card teal">
-          <i class="bi bi-patch-check-fill card-icon"></i>
-          <div class="stat-value">89</div>
-          <div class="stat-label">Completed</div>
-          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>72% rate</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-4 col-xl-2">
-        <div class="stat-card green">
-          <i class="bi bi-hourglass-split card-icon"></i>
-          <div class="stat-value">35</div>
-          <div class="stat-label">In Progress</div>
-          <div class="stat-delta"><i class="bi bi-arrow-down-short"></i>28% remaining</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- RECENT ACTIVITY + COMPLETION SUMMARY -->
-    <div class="row g-3">
-      <div class="col-12 col-lg-8">
-        <div class="panel">
-          <div class="panel-header">
-            <h5><i class="bi bi-clock-history me-2 text-secondary"></i>Recent Activities</h5>
-            <a href="#" style="font-size:.77rem;color:var(--red);">View all</a>
+      <div class="panel-body">
+        <!-- STAT CARDS -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-card red">
+              <i class="bi bi-person-lines-fill card-icon"></i>
+              <div class="stat-value">124</div>
+              <div class="stat-label">Total Students</div>
+              <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+6 this month</div>
+            </div>
           </div>
-          <div class="panel-body p-0">
-            <ul class="activity-feed px-3 pb-2">
-              <li>
-                <div class="act-dot add"><i class="bi bi-person-plus"></i></div>
-                <div class="act-text">
-                  <strong>New student enrolled</strong> — Maria Santos was added to <em>FIRE101</em>
-                  <div class="act-time"><i class="bi bi-clock me-1"></i>2 minutes ago · by Admin Cruz</div>
-                </div>
-              </li>
-              <li>
-                <div class="act-dot upload"><i class="bi bi-cloud-upload"></i></div>
-                <div class="act-text">
-                  <strong>Module uploaded</strong> — "Firearm Handling Safety Protocols.pdf" added to <em>FIRE102</em>
-                  <div class="act-time"><i class="bi bi-clock me-1"></i>18 minutes ago · by Instr. Reyes</div>
-                </div>
-              </li>
-              <li>
-                <div class="act-dot edit"><i class="bi bi-pencil"></i></div>
-                <div class="act-text">
-                  <strong>Subject updated</strong> — FIRE103 syllabus edited by <em>Instr. Bautista</em>
-                  <div class="act-time"><i class="bi bi-clock me-1"></i>1 hour ago · by Instr. Bautista</div>
-                </div>
-              </li>
-              <li>
-                <div class="act-dot reset"><i class="bi bi-key"></i></div>
-                <div class="act-text">
-                  <strong>Password reset</strong> — Account for <em>Juan Dela Cruz</em> was reset
-                  <div class="act-time"><i class="bi bi-clock me-1"></i>3 hours ago · by Program Head</div>
-                </div>
-              </li>
-              <li>
-                <div class="act-dot add"><i class="bi bi-person-check"></i></div>
-                <div class="act-text">
-                  <strong>Instructor assigned</strong> — Instr. Mendoza assigned to <em>FIRE104</em>
-                  <div class="act-time"><i class="bi bi-clock me-1"></i>Yesterday, 4:30 PM</div>
-                </div>
-              </li>
-            </ul>
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-card orange">
+              <i class="bi bi-person-badge-fill card-icon"></i>
+              <div class="stat-value">18</div>
+              <div class="stat-label">Total Instructors</div>
+              <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+2 this month</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-card purple">
+              <i class="bi bi-journal-bookmark-fill card-icon"></i>
+              <div class="stat-value">12</div>
+              <div class="stat-label">Subject Codes</div>
+              <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+1 this term</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-card blue">
+              <i class="bi bi-folder-fill card-icon"></i>
+              <div class="stat-value">47</div>
+              <div class="stat-label">Total Modules</div>
+              <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+5 new uploads</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-card teal">
+              <i class="bi bi-patch-check-fill card-icon"></i>
+              <div class="stat-value">89</div>
+              <div class="stat-label">Completed</div>
+              <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>72% rate</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-card green">
+              <i class="bi bi-hourglass-split card-icon"></i>
+              <div class="stat-value">35</div>
+              <div class="stat-label">In Progress</div>
+              <div class="stat-delta"><i class="bi bi-arrow-down-short"></i>28% remaining</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-12 col-lg-4">
-        <div class="panel h-100">
-          <div class="panel-header">
-            <h5><i class="bi bi-pie-chart-fill me-2 text-secondary"></i>Completion Summary</h5>
+
+        <!-- RECENT ACTIVITY + COMPLETION SUMMARY -->
+        <div class="row g-3">
+          <div class="col-12 col-lg-8">
+            <div class="panel">
+              <div class="panel-header">
+                <h5><i class="bi bi-clock-history me-2 text-secondary"></i>Recent Activities</h5>
+                <a href="#" style="font-size:.77rem;color:var(--red);">View all</a>
+              </div>
+              <div class="panel-body p-0">
+                <ul class="activity-feed px-3 pb-2">
+                  <li>
+                    <div class="act-dot add"><i class="bi bi-person-plus"></i></div>
+                    <div class="act-text">
+                      <strong>New student enrolled</strong> — Maria Santos was added to <em>FIRE101</em>
+                      <div class="act-time"><i class="bi bi-clock me-1"></i>2 minutes ago · by Admin Cruz</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="act-dot upload"><i class="bi bi-cloud-upload"></i></div>
+                    <div class="act-text">
+                      <strong>Module uploaded</strong> — "Firearm Handling Safety Protocols.pdf" added to <em>FIRE102</em>
+                      <div class="act-time"><i class="bi bi-clock me-1"></i>18 minutes ago · by Instr. Reyes</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="act-dot edit"><i class="bi bi-pencil"></i></div>
+                    <div class="act-text">
+                      <strong>Subject updated</strong> — FIRE103 syllabus edited by <em>Instr. Bautista</em>
+                      <div class="act-time"><i class="bi bi-clock me-1"></i>1 hour ago · by Instr. Bautista</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="act-dot reset"><i class="bi bi-key"></i></div>
+                    <div class="act-text">
+                      <strong>Password reset</strong> — Account for <em>Juan Dela Cruz</em> was reset
+                      <div class="act-time"><i class="bi bi-clock me-1"></i>3 hours ago · by Program Head</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="act-dot add"><i class="bi bi-person-check"></i></div>
+                    <div class="act-text">
+                      <strong>Instructor assigned</strong> — Instr. Mendoza assigned to <em>FIRE104</em>
+                      <div class="act-time"><i class="bi bi-clock me-1"></i>Yesterday, 4:30 PM</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-          <div class="panel-body">
-            <div class="mb-3">
-              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE101 — Fundamentals</span><strong>91%</strong></div>
-              <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:91%"></div></div>
-            </div>
-            <div class="mb-3">
-              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE102 — Assembly</span><strong>76%</strong></div>
-              <div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:76%"></div></div>
-            </div>
-            <div class="mb-3">
-              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE103 — Disassembly</span><strong>58%</strong></div>
-              <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:58%"></div></div>
-            </div>
-            <div class="mb-3">
-              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE104 — Safety Protocols</span><strong>82%</strong></div>
-              <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:82%"></div></div>
-            </div>
-            <div>
-              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE105 — Range Practice</span><strong>44%</strong></div>
-              <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:44%"></div></div>
+          <div class="col-12 col-lg-4">
+            <div class="panel h-100">
+              <div class="panel-header">
+                <h5><i class="bi bi-pie-chart-fill me-2 text-secondary"></i>Completion Summary</h5>
+              </div>
+              <div class="panel-body">
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE101 — Fundamentals</span><strong>91%</strong></div>
+                  <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:91%"></div></div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE102 — Assembly</span><strong>76%</strong></div>
+                  <div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:76%"></div></div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE103 — Disassembly</span><strong>58%</strong></div>
+                  <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:58%"></div></div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE104 — Safety Protocols</span><strong>82%</strong></div>
+                  <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:82%"></div></div>
+                </div>
+                <div>
+                  <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE105 — Range Practice</span><strong>44%</strong></div>
+                  <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:44%"></div></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -451,30 +458,36 @@
     </div>
   </section>
 
-  <!-- STUDENT PROGRESS -->
-  <section id="student-progress" class="page-section mt-4">
-    <div class="section-heading">
-      <div class="ico-wrap"><i class="bi bi-bar-chart-line-fill"></i></div>
-      <div>
-        <h2>Student Progress Monitoring</h2>
-        <p>Track completion, assessment scores &amp; learning status</p>
-      </div>
-    </div>
-
+  <!-- STUDENT PROGRESS PANEL -->
+  <section id="student-progress">
     <div class="panel">
+      <div class="panel-banner">
+        <div>
+          <h2>Student Progress Monitoring</h2>
+          <p>Track completion, assessment scores &amp; learning status</p>
+        </div>
+      </div>
+
       <div class="panel-header">
         <h5>All Students Progress</h5>
-        <div class="d-flex gap-2 flex-wrap">
-          <select style="font-size:.79rem;border-radius:8px;border:1.5px solid var(--border);padding:.3rem .65rem;background:#F9FAFB;">
-            <option>All Subjects</option>
-            <option>FIRE101</option><option>FIRE102</option><option>FIRE103</option>
+        <div class="filter-controls">
+          <select class="role-filter" id="subjectFilter" onchange="renderProgress()">
+            <option value="all">All Subjects</option>
+            <option value="FIRE101">FIRE101</option>
+            <option value="FIRE102">FIRE102</option>
+            <option value="FIRE103">FIRE103</option>
+            <option value="FIRE104">FIRE104</option>
+            <option value="FIRE105">FIRE105</option>
           </select>
-          <select style="font-size:.79rem;border-radius:8px;border:1.5px solid var(--border);padding:.3rem .65rem;background:#F9FAFB;">
-            <option>All Statuses</option>
-            <option>Active</option><option>Completed</option><option>In Progress</option>
+          <select class="status-filter" id="statusFilter" onchange="renderProgress()">
+            <option value="all">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Completed">Completed</option>
+            <option value="In Progress">In Progress</option>
           </select>
         </div>
       </div>
+
       <div class="panel-body">
         <div class="tbl-wrap">
           <table class="mgmt-table">
@@ -483,140 +496,13 @@
                 <th>#</th><th>Student</th><th>Subject</th><th>Level</th><th>Score</th><th>Completion</th><th>Status</th><th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td style="color:var(--text-muted)">01</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm" style="background:var(--red);">JC</div>
-                    John Cruz
-                  </div>
-                </td>
-                <td><span class="subject-code">FIRE101</span></td>
-                <td style="font-weight:700;color:#2980B9;">Level 3</td>
-                <td style="font-weight:700;color:#27AE60;">85%</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:90%"></div></div></div>
-                    <span style="font-size:.79rem;font-weight:600;">90%</span>
-                  </div>
-                </td>
-                <td><span class="badge-active">Active</span></td>
-                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">02</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm" style="background:var(--red);">MS</div>
-                    Maria Santos
-                  </div>
-                </td>
-                <td><span class="subject-code">FIRE101</span></td>
-                <td style="font-weight:700;color:#2980B9;">Level 2</td>
-                <td style="font-weight:700;color:#27AE60;">78%</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:65%"></div></div></div>
-                    <span style="font-size:.79rem;font-weight:600;">65%</span>
-                  </div>
-                </td>
-                <td><span class="badge-inprogress">In Progress</span></td>
-                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">03</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm" style="background:#2980B9;">JD</div>
-                    Jose Dela Cruz
-                  </div>
-                </td>
-                <td><span class="subject-code">FIRE102</span></td>
-                <td style="font-weight:700;color:#2980B9;">Level 4</td>
-                <td style="font-weight:700;color:#27AE60;">92%</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:100%"></div></div></div>
-                    <span style="font-size:.79rem;font-weight:600;">100%</span>
-                  </div>
-                </td>
-                <td><span class="badge-completed">Completed</span></td>
-                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">04</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm" style="background:#8E44AD;">LA</div>
-                    Liza Aquino
-                  </div>
-                </td>
-                <td><span class="subject-code">FIRE103</span></td>
-                <td style="font-weight:700;color:#2980B9;">Level 1</td>
-                <td style="font-weight:700;color:#E67E22;">55%</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:40%"></div></div></div>
-                    <span style="font-size:.79rem;font-weight:600;">40%</span>
-                  </div>
-                </td>
-                <td><span class="badge-inprogress">In Progress</span></td>
-                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">05</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm" style="background:#1ABC9C;">RP</div>
-                    Roberto Pascual
-                  </div>
-                </td>
-                <td><span class="subject-code">FIRE104</span></td>
-                <td style="font-weight:700;color:#2980B9;">Level 3</td>
-                <td style="font-weight:700;color:#27AE60;">88%</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:85%"></div></div></div>
-                    <span style="font-size:.79rem;font-weight:600;">85%</span>
-                  </div>
-                </td>
-                <td><span class="badge-active">Active</span></td>
-                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
-              </tr>
-              <tr>
-                <td style="color:var(--text-muted)">06</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm" style="background:#E67E22;">GV</div>
-                    Grace Villanueva
-                  </div>
-                </td>
-                <td><span class="subject-code">FIRE105</span></td>
-                <td style="font-weight:700;color:#2980B9;">Level 2</td>
-                <td style="font-weight:700;color:#E67E22;">62%</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:50%"></div></div></div>
-                    <span style="font-size:.79rem;font-weight:600;">50%</span>
-                  </div>
-                </td>
-                <td><span class="badge-inprogress">In Progress</span></td>
-                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
-              </tr>
-            </tbody>
+            <tbody id="progressTableBody"></tbody>
           </table>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-          <span style="font-size:.77rem;color:var(--text-muted);">Showing 1–6 of 124 students</span>
+          <span style="font-size:.77rem;color:var(--text-muted)" id="progressSummary"></span>
           <nav>
-            <ul class="pagination pagination-sm mb-0">
-              <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-              <li class="page-item active"><a class="page-link" href="#" style="background:var(--red);border-color:var(--red);">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">»</a></li>
-            </ul>
+            <ul class="pagination pagination-sm mb-0" id="progressPagination" style="gap:.2rem"></ul>
           </nav>
         </div>
       </div>
@@ -628,5 +514,110 @@
   </div>
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  const STUDENTS = [
+    { id:'01', name:'John Cruz',       initials:'JC', color:'#C0392B', subject:'FIRE101', level:'Level 3', score:'85%', scoreVal:85, completion:90, status:'Active' },
+    { id:'02', name:'Maria Santos',    initials:'MS', color:'#C0392B', subject:'FIRE101', level:'Level 2', score:'78%', scoreVal:78, completion:65, status:'In Progress' },
+    { id:'03', name:'Jose Dela Cruz',  initials:'JD', color:'#2980B9', subject:'FIRE102', level:'Level 4', score:'92%', scoreVal:92, completion:100, status:'Completed' },
+    { id:'04', name:'Liza Aquino',     initials:'LA', color:'#8E44AD', subject:'FIRE103', level:'Level 1', score:'55%', scoreVal:55, completion:40, status:'In Progress' },
+    { id:'05', name:'Roberto Pascual', initials:'RP', color:'#1ABC9C', subject:'FIRE104', level:'Level 3', score:'88%', scoreVal:88, completion:85, status:'Active' },
+    { id:'06', name:'Grace Villanueva',initials:'GV', color:'#E67E22', subject:'FIRE105', level:'Level 2', score:'62%', scoreVal:62, completion:50, status:'In Progress' },
+    { id:'07', name:'Carlos Ramos',    initials:'CR', color:'#27AE60', subject:'FIRE101', level:'Level 4', score:'94%', scoreVal:94, completion:100, status:'Completed' },
+    { id:'08', name:'Ana Flores',      initials:'AF', color:'#C0392B', subject:'FIRE102', level:'Level 2', score:'71%', scoreVal:71, completion:60, status:'Active' },
+    { id:'09', name:'Miguel Torres',   initials:'MT', color:'#8E44AD', subject:'FIRE103', level:'Level 3', score:'80%', scoreVal:80, completion:75, status:'Active' },
+    { id:'10', name:'Elena Bautista',  initials:'EB', color:'#2980B9', subject:'FIRE104', level:'Level 1', score:'48%', scoreVal:48, completion:35, status:'In Progress' },
+    { id:'11', name:'Rico Mendoza',    initials:'RM', color:'#1ABC9C', subject:'FIRE105', level:'Level 4', score:'91%', scoreVal:91, completion:95, status:'Active' },
+    { id:'12', name:'Sofia Reyes',     initials:'SR', color:'#E67E22', subject:'FIRE102', level:'Level 3', score:'83%', scoreVal:83, completion:80, status:'Active' },
+  ];
+
+  const PAGE_SIZE = 6;
+  let currentPage = 1;
+
+  function barClass(pct) {
+    if (pct >= 80) return 'hi';
+    if (pct >= 55) return 'mid';
+    return 'low';
+  }
+  function scoreColor(val) {
+    if (val >= 80) return '#27AE60';
+    if (val >= 60) return '#E67E22';
+    return '#C0392B';
+  }
+  function statusBadge(s) {
+    if (s === 'Active')      return '<span class="badge-active">Active</span>';
+    if (s === 'Completed')   return '<span class="badge-completed">Completed</span>';
+    return '<span class="badge-inprogress">In Progress</span>';
+  }
+
+  function getFiltered() {
+    const sub = document.getElementById('subjectFilter').value;
+    const st  = document.getElementById('statusFilter').value;
+    return STUDENTS.filter(s => {
+      const subMatch = sub === 'all' || s.subject === sub;
+      const stMatch  = st  === 'all' || s.status  === st;
+      return subMatch && stMatch;
+    });
+  }
+
+  function renderProgress() {
+    const filtered = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = 1;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const page  = filtered.slice(start, start + PAGE_SIZE);
+
+    const tbody = document.getElementById('progressTableBody');
+    if (page.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4" style="color:var(--text-muted)">No students match your filters.</td></tr>`;
+    } else {
+      tbody.innerHTML = page.map(s => `
+        <tr>
+          <td style="color:var(--text-muted)">${s.id}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-sm" style="background:${s.color}">${s.initials}</div>
+              ${s.name}
+            </div>
+          </td>
+          <td><span class="subject-code">${s.subject}</span></td>
+          <td style="font-weight:700;color:#2980B9;">${s.level}</td>
+          <td style="font-weight:700;color:${scoreColor(s.scoreVal)}">${s.score}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill ${barClass(s.completion)}" style="width:${s.completion}%"></div></div></div>
+              <span style="font-size:.79rem;font-weight:600;">${s.completion}%</span>
+            </div>
+          </td>
+          <td>${statusBadge(s.status)}</td>
+          <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
+        </tr>
+      `).join('');
+    }
+
+    const summary = document.getElementById('progressSummary');
+    summary.textContent = filtered.length === 0
+      ? 'Showing 0 of 0 students'
+      : `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} of ${filtered.length} students`;
+
+    const pag = document.getElementById('progressPagination');
+    let html = `<li class="page-item ${currentPage===1?'disabled':''}"><a class="page-link" href="#" onclick="goTo(${currentPage-1});return false;">«</a></li>`;
+    for (let p = 1; p <= totalPages; p++) {
+      html += `<li class="page-item ${p===currentPage?'active':''}"><a class="page-link" href="#" style="${p===currentPage?'background:var(--red);border-color:var(--red)':''}" onclick="goTo(${p});return false;">${p}</a></li>`;
+    }
+    html += `<li class="page-item ${currentPage===totalPages?'disabled':''}"><a class="page-link" href="#" onclick="goTo(${currentPage+1});return false;">»</a></li>`;
+    pag.innerHTML = html;
+  }
+
+  function goTo(p) {
+    const filtered = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (p < 1 || p > totalPages) return;
+    currentPage = p;
+    renderProgress();
+  }
+
+  document.addEventListener('DOMContentLoaded', renderProgress);
+</script>
 </body>
 </html>

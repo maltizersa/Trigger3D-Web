@@ -11,7 +11,6 @@
       --red:        #C0392B;
       --red-dark:   #922B21;
       --red-light:  #F1948A;
-      --white:      #FFFFFF;
       --bg:         #C0392B;
       --sidebar-bg: #FFFFFF;
       --text-main:  #1A2535;
@@ -21,146 +20,53 @@
       --topbar-h:   60px;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    /* TOP BAR — white, matching staff management */
-    .topbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1040;
-      height: var(--topbar-h);
-      background: #FFFFFF;
-      display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-brand {
-      display: flex; align-items: center; gap: .55rem;
-      color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer;
-    }
-    .topbar-brand .icon-box {
-      width: 32px; height: 32px; background: #FDECEA;
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; color: var(--red);
-    }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
     .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
-    .topbar-right .notif-btn {
-      background: #FDECEA; border: none; border-radius: 50%;
-      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1rem; position: relative; cursor: pointer;
-    }
-    .notif-dot {
-      position: absolute; top: 5px; right: 6px;
-      width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff;
-    }
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: var(--red);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A;
-    }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
     .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
     .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
-    .sidebar-toggle {
-      display: none; background: none; border: none;
-      color: var(--red); font-size: 1.3rem; cursor: pointer;
-    }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
 
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030;
-      width: var(--sidebar-w);
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      overflow-y: auto; overflow-x: hidden;
-      transition: transform .25s ease;
-    }
-    .sidebar-label {
-      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--text-muted); padding: 1.1rem 1.1rem .3rem;
-    }
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
     .sidebar-nav { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a {
-      display: flex; align-items: center; gap: .65rem;
-      padding: .6rem 1.1rem; color: var(--text-muted);
-      text-decoration: none; font-size: .85rem; font-weight: 500;
-      border-left: 3px solid transparent;
-      transition: all .15s;
-    }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
     .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
     .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
     .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
-    .sidebar-badge {
-      margin-left: auto; background: var(--red); color: #fff;
-      font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px;
-    }
-    .sidebar-footer {
-      margin-top: auto; padding: 1rem 1.1rem;
-      border-top: 1px solid var(--border);
-    }
-    .sidebar-footer a {
-      display: flex; align-items: center; gap: .55rem;
-      color: var(--text-muted); font-size: .82rem; text-decoration: none;
-    }
+    .sidebar-badge { margin-left: auto; background: var(--red); color: #fff; font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
     .sidebar-footer a:hover { color: var(--red); }
 
-    /* MAIN */
-    .main-content {
-      margin-left: var(--sidebar-w);
-      padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem;
-      transition: margin-left .25s ease;
-      background: transparent;
-    }
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; background: transparent; }
 
-    .page-section { padding-top: 1.5rem; }
-    .section-heading { display: flex; align-items: center; gap: .65rem; margin-bottom: 1.2rem; }
-    .section-heading .ico-wrap {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: #fff; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1.05rem; flex-shrink: 0;
-      border: 1px solid rgba(255,255,255,.5);
-    }
-    .section-heading h2 { font-size: 1.12rem; font-weight: 700; margin: 0; color: #fff; }
-    .section-heading p { font-size: .76rem; margin: 0; color: rgba(255,255,255,.85); }
+    /* PANEL */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-body { padding: 1.2rem; }
 
-    .btn-red {
-      background: var(--red); color: #fff; border: none;
-      font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
+    /* BUTTONS */
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-red:hover { background: var(--red-dark); color: #fff; }
-    .btn-outline-red {
-      background: transparent; color: var(--red);
-      border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600;
-      padding: .4rem .85rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-outline-red:hover { background: var(--red); color: #fff; }
-    .btn-dark {
-      background: var(--text-main); color: #fff; border: none;
-      font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
+    .btn-dark { background: var(--text-main); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-dark:hover { background: #2C3E50; color: #fff; }
-    .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
 
-    .subject-card {
-      background: #fff; border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 1.1rem 1.2rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,.12);
-      display: flex; flex-direction: column; gap: .45rem; height: 100%;
-    }
-    .subject-code {
-      display: inline-block; background: var(--red); color: #fff;
-      font-size: .7rem; font-weight: 800; letter-spacing: .07em;
-      padding: .2rem .6rem; border-radius: 6px;
-    }
+    /* SUBJECT CARDS */
+    .subject-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .45rem; height: 100%; }
+    .subject-code { display: inline-block; background: var(--red); color: #fff; font-size: .7rem; font-weight: 800; letter-spacing: .07em; padding: .2rem .6rem; border-radius: 6px; }
     .subject-title { font-size: .9rem; font-weight: 700; margin: 0; }
     .subject-meta  { font-size: .76rem; color: var(--text-muted); }
     .subject-actions { display: flex; gap: .35rem; margin-top: auto; padding-top: .5rem; }
@@ -171,14 +77,68 @@
     .prog-bar-fill.mid { background: linear-gradient(90deg, #2980B9, #5DADE2); }
     .prog-bar-fill.low { background: linear-gradient(90deg, #E67E22, #F5B842); }
 
-    .btn-icon {
-      width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; font-size: .82rem;
-    }
+    .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
     .btn-icon.edit   { background: #EBF3FF; color: #2980B9; }
     .btn-icon.del    { background: #FDECEA; color: #C0392B; }
-    .btn-icon.toggle { background: #E8F8F2; color: #1A9B59; }
+    .btn-icon.instr  { background: #E8F8F2; color: #1A9B59; }
+    .btn-icon.stud   { background: #F3EEFF; color: #8E44AD; }
     .btn-icon:hover  { filter: brightness(.88); }
+
+    /* DASHED ADD CARD */
+    .subject-card-add { background: #fff; border-radius: 12px; border: 2px dashed #D5D8DC; padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(0,0,0,.08); display: flex; align-items: center; justify-content: center; min-height: 200px; height: 100%; cursor: pointer; transition: border-color .15s, background .15s; }
+    .subject-card-add:hover { border-color: var(--red); background: #FEF9F9; }
+    .subject-card-add .inner { text-align: center; color: var(--text-muted); pointer-events: none; }
+    .subject-card-add .inner i { font-size: 2rem; color: var(--red); display: block; margin-bottom: .4rem; }
+    .subject-card-add .inner strong { font-size: .84rem; display: block; color: var(--text-main); }
+    .subject-card-add .inner span { font-size: .74rem; }
+
+    /* MODAL STEPS */
+    .step-indicator { display: flex; align-items: center; gap: 0; margin-bottom: 1.4rem; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; flex-shrink: 0; background: #EAECEF; color: var(--text-muted); transition: .2s; }
+    .step-dot.active { background: var(--red); color: #fff; }
+    .step-dot.done   { background: #27AE60; color: #fff; }
+    .step-line { flex: 1; height: 2px; background: #EAECEF; transition: .2s; }
+    .step-line.done  { background: #27AE60; }
+    .step-label { font-size: .7rem; color: var(--text-muted); margin-top: .2rem; text-align: center; }
+    .step-wrap { display: flex; flex-direction: column; align-items: center; }
+
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    .instr-list { list-style: none; padding: 0; margin: 0; max-height: 220px; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 8px; }
+    .instr-list li { padding: .55rem .85rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .6rem; font-size: .84rem; cursor: pointer; }
+    .instr-list li:last-child { border-bottom: none; }
+    .instr-list li:hover { background: #FEF9F9; }
+    .instr-list li input[type=radio] { accent-color: var(--red); width: 15px; height: 15px; cursor: pointer; }
+    .instr-avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: .65rem; font-weight: 700; flex-shrink: 0; }
+
+    .confirm-row { display: flex; justify-content: space-between; padding: .45rem 0; border-bottom: 1px solid var(--border); font-size: .84rem; }
+    .confirm-row:last-child { border-bottom: none; }
+    .confirm-row .label { color: var(--text-muted); }
+    .confirm-row .value { font-weight: 600; }
+
+    /* FORM */
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-sm-custom { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); padding: .42rem .7rem; width: 100%; background: #F9FAFB; transition: border-color .15s, background .15s; }
+    .form-control-sm-custom:focus { outline: none; border-color: var(--red); background: #fff; }
+    textarea.form-control-sm-custom { resize: vertical; min-height: 72px; }
+    select.form-control-sm-custom { height: 36px; }
+
+    .status-toggle-wrap { display: flex; gap: .5rem; }
+    .status-btn { flex: 1; padding: .4rem; border-radius: 8px; border: 1.5px solid var(--border); font-size: .8rem; font-weight: 600; cursor: pointer; text-align: center; background: #F9FAFB; color: var(--text-muted); transition: .15s; }
+    .status-btn.selected-active { background: #E8F8F2; border-color: #27AE60; color: #1A9B59; }
+    .status-btn.selected-inactive { background: #FDECEA; border-color: var(--red); color: var(--red); }
+
+    .modal-section-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin: 1rem 0 .6rem; }
+
+    .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1200; display: flex; flex-direction: column; gap: .5rem; }
+    .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
+    .fta-toast.show { opacity: 1; transform: translateY(0); }
+
+    .search-wrap { position: relative; margin-bottom: .6rem; }
+    .search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; }
+    .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
 
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
@@ -200,18 +160,12 @@
   </button>
   <a href="manage-program-head.html" class="topbar-brand">
     <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
-    <div>Trigger3D<small>Admin</small></div>
+    <div>Trigger3D <small>Admin</small></div>
   </a>
   <div class="topbar-right">
-    <button class="notif-btn">
-      <i class="bi bi-bell"></i>
-      <span class="notif-dot"></span>
-    </button>
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
     <div class="avatar">PH</div>
-    <div class="topbar-user d-none d-sm-block">
-      Maj. R. Santos
-      <small>Program Head</small>
-    </div>
+    <div class="topbar-user d-none d-sm-block">Maj. R. Santos <small>Program Head</small></div>
   </div>
 </header>
 
@@ -221,26 +175,14 @@
   <ul class="sidebar-nav">
     <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
   </ul>
-
   <span class="sidebar-label">Management</span>
   <ul class="sidebar-nav">
-    <li>
-      <a href="program-head-staff-management.html">
-        <i class="bi bi-person-badge-fill"></i> Staff Management
-        <span class="sidebar-badge">8</span>
-      </a>
-    </li>
-    <li>
-      <a href="program-head-student-management.html">
-        <i class="bi bi-people-fill"></i> Student Management
-        <span class="sidebar-badge">10</span>
-      </a>
-    </li>
+    <li><a href="program-head-staff-management.html"><i class="bi bi-person-badge-fill"></i> Staff Management <span class="sidebar-badge">8</span></a></li>
+    <li><a href="program-head-student-management.html"><i class="bi bi-people-fill"></i> Student Management <span class="sidebar-badge">10</span></a></li>
     <li><a href="program-head-subject-management.html" class="active"><i class="bi bi-journal-text"></i> Subject Management</a></li>
     <li><a href="program-head-module-management.html"><i class="bi bi-folder2-open"></i> Module Management</a></li>
     <li><a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
   </ul>
-
   <div class="sidebar-footer">
     <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
   </div>
@@ -248,502 +190,385 @@
 
 <!-- MAIN CONTENT -->
 <main class="main-content">
-  <section id="program-head-subject-management" class="page-section">
-    <div class="section-heading">
-      <div class="ico-wrap"><i class="bi bi-journal-text"></i></div>
+  <div class="panel">
+    <div class="panel-banner">
       <div>
         <h2>Subject Management</h2>
         <p>Manage subjects, instructors &amp; enrollments</p>
       </div>
     </div>
+    <div class="panel-body">
+      <div class="action-bar">
+        <button class="btn-red" data-bs-toggle="modal" data-bs-target="#createSubjectModal"><i class="bi bi-plus-lg"></i> Create Subject</button>
+        <button class="btn-dark" data-bs-toggle="modal" data-bs-target="#assignInstructorModal" onclick="resetAssign()"><i class="bi bi-person-badge-fill"></i> Assign Instructor</button>
 
-    <div class="action-bar mb-3">
-      <button class="btn-red"><i class="bi bi-plus-circle-fill"></i> Create Subject</button>
-      <button class="btn-dark"><i class="bi bi-person-badge-fill"></i> Assign Instructor</button>
-      <button class="btn-outline-red"><i class="bi bi-people-fill"></i> Assign Students</button>
-    </div>
+      </div>
 
-    <div class="row g-3">
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE101</span></div>
-          <p class="subject-title">Firearm Fundamentals</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Ana Reyes</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>32 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>8 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>91%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:91%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE102</span></div>
-          <p class="subject-title">Firearm Assembly</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Carlos Mendoza</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>28 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>10 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>76%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:76%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE103</span></div>
-          <p class="subject-title">Firearm Disassembly</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Ramon Bautista</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>24 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>9 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>58%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:58%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE104</span></div>
-          <p class="subject-title">Firearm Safety Protocols</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Ana Reyes</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>22 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>7 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>82%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:82%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE105</span></div>
-          <p class="subject-title">Range Practice &amp; Live Fire</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Carlos Mendoza</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>18 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>6 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>44%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:44%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card" style="border:2px dashed #D5D8DC;background:#FAFBFC;align-items:center;justify-content:center;min-height:190px;">
-          <div style="text-align:center;color:var(--text-muted);">
-            <div style="font-size:2rem;margin-bottom:.4rem;color:var(--red);"><i class="bi bi-plus-circle"></i></div>
-            <div style="font-size:.84rem;font-weight:600;">Create New Subject</div>
-            <div style="font-size:.74rem;margin-top:.2rem;">Add a new firearm subject code</div>
-          </div>
-        </div>
+      <div class="row g-3" id="subjectGrid">
+        <!-- Cards rendered by JS -->
       </div>
     </div>
-  </section>
+  </div>
 
   <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
-    FTA Management System &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+    Trigger3D Subject Management &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
   </div>
 </main>
 
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Subject Management — FTA System</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-  <style>
-    :root {
-      --red:        #C0392B;
-      --red-dark:   #922B21;
-      --red-light:  #F1948A;
-      --white:      #FFFFFF;
-      --bg:         #C0392B;
-      --sidebar-bg: #FFFFFF;
-      --text-main:  #1A2535;
-      --text-muted: #7F8C8D;
-      --border:     #E8EAED;
-      --sidebar-w:  220px;
-      --topbar-h:   60px;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-    }
+<div class="fta-toast-stack" id="toastStack"></div>
 
-    /* TOP BAR — white, matching staff management */
-    .topbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1040;
-      height: var(--topbar-h);
-      background: #FFFFFF;
-      display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-brand {
-      display: flex; align-items: center; gap: .55rem;
-      color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer;
-    }
-    .topbar-brand .icon-box {
-      width: 32px; height: 32px; background: #FDECEA;
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; color: var(--red);
-    }
-    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
-    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
-    .topbar-right .notif-btn {
-      background: #FDECEA; border: none; border-radius: 50%;
-      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1rem; position: relative; cursor: pointer;
-    }
-    .notif-dot {
-      position: absolute; top: 5px; right: 6px;
-      width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff;
-    }
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: var(--red);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A;
-    }
-    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
-    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
-    .sidebar-toggle {
-      display: none; background: none; border: none;
-      color: var(--red); font-size: 1.3rem; cursor: pointer;
-    }
+<!-- ===== MODAL: CREATE SUBJECT ===== -->
+<div class="modal fade" id="createSubjectModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-plus-lg me-2" style="color:var(--red)"></i>Create Subject
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+        <p class="modal-section-label" style="margin-top:0;">Basic Information</p>
 
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030;
-      width: var(--sidebar-w);
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      overflow-y: auto; overflow-x: hidden;
-      transition: transform .25s ease;
-    }
-    .sidebar-label {
-      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--text-muted); padding: 1.1rem 1.1rem .3rem;
-    }
-    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a {
-      display: flex; align-items: center; gap: .65rem;
-      padding: .6rem 1.1rem; color: var(--text-muted);
-      text-decoration: none; font-size: .85rem; font-weight: 500;
-      border-left: 3px solid transparent;
-      transition: all .15s;
-    }
-    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
-    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
-    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
-    .sidebar-badge {
-      margin-left: auto; background: var(--red); color: #fff;
-      font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px;
-    }
-    .sidebar-footer {
-      margin-top: auto; padding: 1rem 1.1rem;
-      border-top: 1px solid var(--border);
-    }
-    .sidebar-footer a {
-      display: flex; align-items: center; gap: .55rem;
-      color: var(--text-muted); font-size: .82rem; text-decoration: none;
-    }
-    .sidebar-footer a:hover { color: var(--red); }
+        <div class="mb-3">
+          <label class="form-label-sm">Subject Code <span class="text-danger">*</span></label>
+          <input type="text" id="cs_code" class="form-control-sm-custom" placeholder="e.g. FIRE101" maxlength="10" />
+          <div style="font-size:.71rem;color:var(--text-muted);margin-top:.25rem;">Use uppercase letters and numbers only (e.g. FIRE101)</div>
+        </div>
 
-    /* MAIN */
-    .main-content {
-      margin-left: var(--sidebar-w);
-      padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem;
-      transition: margin-left .25s ease;
-      background: transparent;
-    }
+        <div class="mb-3">
+          <label class="form-label-sm">Subject Title <span class="text-danger">*</span></label>
+          <input type="text" id="cs_title" class="form-control-sm-custom" placeholder="e.g. Firearm Fundamentals" />
+        </div>
 
-    .page-section { padding-top: 1.5rem; }
-    .section-heading { display: flex; align-items: center; gap: .65rem; margin-bottom: 1.2rem; }
-    .section-heading .ico-wrap {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: #fff; display: flex; align-items: center; justify-content: center;
-      color: var(--red); font-size: 1.05rem; flex-shrink: 0;
-      border: 1px solid rgba(255,255,255,.5);
-    }
-    .section-heading h2 { font-size: 1.12rem; font-weight: 700; margin: 0; color: #fff; }
-    .section-heading p { font-size: .76rem; margin: 0; color: rgba(255,255,255,.85); }
+        <div class="mb-3">
+          <label class="form-label-sm">Description</label>
+          <textarea id="cs_desc" class="form-control-sm-custom" placeholder="e.g. Introduction to firearm parts, safety, assembly, and disassembly."></textarea>
+        </div>
 
-    .btn-red {
-      background: var(--red); color: #fff; border: none;
-      font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
-    .btn-red:hover { background: var(--red-dark); color: #fff; }
-    .btn-outline-red {
-      background: transparent; color: var(--red);
-      border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600;
-      padding: .4rem .85rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
-    .btn-outline-red:hover { background: var(--red); color: #fff; }
-    .btn-dark {
-      background: var(--text-main); color: #fff; border: none;
-      font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
-    }
-    .btn-dark:hover { background: #2C3E50; color: #fff; }
-    .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+        <div class="mb-1">
+          <label class="form-label-sm">Status <span class="text-danger">*</span></label>
+          <div class="status-toggle-wrap">
+            <div class="status-btn selected-active" id="statusActive" onclick="selectStatus('Active')">
+              <i class="bi bi-check-circle-fill me-1"></i> Active
+            </div>
+            <div class="status-btn" id="statusInactive" onclick="selectStatus('Inactive')">
+              <i class="bi bi-x-circle-fill me-1"></i> Inactive
+            </div>
+          </div>
+        </div>
 
-    .subject-card {
-      background: #fff; border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 1.1rem 1.2rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,.12);
-      display: flex; flex-direction: column; gap: .45rem; height: 100%;
-    }
-    .subject-code {
-      display: inline-block; background: var(--red); color: #fff;
-      font-size: .7rem; font-weight: 800; letter-spacing: .07em;
-      padding: .2rem .6rem; border-radius: 6px;
-    }
-    .subject-title { font-size: .9rem; font-weight: 700; margin: 0; }
-    .subject-meta  { font-size: .76rem; color: var(--text-muted); }
-    .subject-actions { display: flex; gap: .35rem; margin-top: auto; padding-top: .5rem; }
-
-    .prog-bar-wrap { background: #EAECEF; border-radius: 99px; height: 6px; overflow: hidden; }
-    .prog-bar-fill { height: 100%; border-radius: 99px; }
-    .prog-bar-fill.hi  { background: linear-gradient(90deg, #27AE60, #52D68A); }
-    .prog-bar-fill.mid { background: linear-gradient(90deg, #2980B9, #5DADE2); }
-    .prog-bar-fill.low { background: linear-gradient(90deg, #E67E22, #F5B842); }
-
-    .btn-icon {
-      width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; font-size: .82rem;
-    }
-    .btn-icon.edit   { background: #EBF3FF; color: #2980B9; }
-    .btn-icon.del    { background: #FDECEA; color: #C0392B; }
-    .btn-icon.toggle { background: #E8F8F2; color: #1A9B59; }
-    .btn-icon:hover  { filter: brightness(.88); }
-
-    @media (max-width: 991.98px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; }
-      .sidebar-toggle { display: flex; align-items: center; }
-    }
-    @media (max-width: 575.98px) {
-      .main-content { padding-left: 1rem; padding-right: 1rem; }
-    }
-  </style>
-</head>
-<body>
-
-<!-- TOP BAR -->
-<header class="topbar">
-  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
-    <i class="bi bi-list"></i>
-  </button>
-  <a href="manage-program-head.html" class="topbar-brand">
-    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
-    <div>Trigger3D<small>Admin</small></div>
-  </a>
-  <div class="topbar-right">
-    <button class="notif-btn">
-      <i class="bi bi-bell"></i>
-      <span class="notif-dot"></span>
-    </button>
-    <div class="avatar">PH</div>
-    <div class="topbar-user d-none d-sm-block">
-      Maj. R. Santos
-      <small>Program Head</small>
+        <div id="cs_error" style="display:none;margin-top:.8rem;font-size:.79rem;color:var(--red);background:#FDECEA;border-radius:8px;padding:.45rem .75rem;">
+          <i class="bi bi-exclamation-circle me-1"></i><span id="cs_error_msg"></span>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" onclick="saveSubject()"><i class="bi bi-check-lg"></i> Save Subject</button>
+      </div>
     </div>
   </div>
-</header>
+</div>
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <span class="sidebar-label">Main</span>
-  <ul class="sidebar-nav">
-    <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
-  </ul>
+<!-- ===== MODAL: ASSIGN INSTRUCTOR (3-step) ===== -->
+<div class="modal fade" id="assignInstructorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-person-badge-fill me-2" style="color:#1A9B59"></i>Assign Instructor
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
 
-  <span class="sidebar-label">Management</span>
-  <ul class="sidebar-nav">
-    <li>
-      <a href="program-head-staff-management.html">
-        <i class="bi bi-person-badge-fill"></i> Staff Management
-        <span class="sidebar-badge">8</span>
-      </a>
-    </li>
-    <li>
-      <a href="program-head-student-management.html">
-        <i class="bi bi-people-fill"></i> Student Management
-        <span class="sidebar-badge">10</span>
-      </a>
-    </li>
-    <li><a href="program-head-subject-management.html" class="active"><i class="bi bi-journal-text"></i> Subject Management</a></li>
-    <li><a href="program-head-module-management.html"><i class="bi bi-folder2-open"></i> Module Management</a></li>
-    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
-  </ul>
+        <!-- Step indicator -->
+        <div class="step-indicator">
+          <div class="step-wrap">
+            <div class="step-dot active" id="sd1">1</div>
+            <div class="step-label">Subject</div>
+          </div>
+          <div class="step-line" id="sl1"></div>
+          <div class="step-wrap">
+            <div class="step-dot" id="sd2">2</div>
+            <div class="step-label">Instructor</div>
+          </div>
+          <div class="step-line" id="sl2"></div>
+          <div class="step-wrap">
+            <div class="step-dot" id="sd3">3</div>
+            <div class="step-label">Confirm</div>
+          </div>
+        </div>
 
-  <div class="sidebar-footer">
-    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+        <!-- Step 1: Select Subject -->
+        <div class="step-panel active" id="step1">
+          <label class="form-label-sm">Select Subject <span class="text-danger">*</span></label>
+          <select id="ai_subject" class="form-control-sm-custom" style="height:36px;">
+            <option value="">— Choose a subject —</option>
+          </select>
+          <div id="s1_preview" style="display:none;margin-top:.75rem;background:#F9FAFB;border-radius:8px;padding:.65rem .85rem;border:1px solid var(--border);">
+            <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:.2rem;">Selected</div>
+            <div id="s1_preview_text" style="font-size:.85rem;font-weight:700;"></div>
+          </div>
+          <div id="s1_error" style="display:none;margin-top:.6rem;font-size:.79rem;color:var(--red);"><i class="bi bi-exclamation-circle me-1"></i>Please select a subject.</div>
+        </div>
+
+        <!-- Step 2: Select Instructor -->
+        <div class="step-panel" id="step2">
+          <label class="form-label-sm">Search Instructor</label>
+          <div class="search-wrap">
+            <i class="bi bi-search"></i>
+            <input type="search" id="instrSearch" placeholder="Search instructor..." oninput="filterInstructors()" />
+          </div>
+          <ul class="instr-list" id="instrList"></ul>
+          <div id="s2_error" style="display:none;margin-top:.6rem;font-size:.79rem;color:var(--red);"><i class="bi bi-exclamation-circle me-1"></i>Please select an instructor.</div>
+        </div>
+
+        <!-- Step 3: Confirm -->
+        <div class="step-panel" id="step3">
+          <div style="background:#F9FAFB;border-radius:10px;padding:.85rem 1rem;border:1px solid var(--border);">
+            <div class="confirm-row"><span class="label">Subject Code</span><span class="value" id="c_code">—</span></div>
+            <div class="confirm-row"><span class="label">Subject Title</span><span class="value" id="c_title">—</span></div>
+            <div class="confirm-row"><span class="label">Instructor</span><span class="value" id="c_instr">—</span></div>
+          </div>
+          <div style="margin-top:.85rem;font-size:.79rem;color:var(--text-muted);">
+            <i class="bi bi-info-circle me-1"></i>Confirm the assignment above before saving.
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;display:flex;justify-content:space-between;">
+        <button type="button" class="btn-outline-red" id="ai_back" onclick="assignStep(-1)" style="display:none;">← Back</button>
+        <div style="display:flex;gap:.5rem;margin-left:auto;">
+          <button type="button" class="btn-outline-red" id="ai_cancel" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn-dark" id="ai_next" onclick="assignStep(1)">Next →</button>
+        </div>
+      </div>
+    </div>
   </div>
-</aside>
+</div>
 
-<!-- MAIN CONTENT -->
-<main class="main-content">
-  <section id="program-head-subject-management" class="page-section">
-    <div class="section-heading">
-      <div class="ico-wrap"><i class="bi bi-journal-text"></i></div>
-      <div>
-        <h2>Subject Management</h2>
-        <p>Manage subjects, instructors &amp; enrollments</p>
-      </div>
-    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── DATA ── */
+  let SUBJECTS = [
+    { code:'FIRE101', title:'Firearm Fundamentals',       instructor:'Instr. Ana Reyes',      students:32, modules:8,  completion:91, bar:'hi'  },
+    { code:'FIRE102', title:'Firearm Assembly',            instructor:'Instr. Carlos Mendoza', students:28, modules:10, completion:76, bar:'mid' },
+    { code:'FIRE103', title:'Firearm Disassembly',         instructor:'Instr. Ramon Bautista', students:24, modules:9,  completion:58, bar:'low' },
+    { code:'FIRE104', title:'Firearm Safety Protocols',    instructor:'Instr. Ana Reyes',      students:22, modules:7,  completion:82, bar:'hi'  },
+    { code:'FIRE105', title:'Range Practice & Live Fire',  instructor:'Instr. Carlos Mendoza', students:18, modules:6,  completion:44, bar:'low' },
+  ];
 
-    <div class="action-bar mb-3">
-      <button class="btn-red"><i class="bi bi-plus-circle-fill"></i> Create Subject</button>
-      <button class="btn-dark"><i class="bi bi-person-badge-fill"></i> Assign Instructor</button>
-      <button class="btn-outline-red"><i class="bi bi-people-fill"></i> Assign Students</button>
-    </div>
+  const INSTRUCTORS = [
+    { name:'Ana Reyes',       id:'AR', color:'#27AE60' },
+    { name:'Carlos Mendoza',  id:'CM', color:'#2980B9' },
+    { name:'Ramon Bautista',  id:'RB', color:'#8E44AD' },
+    { name:'Diego Fernandez', id:'DF', color:'#E67E22' },
+    { name:'Carmela Lopez',   id:'CL', color:'#C0392B' },
+    { name:'Antonio Reyes',   id:'AR2',color:'#1ABC9C' },
+  ];
 
-    <div class="row g-3">
+  /* ── RENDER CARDS ── */
+  function renderCards() {
+    const grid = document.getElementById('subjectGrid');
+    let html = SUBJECTS.map(s => `
       <div class="col-12 col-sm-6 col-xl-4">
         <div class="subject-card">
-          <div><span class="subject-code">FIRE101</span></div>
-          <p class="subject-title">Firearm Fundamentals</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Ana Reyes</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>32 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>8 Modules</div>
+          <div><span class="subject-code">${s.code}</span></div>
+          <p class="subject-title">${s.title}</p>
+          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>${s.instructor}</div>
+          <div class="subject-meta"><i class="bi bi-people me-1"></i>${s.students} Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>${s.modules} Modules</div>
           <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>91%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:91%"></div></div>
+            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>${s.completion}%</strong></div>
+            <div class="prog-bar-wrap"><div class="prog-bar-fill ${s.bar}" style="width:${s.completion}%"></div></div>
           </div>
           <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
+            <button class="btn-icon edit" title="Edit" onclick="showToast('Editing ${s.code} (demo only)','bi-pencil-fill')"><i class="bi bi-pencil-fill"></i></button>
+            <button class="btn-icon instr" title="Assign Instructor" data-bs-toggle="modal" data-bs-target="#assignInstructorModal" onclick="resetAssign('${s.code}')"><i class="bi bi-person-badge-fill"></i></button>
+            <button class="btn-icon stud" title="Assign Students" onclick="showToast('Assigning students to ${s.code} (demo only)','bi-people-fill')"><i class="bi bi-people-fill"></i></button>
+            <button class="btn-icon del" title="Delete" onclick="deleteSubject('${s.code}')"><i class="bi bi-trash-fill"></i></button>
           </div>
         </div>
       </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE102</span></div>
-          <p class="subject-title">Firearm Assembly</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Carlos Mendoza</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>28 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>10 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>76%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:76%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE103</span></div>
-          <p class="subject-title">Firearm Disassembly</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Ramon Bautista</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>24 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>9 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>58%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:58%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE104</span></div>
-          <p class="subject-title">Firearm Safety Protocols</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Ana Reyes</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>22 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>7 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>82%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:82%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
-          <div><span class="subject-code">FIRE105</span></div>
-          <p class="subject-title">Range Practice &amp; Live Fire</p>
-          <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>Instr. Carlos Mendoza</div>
-          <div class="subject-meta"><i class="bi bi-people me-1"></i>18 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>6 Modules</div>
-          <div class="mt-2">
-            <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>44%</strong></div>
-            <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:44%"></div></div>
-          </div>
-          <div class="subject-actions">
-            <button class="btn-icon edit"><i class="bi bi-pencil-fill"></i></button>
-            <button class="btn-icon toggle"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon" style="background:#F3EEFF;color:#8E44AD;"><i class="bi bi-people-fill"></i></button>
-            <button class="btn-icon del"><i class="bi bi-trash-fill"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card" style="border:2px dashed #D5D8DC;background:#FAFBFC;align-items:center;justify-content:center;min-height:190px;">
-          <div style="text-align:center;color:var(--text-muted);">
-            <div style="font-size:2rem;margin-bottom:.4rem;color:var(--red);"><i class="bi bi-plus-circle"></i></div>
-            <div style="font-size:.84rem;font-weight:600;">Create New Subject</div>
-            <div style="font-size:.74rem;margin-top:.2rem;">Add a new firearm subject code</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    `).join('');
 
-  <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
-    FTA Management System &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
-  </div>
-</main>
+    html += `
+      <div class="col-12 col-sm-6 col-xl-4">
+        <div class="subject-card-add" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
+          <div class="inner">
+            <i class="bi bi-plus-lg"></i>
+            <strong>Create New Subject</strong>
+            <span>Add a new firearm subject code</span>
+          </div>
+        </div>
+      </div>`;
 
+    grid.innerHTML = html;
+    populateSubjectDropdown();
+  }
+
+  function deleteSubject(code) {
+    if (!confirm(`Remove ${code}? (front-end only)`)) return;
+    SUBJECTS = SUBJECTS.filter(s => s.code !== code);
+    showToast(`${code} removed (demo only)`, 'bi-trash-fill');
+    renderCards();
+  }
+
+  /* ── CREATE SUBJECT ── */
+  let selectedStatus = 'Active';
+  function selectStatus(val) {
+    selectedStatus = val;
+    document.getElementById('statusActive').className   = 'status-btn' + (val==='Active'   ? ' selected-active'   : '');
+    document.getElementById('statusInactive').className = 'status-btn' + (val==='Inactive' ? ' selected-inactive' : '');
+  }
+
+  function saveSubject() {
+    const code  = document.getElementById('cs_code').value.trim().toUpperCase();
+    const title = document.getElementById('cs_title').value.trim();
+    const err   = document.getElementById('cs_error');
+    const errMsg= document.getElementById('cs_error_msg');
+
+    if (!code) { errMsg.textContent='Subject code is required.'; err.style.display='block'; return; }
+    if (!title){ errMsg.textContent='Subject title is required.'; err.style.display='block'; return; }
+    if (SUBJECTS.find(s=>s.code===code)) { errMsg.textContent=`Subject code "${code}" already exists.`; err.style.display='block'; return; }
+
+    err.style.display='none';
+    const pct = 0;
+    SUBJECTS.push({ code, title, instructor:'— Unassigned —', students:0, modules:0, completion:pct, bar:'low' });
+    renderCards();
+    bootstrap.Modal.getInstance(document.getElementById('createSubjectModal')).hide();
+    showToast(`${code} created (demo only)`, 'bi-plus-lg');
+    document.getElementById('cs_code').value='';
+    document.getElementById('cs_title').value='';
+    document.getElementById('cs_desc').value='';
+    selectStatus('Active');
+  }
+
+  // Clear error on input
+  ['cs_code','cs_title'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', () => {
+      document.getElementById('cs_error').style.display='none';
+    });
+  });
+
+  /* ── ASSIGN INSTRUCTOR (3 steps) ── */
+  let aiStep = 1;
+  let selectedInstructor = null;
+
+  function populateSubjectDropdown(preselect) {
+    const sel = document.getElementById('ai_subject');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— Choose a subject —</option>' +
+      SUBJECTS.map(s=>`<option value="${s.code}">${s.code} — ${s.title}</option>`).join('');
+    if (preselect) sel.value = preselect;
+    sel.onchange = () => {
+      const v = sel.value;
+      const preview = document.getElementById('s1_preview');
+      const txt = document.getElementById('s1_preview_text');
+      if (v) {
+        const s = SUBJECTS.find(x=>x.code===v);
+        txt.textContent = `${s.code} — ${s.title}`;
+        preview.style.display='block';
+      } else { preview.style.display='none'; }
+    };
+    if (preselect) sel.dispatchEvent(new Event('change'));
+  }
+
+  function resetAssign(preselect) {
+    aiStep = 1;
+    selectedInstructor = null;
+    document.getElementById('instrSearch').value='';
+    document.getElementById('s1_error').style.display='none';
+    document.getElementById('s2_error').style.display='none';
+    document.getElementById('s1_preview').style.display='none';
+    updateStepUI();
+    populateSubjectDropdown(preselect||'');
+    renderInstructorList();
+  }
+
+  function renderInstructorList(filter) {
+    const list = document.getElementById('instrList');
+    const q = (filter||'').toLowerCase();
+    const items = INSTRUCTORS.filter(i => !q || i.name.toLowerCase().includes(q));
+    list.innerHTML = items.map(i=>`
+      <li onclick="selectInstructor('${i.name}', this)">
+        <input type="radio" name="instrRadio" value="${i.name}" ${selectedInstructor===i.name?'checked':''} />
+        <div class="instr-avatar" style="background:${i.color}">${i.id}</div>
+        <span>${i.name}</span>
+      </li>
+    `).join('') || '<li style="padding:.7rem 1rem;color:var(--text-muted);font-size:.82rem;">No instructors found.</li>';
+  }
+
+  function selectInstructor(name, li) {
+    selectedInstructor = name;
+    li.querySelector('input').checked=true;
+    document.getElementById('s2_error').style.display='none';
+  }
+
+  function filterInstructors() {
+    renderInstructorList(document.getElementById('instrSearch').value);
+  }
+
+  function assignStep(dir) {
+    // Validate current step
+    if (dir===1 && aiStep===1) {
+      const sub = document.getElementById('ai_subject').value;
+      if (!sub) { document.getElementById('s1_error').style.display='block'; return; }
+      document.getElementById('s1_error').style.display='none';
+    }
+    if (dir===1 && aiStep===2) {
+      if (!selectedInstructor) { document.getElementById('s2_error').style.display='block'; return; }
+      document.getElementById('s2_error').style.display='none';
+      // Fill confirm
+      const code = document.getElementById('ai_subject').value;
+      const subj = SUBJECTS.find(s=>s.code===code);
+      document.getElementById('c_code').textContent  = subj.code;
+      document.getElementById('c_title').textContent = subj.title;
+      document.getElementById('c_instr').textContent = selectedInstructor;
+    }
+    if (dir===1 && aiStep===3) {
+      // Save
+      const code = document.getElementById('ai_subject').value;
+      const idx  = SUBJECTS.findIndex(s=>s.code===code);
+      if (idx>-1) SUBJECTS[idx].instructor = selectedInstructor;
+      renderCards();
+      bootstrap.Modal.getInstance(document.getElementById('assignInstructorModal')).hide();
+      showToast(`${selectedInstructor} assigned to ${code} (demo only)`, 'bi-person-badge-fill');
+      return;
+    }
+    aiStep = Math.max(1, Math.min(3, aiStep + dir));
+    updateStepUI();
+    if (aiStep===2) renderInstructorList();
+  }
+
+  function updateStepUI() {
+    [1,2,3].forEach(n => {
+      document.getElementById('step'+n).className = 'step-panel' + (n===aiStep?' active':'');
+      const dot = document.getElementById('sd'+n);
+      dot.className = 'step-dot' + (n<aiStep?' done':n===aiStep?' active':'');
+    });
+    [1,2].forEach(n => {
+      const line = document.getElementById('sl'+n);
+      if (line) line.className = 'step-line' + (n<aiStep?' done':'');
+    });
+    document.getElementById('ai_back').style.display = aiStep>1?'':'none';
+    const next = document.getElementById('ai_next');
+    next.innerHTML = aiStep===3 ? '<i class="bi bi-check-lg"></i> Assign' : 'Next →';
+    next.className = aiStep===3 ? 'btn-red' : 'btn-dark';
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg, icon) {
+    const stack = document.getElementById('toastStack');
+    const el = document.createElement('div');
+    el.className = 'fta-toast';
+    el.innerHTML = `<i class="bi ${icon||'bi-info-circle-fill'}"></i><span>${msg}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(()=>el.classList.add('show'));
+    setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),250); },2400);
+  }
+
+  document.addEventListener('DOMContentLoaded', renderCards);
+</script>
 </body>
 </html>
