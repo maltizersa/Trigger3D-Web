@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Management — FTA System</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #FFFFFF; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
+
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-badge { margin-left: auto; background: var(--red); color: #fff; font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+    .page-section { padding-top: 1.5rem; }
+
+    /* PANEL with fused white banner */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+
+    .panel-banner {
+      background: #fff;
+      padding: 1rem 1.4rem;
+      display: flex; align-items: center; gap: .85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-banner .ico-wrap {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: #FDECEA;
+      border: 1px solid #F1948A;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--red); font-size: 1.1rem; flex-shrink: 0;
+    }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+
+    .panel-header { padding: .9rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    .panel-body { padding: 1.2rem; }
+
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-red:hover { background: var(--red-dark); color: #fff; }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-red:hover { background: var(--red); color: #fff; }
+    .btn-dark { background: var(--text-main); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-dark:hover { background: #2C3E50; color: #fff; }
+    .btn-green { background: #27AE60; color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-green:hover { background: #1E8449; color: #fff; }
+    .btn-purple { background: #8E44AD; color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-purple:hover { background: #6C3483; color: #fff; }
+    .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+
+    .search-wrap { position: relative; max-width: 280px; width: 100%; }
+    .search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; }
+    .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
+    .filter-controls { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .role-filter { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 34px; padding: 0 .6rem; color: var(--text-main); }
+    .role-filter:focus { outline: none; border-color: var(--red); background: #fff; }
+
+    .mgmt-table { width: 100%; font-size: .82rem; border-collapse: collapse; }
+    .mgmt-table thead th { background: #fff; color: var(--text-main); padding: .65rem 1rem; font-weight: 700; font-size: .73rem; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; border-bottom: 2px solid var(--border); }
+    .mgmt-table tbody tr { border-bottom: 1px solid var(--border); }
+    .mgmt-table tbody tr:hover { background: #FEF9F9; }
+    .mgmt-table tbody td { padding: .7rem 1rem; vertical-align: middle; }
+    .tbl-wrap { overflow-x: auto; }
+
+    .badge-active     { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-inactive   { background: #FDECEA; color: #C0392B; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-student    { background: #EBF3FF; color: #2980B9; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-instructor { background: #FEF9E7; color: #B7770D; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-secretary  { background: #F4ECF7; color: #8E44AD; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+
+    .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
+    .btn-icon.edit   { background: #EBF3FF; color: #2980B9; }
+    .btn-icon.del    { background: #FDECEA; color: #C0392B; }
+    .btn-icon.reset  { background: #FEF9E7; color: #B7770D; }
+    .btn-icon.toggle { background: #E8F8F2; color: #1A9B59; }
+    .btn-icon.toggle.is-off { background: #FDECEA; color: #C0392B; }
+    .btn-icon:hover  { filter: brightness(.88); }
+    .avatar-sm { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .7rem; flex-shrink: 0; }
+
+    .step-wizard { display: flex; align-items: flex-start; justify-content: center; margin-bottom: 1.5rem; }
+    .step-item { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .step-item:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 60%; width: 80%; height: 2px; background: #E8EAED; z-index: 0; }
+    .step-item.done::after  { background: #27AE60; }
+    .step-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .74rem; font-weight: 700; border: 2px solid #E8EAED; background: #fff; color: #7F8C8D; position: relative; z-index: 1; }
+    .step-item.done   .step-circle { background: #27AE60; border-color: #27AE60; color: #fff; }
+    .step-item.active .step-circle { border-color: var(--red); color: var(--red); }
+    .step-label { font-size: .63rem; color: #7F8C8D; margin-top: .3rem; text-align: center; line-height: 1.3; }
+    .step-item.active .step-label { color: var(--red); font-weight: 600; }
+    .step-item.done   .step-label  { color: #27AE60; font-weight: 600; }
+
+    .drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 2rem 1rem; text-align: center; cursor: pointer; transition: .2s; }
+    .drop-zone:hover { border-color: var(--red); background: #FEF2F0; }
+    .drop-zone i { font-size: 2.2rem; color: var(--text-muted); display: block; margin-bottom: .5rem; }
+
+    .preview-table { width: 100%; font-size: .76rem; border-collapse: collapse; }
+    .preview-table thead th { background: #F9FAFB; padding: .42rem .7rem; font-weight: 600; font-size: .69rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    .preview-table tbody td { padding: .42rem .7rem; border-bottom: 1px solid var(--border); }
+    .preview-table tbody tr:hover td { background: #FEF9F9; }
+
+    .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1100; display: flex; flex-direction: column; gap: .5rem; }
+    .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
+    .fta-toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </button>
+  <a href="manage-program-head.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Admin</small></div>
+  </a>
+  <div class="topbar-right">
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+    <div class="avatar">PH</div>
+    <div class="topbar-user d-none d-sm-block">Maj. R. Santos<small>Program Head</small></div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+  <span class="sidebar-label">Management</span>
+  <ul class="sidebar-nav">
+    <li>
+      <a href="program-head-staff-management.html">
+        <i class="bi bi-person-badge-fill"></i> Staff Management
+        <span class="sidebar-badge">8</span>
+      </a>
+    </li>
+    <li>
+      <a href="program-head-student-management.html" class="active">
+        <i class="bi bi-people-fill"></i> Student Management
+        <span class="sidebar-badge">10</span>
+      </a>
+    </li>
+    <li><a href="program-head-subject-management.html"><i class="bi bi-journal-text"></i> Subject Management</a></li>
+    <li><a href="program-head-module-management.html"><i class="bi bi-folder2-open"></i> Module Management</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <section class="page-section">
+
+    <div class="panel">
+
+      <!-- WHITE BANNER HEADER — fused to top of card -->
+      <div class="panel-banner">
+        <div class="ico-wrap"><i class="bi bi-people-fill"></i></div>
+        <div>
+          <h2>Student Management</h2>
+          <p>Manage student accounts</p>
+        </div>
+      </div>
+
+      <!-- FILTER ROW -->
+      <div class="panel-header">
+        <h5>All Student Accounts</h5>
+        <div class="filter-controls">
+          <select class="role-filter" id="roleFilter" onchange="renderTable()">
+            <option value="all">All Students</option>
+            <option value="Student">Student</option>
+          </select>
+          <div class="search-wrap">
+            <i class="bi bi-search"></i>
+            <input type="search" id="searchInput" placeholder="Search users…" oninput="renderTable()" />
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="action-bar">
+          <button class="btn-red" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <i class="bi bi-person-plus-fill"></i> Add Student
+          </button>
+          <button class="btn-green" data-bs-toggle="modal" data-bs-target="#importStep3Modal">
+            <i class="bi bi-upload"></i> Import Students
+          </button>
+          <button class="btn-outline-red" onclick="showToast('Password reset link sent (demo only)', 'bi-key-fill')">
+            <i class="bi bi-arrow-repeat"></i> Reset Password
+          </button>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="mgmt-table">
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Role</th><th>Subject</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+          <span style="font-size:.77rem;color:var(--text-muted)" id="pageSummary"></span>
+          <nav>
+            <ul class="pagination pagination-sm mb-0" id="pagination" style="gap:.2rem"></ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center">
+    FTA Management System &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+  </div>
+</main>
+
+<div class="fta-toast-stack" id="toastStack"></div>
+
+<!-- MODAL: ADD STUDENT -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem">
+        <h5 class="modal-title" id="addStudentLabel" style="font-size:.95rem;font-weight:700">
+          <i class="bi bi-person-plus-fill me-2" style="color:var(--red)"></i>Add Student Manually
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem">
+        <div class="alert d-flex align-items-start gap-2 py-2 px-3 mb-3" style="font-size:.79rem;border-radius:8px;background:#EBF3FF;border:1px solid #B5D4F4;color:#1A5276">
+          <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+          <div>Use this form for late enrollees or when only one or two students need to be added.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" style="font-size:.77rem;font-weight:600">Student ID <span class="text-danger">*</span></label>
+          <input type="text" class="form-control form-control-sm" value="2024-00250" style="border-radius:8px;font-size:.82rem" />
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">First Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-sm" value="Juan" style="border-radius:8px;font-size:.82rem" />
+          </div>
+          <div class="col-6">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">Middle Name</label>
+            <input type="text" class="form-control form-control-sm" value="dela" style="border-radius:8px;font-size:.82rem" />
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-8">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">Last Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-sm" value="Cruz" style="border-radius:8px;font-size:.82rem" />
+          </div>
+          <div class="col-4">
+            <label class="form-label" style="font-size:.77rem;font-weight:600">Suffix</label>
+            <input type="text" class="form-control form-control-sm" placeholder="Jr., III" style="border-radius:8px;font-size:.82rem" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" style="font-size:.77rem;font-weight:600">Gmail <span class="text-danger">*</span></label>
+          <input type="email" class="form-control form-control-sm" value="jdelacruz@gmail.com" style="border-radius:8px;font-size:.82rem" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" style="font-size:.77rem;font-weight:600">Phone Number <span class="text-danger">*</span></label>
+          <input type="tel" class="form-control form-control-sm" value="09171234567" style="border-radius:8px;font-size:.82rem" />
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" data-bs-dismiss="modal" onclick="showToast('Student saved (demo only)', 'bi-person-plus-fill')"><i class="bi bi-check-lg"></i> Save Student</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT STEP 3 -->
+<div class="modal fade" id="importStep3Modal" tabindex="-1" aria-labelledby="importStep3Label" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem">
+        <h5 class="modal-title" id="importStep3Label" style="font-size:.95rem;font-weight:700">
+          <i class="bi bi-upload me-2" style="color:#27AE60"></i>Import Students
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem">
+        <div class="step-wizard">
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Download<br>Template</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Fill Student<br>Data</div></div>
+          <div class="step-item active"><div class="step-circle">3</div><div class="step-label">Upload<br>Excel / CSV</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Preview<br>Records</div></div>
+          <div class="step-item"><div class="step-circle">5</div><div class="step-label">Confirm<br>Import</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Students<br>Created</div></div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-3 p-3 rounded-3" style="background:#F9FAFB;border:1px solid var(--border)">
+          <div>
+            <div style="font-size:.82rem;font-weight:600">Step 1 &amp; 2 — Download &amp; Fill Template</div>
+            <div style="font-size:.76rem;color:var(--text-muted)">Download the template, fill in student data, then upload below.</div>
+          </div>
+          <a href="#" class="btn-green flex-shrink-0"><i class="bi bi-download"></i> Download Template</a>
+        </div>
+        <div class="drop-zone">
+          <i class="bi bi-cloud-upload"></i>
+          <p style="font-size:.88rem;font-weight:600;color:var(--text-main);margin-bottom:.25rem">Click to upload or drag &amp; drop</p>
+          <p style="font-size:.78rem;color:var(--text-muted);margin:0">Supports .xlsx and .csv files</p>
+        </div>
+        <div class="mt-2 px-3 py-2 rounded-3 d-flex align-items-center gap-2" style="background:#E8F8F2;font-size:.8rem;color:#1A9B59">
+          <i class="bi bi-file-earmark-check-fill"></i>
+          <span style="font-weight:600">students_batch_2024.xlsx</span>
+          <span class="ms-auto" style="color:var(--text-muted);font-size:.75rem">42.3 KB</span>
+          <i class="bi bi-x-circle-fill" style="color:#C0392B;cursor:pointer"></i>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-green" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep4Modal">
+          <i class="bi bi-eye-fill"></i> Preview Records
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT STEP 4 -->
+<div class="modal fade" id="importStep4Modal" tabindex="-1" aria-labelledby="importStep4Label" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem">
+        <h5 class="modal-title" id="importStep4Label" style="font-size:.95rem;font-weight:700">
+          <i class="bi bi-table me-2" style="color:#2980B9"></i>Preview Records
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem">
+        <div class="step-wizard">
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Download<br>Template</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Fill Student<br>Data</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Upload<br>Excel / CSV</div></div>
+          <div class="step-item active"><div class="step-circle">4</div><div class="step-label">Preview<br>Records</div></div>
+          <div class="step-item"><div class="step-circle">5</div><div class="step-label">Confirm<br>Import</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Students<br>Created</div></div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <span style="font-size:.82rem;color:var(--text-muted)">Found <strong style="color:var(--text-main)">5 records</strong> ready to import</span>
+          <span class="badge-active"><i class="bi bi-check-circle-fill me-1"></i>No errors detected</span>
+        </div>
+        <div class="tbl-wrap">
+          <table class="preview-table">
+            <thead>
+              <tr><th>#</th><th>Student ID</th><th>First Name</th><th>Middle Name</th><th>Last Name</th><th>Suffix</th><th>Gmail</th><th>Phone Number</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>2024-00201</td><td>Pedro</td><td>M.</td><td>Gonzales</td><td>—</td><td>pgonzales@gmail.com</td><td>09171110001</td></tr>
+              <tr><td>2</td><td>2024-00202</td><td>Luisa</td><td>R.</td><td>Mendoza</td><td>—</td><td>lmendoza@gmail.com</td><td>09171110002</td></tr>
+              <tr><td>3</td><td>2024-00203</td><td>Carlo</td><td>A.</td><td>Vega</td><td>—</td><td>cvega@gmail.com</td><td>09171110003</td></tr>
+              <tr><td>4</td><td>2024-00204</td><td>Bianca</td><td>L.</td><td>Torres</td><td>—</td><td>btorres@gmail.com</td><td>09171110004</td></tr>
+              <tr><td>5</td><td>2024-00205</td><td>Marco</td><td>J.</td><td>Reyes</td><td>Jr.</td><td>mreyes@gmail.com</td><td>09171110005</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep3Modal"><i class="bi bi-arrow-left"></i> Back</button>
+        <button type="button" class="btn-green" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep5Modal"><i class="bi bi-check2-all"></i> Confirm Import</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT STEP 5 -->
+<div class="modal fade" id="importStep5Modal" tabindex="-1" aria-labelledby="importStep5Label" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem">
+        <h5 class="modal-title" id="importStep5Label" style="font-size:.95rem;font-weight:700">
+          <i class="bi bi-check2-circle me-2" style="color:#27AE60"></i>Confirm Import
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center" style="padding:1.75rem 1.3rem">
+        <div class="step-wizard mb-4">
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Download</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Fill</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Upload</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Preview</div></div>
+          <div class="step-item active"><div class="step-circle">5</div><div class="step-label">Confirm</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Done</div></div>
+        </div>
+        <div style="width:68px;height:68px;background:#E8F8F2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.9rem;color:#1A9B59">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <p style="font-size:.92rem;font-weight:700;margin-bottom:.4rem">Import 5 students?</p>
+        <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:0">This will create <strong>5 new student accounts</strong>. Default passwords will be sent to each student's Gmail address.</p>
+      </div>
+      <div class="modal-footer justify-content-center" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep4Modal"><i class="bi bi-arrow-left"></i> Back</button>
+        <button type="button" class="btn-green" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep6Modal"><i class="bi bi-cloud-upload"></i> Import Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT STEP 6 -->
+<div class="modal fade" id="importStep6Modal" tabindex="-1" aria-labelledby="importStep6Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-body text-center" style="padding:2.2rem 1.5rem">
+        <div style="width:72px;height:72px;background:#E8F8F2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2.2rem;color:#1A9B59">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h5 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Students Created!</h5>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1.4rem"><strong>5 student accounts</strong> have been successfully created. Login credentials have been sent to their registered Gmail addresses.</p>
+        <button type="button" class="btn-red" data-bs-dismiss="modal" style="margin:0 auto"><i class="bi bi-check-lg"></i> Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  const USERS = [
+    { id:'01', name:'John Cruz',       email:'jcruz@fta.edu',      role:'Student', subject:'FIRE101, FIRE102', status:'Active',   color:'#C0392B', initials:'JC' },
+    { id:'02', name:'Maria Santos',    email:'msantos@fta.edu',    role:'Student', subject:'FIRE101',          status:'Active',   color:'#C0392B', initials:'MS' },
+    { id:'03', name:'Jose Dela Cruz',  email:'jdelacruz@fta.edu',  role:'Student', subject:'FIRE104, FIRE105', status:'Active',   color:'#2980B9', initials:'JD' },
+    { id:'04', name:'Pedro Gonzales',  email:'pgonzales@fta.edu',  role:'Student', subject:'FIRE101',          status:'Active',   color:'#E67E22', initials:'PG' },
+    { id:'05', name:'Luisa Mendoza',   email:'lmendoza@fta.edu',   role:'Student', subject:'FIRE102',          status:'Active',   color:'#16A085', initials:'LM' },
+    { id:'06', name:'Carlo Vega',      email:'cvega@fta.edu',      role:'Student', subject:'FIRE103',          status:'Inactive', color:'#2C3E50', initials:'CV' },
+    { id:'07', name:'Bianca Torres',   email:'btorres@fta.edu',    role:'Student', subject:'FIRE104',          status:'Active',   color:'#C0392B', initials:'BT' },
+    { id:'08', name:'Marco Reyes',     email:'mreyes@fta.edu',     role:'Student', subject:'FIRE105',          status:'Active',   color:'#2980B9', initials:'MR' },
+    { id:'09', name:'Miguel Tan',      email:'mtan@fta.edu',       role:'Student', subject:'FIRE101, FIRE103', status:'Active',   color:'#E67E22', initials:'MT' },
+    { id:'10', name:'Sofia Ramirez',   email:'sramirez@fta.edu',   role:'Student', subject:'FIRE102',          status:'Inactive', color:'#16A085', initials:'SR' }
+  ];
+
+  const PAGE_SIZE = 6;
+  let currentPage = 1;
+
+  function roleBadge(role) {
+    if (role === 'Student') return '<span class="badge-student">Student</span>';
+    if (role === 'Instructor') return '<span class="badge-instructor">Instructor</span>';
+    return '<span class="badge-secretary">Secretary</span>';
+  }
+  function statusBadge(status) {
+    return status === 'Active'
+      ? '<span class="badge-active">Active</span>'
+      : '<span class="badge-inactive">Inactive</span>';
+  }
+  function getFiltered() {
+    const role = document.getElementById('roleFilter').value;
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    return USERS.filter(u => {
+      const roleMatch = role === 'all' || u.role === role;
+      const qMatch = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+      return roleMatch && qMatch;
+    });
+  }
+  function renderTable() {
+    const filtered = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filtered.slice(start, start + PAGE_SIZE);
+    const tbody = document.getElementById('userTableBody');
+    tbody.innerHTML = pageItems.map(u => `
+      <tr data-uid="${u.id}-${u.email}">
+        <td style="color:var(--text-muted)">${u.id}</td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <div class="avatar-sm" style="background:${u.color}">${u.initials}</div>
+            <div><div style="font-weight:600">${u.name}</div><div style="font-size:.71rem;color:var(--text-muted)">${u.email}</div></div>
+          </div>
+        </td>
+        <td>${roleBadge(u.role)}</td>
+        <td>${u.subject}</td>
+        <td class="status-cell">${statusBadge(u.status)}</td>
+        <td><div class="d-flex gap-1">
+          <button class="btn-icon edit" title="Edit" onclick="onEdit('${u.name}')"><i class="bi bi-pencil-fill"></i></button>
+          <button class="btn-icon reset" title="Reset Password" onclick="onReset('${u.name}')"><i class="bi bi-key-fill"></i></button>
+          <button class="btn-icon toggle ${u.status === 'Inactive' ? 'is-off' : ''}" title="${u.status === 'Active' ? 'Deactivate' : 'Activate'}" onclick="onToggle(this, '${u.name}')"><i class="bi ${u.status === 'Active' ? 'bi-toggle-on' : 'bi-toggle-off'}"></i></button>
+          <button class="btn-icon del" title="Delete" onclick="onDelete(this, '${u.name}')"><i class="bi bi-trash-fill"></i></button>
+        </div></td>
+      </tr>
+    `).join('');
+    if (pageItems.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4" style="color:var(--text-muted)">No users match your search/filter.</td></tr>`;
+    }
+    const summary = document.getElementById('pageSummary');
+    summary.textContent = filtered.length === 0
+      ? 'Showing 0 of 0 users'
+      : `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} of ${filtered.length} users`;
+    const pag = document.getElementById('pagination');
+    let html = `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="goToPage(${currentPage - 1});return false;">«</a></li>`;
+    for (let p = 1; p <= totalPages; p++) {
+      html += `<li class="page-item ${p === currentPage ? 'active' : ''}"><a class="page-link" href="#" style="${p === currentPage ? 'background:var(--red);border-color:var(--red)' : ''}" onclick="goToPage(${p});return false;">${p}</a></li>`;
+    }
+    html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="goToPage(${currentPage + 1});return false;">»</a></li>`;
+    pag.innerHTML = html;
+  }
+  function goToPage(p) {
+    const filtered = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (p < 1 || p > totalPages) return;
+    currentPage = p;
+    renderTable();
+  }
+  function showToast(message, icon) {
+    const stack = document.getElementById('toastStack');
+    const el = document.createElement('div');
+    el.className = 'fta-toast';
+    el.innerHTML = `<i class="bi ${icon || 'bi-info-circle-fill'}"></i><span>${message}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 250); }, 2200);
+  }
+  function onEdit(name)  { showToast(`Editing ${name} (demo only)`, 'bi-pencil-fill'); }
+  function onReset(name) { showToast(`Password reset email sent to ${name} (demo only)`, 'bi-key-fill'); }
+  function onToggle(btn, name) {
+    const row = btn.closest('tr');
+    const statusCell = row.querySelector('.status-cell');
+    const icon = btn.querySelector('i');
+    const nowActive = icon.classList.contains('bi-toggle-off');
+    if (nowActive) {
+      statusCell.innerHTML = statusBadge('Active');
+      icon.classList.replace('bi-toggle-off', 'bi-toggle-on');
+      btn.classList.remove('is-off'); btn.title = 'Deactivate';
+      showToast(`${name} set to Active (demo only)`, 'bi-toggle-on');
+    } else {
+      statusCell.innerHTML = statusBadge('Inactive');
+      icon.classList.replace('bi-toggle-on', 'bi-toggle-off');
+      btn.classList.add('is-off'); btn.title = 'Activate';
+      showToast(`${name} set to Inactive (demo only)`, 'bi-toggle-off');
+    }
+  }
+  function onDelete(btn, name) {
+    if (!confirm(`Remove ${name} from the list? (front-end only)`)) return;
+    const row = btn.closest('tr');
+    const uid = row.getAttribute('data-uid');
+    const idx = USERS.findIndex(u => `${u.id}-${u.email}` === uid);
+    if (idx !== -1) USERS.splice(idx, 1);
+    showToast(`${name} removed from view (demo only)`, 'bi-trash-fill');
+    renderTable();
+  }
+  document.addEventListener('DOMContentLoaded', renderTable);
+</script>
+</body>
+</html>

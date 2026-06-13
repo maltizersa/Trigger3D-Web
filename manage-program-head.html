@@ -1,696 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manage Program Head</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<style>
-  :root {
-    --accent: #6c63ff;
-    --accent-light: #f0eeff;
-    --orange: #f97316;
-    --purple: #7c3aed;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Head — Management System</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --white:      #FFFFFF;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
 
-  body { background: #f0f2f5; font-size: 13px; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--red);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
 
-  /* Sidebar */
-  .sidebar {
-    width: 200px;
-    min-height: 100vh;
-    background: #fff;
-    border-right: 1px solid #e8e8e8;
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  .avatar-sm {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 11px; font-weight: 600;
-  }
-  .s-nav-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 7px 16px; color: #555; font-size: 12px;
-    text-decoration: none; border-radius: 0 20px 20px 0;
-    margin-right: 8px; transition: background .15s, color .15s;
-  }
-  .s-nav-item:hover { background: #f5f5f5; color: #333; }
-  .s-nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
-  .s-nav-item i { font-size: 13px; width: 16px; }
-  .nav-label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px 4px; }
+    /* TOP BAR */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1040;
+      height: var(--topbar-h);
+      background: #FFFFFF;
+      display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: .55rem;
+      color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none;
+    }
+    .topbar-brand .icon-box {
+      width: 32px; height: 32px; background: #FDECEA;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--red);
+    }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .topbar-right .notif-btn {
+      background: #FDECEA; border: none; border-radius: 50%;
+      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      color: var(--red); font-size: 1rem; position: relative; cursor: pointer;
+    }
+    .notif-dot {
+      position: absolute; top: 5px; right: 6px;
+      width: 7px; height: 7px; background: #F9CA24; border-radius: 50%;
+      border: 1px solid #fff;
+    }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--red);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A;
+    }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle {
+      display: none; background: none; border: none;
+      color: var(--red); font-size: 1.3rem; cursor: pointer;
+    }
 
-  .instructor-avatar { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; }
-  .av1 { background: linear-gradient(135deg,#a78bfa,#7c3aed); }
-  .av2 { background: linear-gradient(135deg,#fbbf24,#f59e0b); }
-  .av3 { background: linear-gradient(135deg,#34d399,#059669); }
-  .av4 { background: linear-gradient(135deg,#60a5fa,#2563eb); }
-  .av5 { background: linear-gradient(135deg,#f87171,#dc2626); }
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030;
+      width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow-y: auto; overflow-x: hidden;
+      transition: transform .25s ease;
+    }
+    .sidebar-label {
+      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-muted); padding: 1.1rem 1.1rem .3rem;
+    }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: .65rem;
+      padding: .6rem 1.1rem; color: var(--text-muted);
+      text-decoration: none; font-size: .85rem; font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all .15s;
+    }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-badge {
+      margin-left: auto; background: var(--red); color: #fff;
+      font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px;
+    }
+    .sidebar-footer {
+      margin-top: auto; padding: 1rem 1.1rem;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: .55rem;
+      color: var(--text-muted); font-size: .82rem; text-decoration: none;
+    }
+    .sidebar-footer a:hover { color: var(--red); }
 
-  /* Notifications panel */
-  .notif-panel {
-    width: 220px; background: #fff;
-    border-right: 1px solid #e8e8e8;
-    flex-shrink: 0; position: sticky;
-    top: 0; height: 100vh; overflow-y: auto;
-  }
-  .notif-icon {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--accent-light); display: flex;
-    align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .notif-icon i { font-size: 13px; color: var(--accent); }
+    /* MAIN */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem;
+      transition: margin-left .25s ease;
+      background: transparent;
+    }
 
-  /* Search box */
-  .search-box {
-    display: flex; align-items: center;
-    background: #f5f5f5; border: 1px solid #e8e8e8;
-    border-radius: 6px; padding: 5px 10px; gap: 6px;
-  }
-  .search-box input { background: none; border: none; outline: none; font-size: 12px; width: 120px; }
-  .shortcut { background: #eee; border-radius: 3px; padding: 1px 4px; font-size: 10px; color: #888; }
-  .icon-btn {
-    width: 28px; height: 28px; border-radius: 6px; background: #f5f5f5;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: #666; font-size: 14px; border: none;
-    text-decoration: none; transition: background .15s;
-  }
-  .icon-btn:hover { background: #ebebeb; color: #333; }
+    /* SECTION HEADING */
+    .page-section { padding-top: 1.5rem; }
+    .section-heading { display: flex; align-items: center; gap: .65rem; margin-bottom: 1.2rem; }
+    .section-heading .ico-wrap {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      color: var(--red); font-size: 1.05rem; flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,.5);
+    }
+    .section-heading h2 { font-size: 1.12rem; font-weight: 700; margin: 0; color: #fff; }
+    .section-heading p { font-size: .76rem; margin: 0; color: rgba(255,255,255,.85); }
 
-  /* Stat cards */
-  .stat-card { background: #fff; border-radius: 12px; border: 1px solid #efefef; }
-  .stat-card.purple-tint { background: #f8f7ff; }
-  .stat-value { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+    /* STAT CARDS */
+    .stat-card {
+      border-radius: 14px; padding: 1.2rem 1.3rem;
+      color: #fff; position: relative; overflow: hidden;
+      height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,.12);
+    }
+    .stat-card::before {
+      content: ''; position: absolute; right: -20px; top: -20px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(255,255,255,.12);
+    }
+    .stat-card::after {
+      content: ''; position: absolute; right: 20px; top: 30px;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+    .stat-card .card-icon {
+      position: absolute; top: 1rem; right: 1rem;
+      font-size: 1.4rem; opacity: .7;
+    }
+    .stat-card .stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .stat-card .stat-label { font-size: .75rem; opacity: .85; margin-top: .3rem; }
+    .stat-card .stat-delta { font-size: .7rem; opacity: .8; margin-top: .25rem; }
+    .stat-card.red    { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+    .stat-card.orange { background: linear-gradient(135deg, #E67E22, #D35400); }
+    .stat-card.blue   { background: linear-gradient(135deg, #2980B9, #1A5276); }
+    .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
+    .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
+    .stat-card.purple { background: linear-gradient(135deg, #8E44AD, #6C3483); }
 
-  /* Table card */
-  .table-card { background: #fff; border-radius: 12px; border: 1px solid #efefef; }
+    /* PANEL */
+    .panel {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.2); overflow: hidden;
+    }
+    .panel-header {
+      padding: .9rem 1.2rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+    }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    .panel-body { padding: 1.2rem; }
 
-  /* Avatar initials for table */
-  .ph-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
-  }
+    /* PROGRESS BAR */
+    .prog-bar-wrap { background: #EAECEF; border-radius: 99px; height: 6px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; border-radius: 99px; }
+    .prog-bar-fill.hi  { background: linear-gradient(90deg, #27AE60, #52D68A); }
+    .prog-bar-fill.mid { background: linear-gradient(90deg, #2980B9, #5DADE2); }
+    .prog-bar-fill.low { background: linear-gradient(90deg, #E67E22, #F5B842); }
 
-  .badge-active {
-    background: #dcfce7; color: #16a34a;
-    font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 20px; display: inline-block;
-  }
-  .badge-inactive {
-    background: #fee2e2; color: #dc2626;
-    font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 20px; display: inline-block;
-  }
-  .badge-pending {
-    background: #fef9c3; color: #ca8a04;
-    font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 20px; display: inline-block;
-  }
+    /* ACTIVITY FEED */
+    .activity-feed { list-style: none; padding: 0; margin: 0; }
+    .activity-feed li {
+      display: flex; align-items: flex-start; gap: .8rem;
+      padding: .65rem 0; border-bottom: 1px solid var(--border);
+    }
+    .activity-feed li:last-child { border-bottom: none; }
+    .act-dot {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: .82rem;
+    }
+    .act-dot.add    { background: #E8F8F2; color: #1A9B59; }
+    .act-dot.edit   { background: #EBF3FF; color: #2980B9; }
+    .act-dot.upload { background: #FEF9E7; color: #B7770D; }
+    .act-dot.reset  { background: #FDECEA; color: #C0392B; }
+    .act-text { font-size: .82rem; line-height: 1.4; }
+    .act-time { font-size: .69rem; color: var(--text-muted); margin-top: .1rem; }
 
-  /* Table tweaks */
-  .ph-table thead th {
-    font-size: 10.5px; color: #999; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.4px;
-    border-bottom: 1px solid #f0f0f0; padding: 10px 12px;
-    background: #fafafa;
-  }
-  .ph-table tbody td {
-    font-size: 12px; color: #333;
-    padding: 10px 12px; vertical-align: middle;
-    border-bottom: 1px solid #f5f5f5;
-  }
-  .ph-table tbody tr:last-child td { border-bottom: none; }
-  .ph-table tbody tr:hover td { background: #fafafa; }
+    /* TABLE */
+    .mgmt-table { width: 100%; font-size: .82rem; border-collapse: collapse; }
+    .mgmt-table thead th {
+      background: #fff; color: var(--text-main);
+      padding: .65rem 1rem; font-weight: 700; font-size: .73rem;
+      letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
+      border-bottom: 2px solid var(--border);
+    }
+    .mgmt-table thead th:first-child { border-radius: 6px 0 0 0; }
+    .mgmt-table thead th:last-child  { border-radius: 0 6px 0 0; }
+    .mgmt-table tbody tr { border-bottom: 1px solid var(--border); }
+    .mgmt-table tbody tr:hover { background: #FEF9F9; }
+    .mgmt-table tbody td { padding: .7rem 1rem; vertical-align: middle; }
+    .tbl-wrap { overflow-x: auto; }
 
-  /* Action icon buttons in table */
-  .tbl-btn {
-    width: 26px; height: 26px; border-radius: 6px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 12px; border: 1px solid #e8e8e8; background: #fff;
-    color: #666; cursor: pointer; transition: background .15s;
-    text-decoration: none;
-  }
-  .tbl-btn:hover { background: #f5f5f5; color: #333; }
-  .tbl-btn.edit:hover { background: #f0eeff; color: var(--accent); border-color: #d0c9ff; }
-  .tbl-btn.del:hover  { background: #fff1f1; color: #dc2626; border-color: #fecaca; }
+    .badge-active     { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; }
+    .badge-inprogress { background: #EBF3FF; color: #1565C0; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; }
+    .badge-completed  { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; }
 
-  /* Pagination */
-  .page-btn {
-    width: 26px; height: 26px; border-radius: 5px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; border: 1px solid #e8e8e8; background: #fff;
-    color: #555; text-decoration: none; transition: background .15s;
-  }
-  .page-btn:hover { background: #f5f5f5; }
-  .page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .subject-code {
+      display: inline-block; background: var(--red); color: #fff;
+      font-size: .67rem; font-weight: 800; letter-spacing: .07em;
+      padding: .2rem .6rem; border-radius: 6px;
+    }
+    .avatar-sm {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: .68rem;
+    }
+    .btn-icon {
+      width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; font-size: .82rem;
+    }
+    .btn-icon.view { background: #EBF3FF; color: #2980B9; }
+    .btn-icon:hover { filter: brightness(.88); }
 
-  /* Modal */
-  .modal-header-custom { background: var(--accent-light); border-bottom: 1px solid #ddd8ff; }
-  .modal-title-custom { color: var(--accent); font-weight: 700; font-size: 14px; }
-  .form-label { font-size: 11.5px; font-weight: 600; color: #555; }
-  .form-control, .form-select {
-    font-size: 12px; border-radius: 8px;
-    border: 1px solid #e8e8e8; padding: 7px 10px;
-  }
-  .form-control:focus, .form-select:focus {
-    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,.1);
-  }
-
-  /* Filter bar */
-  .filter-bar { background: #fff; border-radius: 10px; border: 1px solid #efefef; }
-</style>
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .stat-card .stat-value { font-size: 1.4rem; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="d-flex" style="min-height:100vh;">
+<!-- TOP BAR -->
+<header class="topbar">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </button>
+  <a href="manage-program-head.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Admin</small></div>
+  </a>
+  <div class="topbar-right">
+    <button class="notif-btn">
+      <i class="bi bi-bell"></i>
+      <span class="notif-dot"></span>
+    </button>
+    <div class="avatar">PH</div>
+    <div class="topbar-user d-none d-sm-block">
+      Maj. R. Santos
+      <small>Program Head</small>
+    </div>
+  </div>
+</header>
 
-  <!-- ── SIDEBAR ── -->
-  <aside class="sidebar d-flex flex-column py-3">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-program-head.html" class="active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
 
-    <div class="d-flex align-items-center gap-2 px-3 pb-3 border-bottom">
-      <div class="avatar-sm">A</div>
-      <span class="fw-semibold" style="font-size:13px;">Admin</span>
+  <span class="sidebar-label">Management</span>
+  <ul class="sidebar-nav">
+    <li>
+      <a href="program-head-staff-management.html">
+        <i class="bi bi-person-badge-fill"></i> Staff Management
+        <span class="sidebar-badge">8</span>
+      </a>
+    </li>
+    <li>
+      <a href="program-head-student-management.html">
+        <i class="bi bi-people-fill"></i> Student Management
+        <span class="sidebar-badge">10</span>
+      </a>
+    </li>
+    <li><a href="program-head-subject-management.html"><i class="bi bi-journal-text"></i> Subject Management</a></li>
+    <li><a href="program-head-module-management.html"><i class="bi bi-folder2-open"></i> Module Management</a></li>
+  </ul>
+
+  <span class="sidebar-label">Settings</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-gear-fill"></i> System Settings</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <section id="dashboard" class="page-section">
+    <div class="section-heading">
+      <div class="ico-wrap"><i class="bi bi-grid-1x2-fill"></i></div>
+      <div>
+        <h2>Dashboard</h2>
+        <p>Quick overview of the training management system</p>
+      </div>
     </div>
 
-    <div class="d-flex gap-3 px-3 py-2">
-      <span style="font-size:11px;color:#333;font-weight:500;cursor:pointer;">Favorites</span>
-      <span style="font-size:11px;color:#999;cursor:pointer;">Recently</span>
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-3">
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card red">
+          <i class="bi bi-person-lines-fill card-icon"></i>
+          <div class="stat-value">124</div>
+          <div class="stat-label">Total Students</div>
+          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+6 this month</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card orange">
+          <i class="bi bi-person-badge-fill card-icon"></i>
+          <div class="stat-value">18</div>
+          <div class="stat-label">Total Instructors</div>
+          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+2 this month</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card purple">
+          <i class="bi bi-journal-bookmark-fill card-icon"></i>
+          <div class="stat-value">12</div>
+          <div class="stat-label">Subject Codes</div>
+          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+1 this term</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card blue">
+          <i class="bi bi-folder-fill card-icon"></i>
+          <div class="stat-value">47</div>
+          <div class="stat-label">Total Modules</div>
+          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+5 new uploads</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card teal">
+          <i class="bi bi-patch-check-fill card-icon"></i>
+          <div class="stat-value">89</div>
+          <div class="stat-label">Completed</div>
+          <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>72% rate</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="stat-card green">
+          <i class="bi bi-hourglass-split card-icon"></i>
+          <div class="stat-value">35</div>
+          <div class="stat-label">In Progress</div>
+          <div class="stat-delta"><i class="bi bi-arrow-down-short"></i>28% remaining</div>
+        </div>
+      </div>
     </div>
 
-    <div class="nav-label">Dashboards</div>
-    <a href="index.html" class="s-nav-item">
-      <i class="bi bi-grid-fill"></i> Dashboard
-    </a>
-
-    <div class="nav-label mt-1">Manage</div>
-    <a href="manage-program-head.html" class="s-nav-item active"><i class="bi bi-person-badge"></i> Program Head</a>
-    <a href="manage-secretary.html"    class="s-nav-item"><i class="bi bi-briefcase"></i> Secretary</a>
-    <a href="manage-ins.html"          class="s-nav-item"><i class="bi bi-person-video3"></i> Instructors</a>
-    <a href="manage-students.html"     class="s-nav-item"><i class="bi bi-mortarboard"></i> Students</a>
-    <a href="manage-subject-codes.html"class="s-nav-item"><i class="bi bi-journal-bookmark"></i> Subject Codes</a>
-
-    <div class="nav-label mt-1">Pages</div>
-    <a href="#" class="s-nav-item"><i class="bi bi-person-lines-fill"></i> User Profile</a>
-    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">User Accounts</a>
-    <a href="#" class="s-nav-item" style="padding-left:32px;font-size:11.5px;">Subject Codes</a>
-    <a href="#" class="s-nav-item"><i class="bi bi-person-circle"></i> Account</a>
-
-    <div class="px-3 mt-2">
-      <div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;padding:8px 0 6px;">Instructors</div>
-      <div class="d-flex align-items-center gap-2 py-1"><div class="av1 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
-      <div class="d-flex align-items-center gap-2 py-1"><div class="av2 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
-      <div class="d-flex align-items-center gap-2 py-1"><div class="av3 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
-      <div class="d-flex align-items-center gap-2 py-1"><div class="av4 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
-      <div class="d-flex align-items-center gap-2 py-1"><div class="av5 instructor-avatar"></div><span style="font-size:12px;color:#444;">Don Don</span></div>
-    </div>
-  </aside>
-
-  <!-- ── MAIN ── -->
-  <div class="d-flex flex-grow-1 overflow-hidden">
-
-    <!-- NOTIFICATIONS PANEL -->
-    <div class="notif-panel p-3">
-      <h3 class="fw-semibold mb-3" style="font-size:13px;">Notifications</h3>
-
-      <div class="d-flex align-items-start gap-2 mb-3">
-        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
-        <div>
-          <div class="fw-medium" style="font-size:11.5px;">New Program Head</div>
-          <div style="font-size:10px;color:#aaa;">Just now</div>
-        </div>
-      </div>
-      <div class="d-flex align-items-start gap-2 mb-3">
-        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
-        <div>
-          <div class="fw-medium" style="font-size:11.5px;">Account updated</div>
-          <div style="font-size:10px;color:#aaa;">59 minutes ago</div>
-        </div>
-      </div>
-      <div class="d-flex align-items-start gap-2 mb-3">
-        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
-        <div>
-          <div class="fw-medium" style="font-size:11.5px;">New user</div>
-          <div style="font-size:10px;color:#aaa;">12 hours ago</div>
-        </div>
-      </div>
-      <div class="d-flex align-items-start gap-2 mb-3">
-        <div class="notif-icon mt-1"><i class="bi bi-person-fill"></i></div>
-        <div>
-          <div class="fw-medium" style="font-size:11.5px;">Role assigned</div>
-          <div style="font-size:10px;color:#aaa;">Today, 11:59 AM</div>
-        </div>
-      </div>
-
-      <div class="fw-semibold mb-2" style="font-size:11px;color:#333;">Activities</div>
-      <div class="d-flex align-items-center gap-2 mb-3"><div class="av1 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Profile updated</div><div style="font-size:10px;color:#aaa;">Just now</div></div></div>
-      <div class="d-flex align-items-center gap-2 mb-3"><div class="av2 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Added program</div><div style="font-size:10px;color:#aaa;">59 minutes ago</div></div></div>
-      <div class="d-flex align-items-center gap-2 mb-3"><div class="av3 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Account created</div><div style="font-size:10px;color:#aaa;">12 hours ago</div></div></div>
-      <div class="d-flex align-items-center gap-2 mb-3"><div class="av4 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Role changed</div><div style="font-size:10px;color:#aaa;">Today, 11:59 AM</div></div></div>
-      <div class="d-flex align-items-center gap-2 mb-3"><div class="av5 instructor-avatar"></div><div><div class="fw-medium" style="font-size:11.5px;">Profile reviewed</div><div style="font-size:10px;color:#aaa;">Feb 2, 2026</div></div></div>
-    </div>
-
-    <!-- CONTENT -->
-    <div class="flex-grow-1 overflow-y-auto p-3 p-lg-4">
-
-      <!-- TOP NAV -->
-      <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-        <div class="d-flex align-items-center gap-2" style="font-size:12px;color:#888;">
-          <i class="bi bi-grid"></i>
-          <span>Dashboards</span>
-          <span style="color:#ccc;">/</span>
-          <span>Manage</span>
-          <span style="color:#ccc;">/</span>
-          <span class="fw-medium text-dark">Program Head</span>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-          <div class="search-box">
-            <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
-            <input type="text" placeholder="Search">
-            <span class="shortcut">/</span>
+    <!-- RECENT ACTIVITY + COMPLETION SUMMARY -->
+    <div class="row g-3">
+      <div class="col-12 col-lg-8">
+        <div class="panel">
+          <div class="panel-header">
+            <h5><i class="bi bi-clock-history me-2 text-secondary"></i>Recent Activities</h5>
+            <a href="#" style="font-size:.77rem;color:var(--red);">View all</a>
           </div>
-          <a href="#" class="icon-btn"><i class="bi bi-sun"></i></a>
-          <a href="#" class="icon-btn"><i class="bi bi-clock"></i></a>
-          <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
-          <a href="#" class="icon-btn"><i class="bi bi-grid"></i></a>
+          <div class="panel-body p-0">
+            <ul class="activity-feed px-3 pb-2">
+              <li>
+                <div class="act-dot add"><i class="bi bi-person-plus"></i></div>
+                <div class="act-text">
+                  <strong>New student enrolled</strong> — Maria Santos was added to <em>FIRE101</em>
+                  <div class="act-time"><i class="bi bi-clock me-1"></i>2 minutes ago · by Admin Cruz</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-dot upload"><i class="bi bi-cloud-upload"></i></div>
+                <div class="act-text">
+                  <strong>Module uploaded</strong> — "Firearm Handling Safety Protocols.pdf" added to <em>FIRE102</em>
+                  <div class="act-time"><i class="bi bi-clock me-1"></i>18 minutes ago · by Instr. Reyes</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-dot edit"><i class="bi bi-pencil"></i></div>
+                <div class="act-text">
+                  <strong>Subject updated</strong> — FIRE103 syllabus edited by <em>Instr. Bautista</em>
+                  <div class="act-time"><i class="bi bi-clock me-1"></i>1 hour ago · by Instr. Bautista</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-dot reset"><i class="bi bi-key"></i></div>
+                <div class="act-text">
+                  <strong>Password reset</strong> — Account for <em>Juan Dela Cruz</em> was reset
+                  <div class="act-time"><i class="bi bi-clock me-1"></i>3 hours ago · by Program Head</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-dot add"><i class="bi bi-person-check"></i></div>
+                <div class="act-text">
+                  <strong>Instructor assigned</strong> — Instr. Mendoza assigned to <em>FIRE104</em>
+                  <div class="act-time"><i class="bi bi-clock me-1"></i>Yesterday, 4:30 PM</div>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-
-      <!-- PAGE HEADER -->
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <div>
-          <h2 class="fw-semibold m-0" style="font-size:15px;">Program Head Management</h2>
-          <p class="text-muted m-0" style="font-size:11px;">Manage all program head accounts and their assigned departments.</p>
+      <div class="col-12 col-lg-4">
+        <div class="panel h-100">
+          <div class="panel-header">
+            <h5><i class="bi bi-pie-chart-fill me-2 text-secondary"></i>Completion Summary</h5>
+          </div>
+          <div class="panel-body">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE101 — Fundamentals</span><strong>91%</strong></div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:91%"></div></div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE102 — Assembly</span><strong>76%</strong></div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:76%"></div></div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE103 — Disassembly</span><strong>58%</strong></div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:58%"></div></div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE104 — Safety Protocols</span><strong>82%</strong></div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:82%"></div></div>
+            </div>
+            <div>
+              <div class="d-flex justify-content-between mb-1" style="font-size:.79rem;"><span>FIRE105 — Range Practice</span><strong>44%</strong></div>
+              <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:44%"></div></div>
+            </div>
+          </div>
         </div>
-        <button class="btn btn-sm text-white d-flex align-items-center gap-1" style="background:var(--accent);font-size:12px;border-radius:8px;" data-bs-toggle="modal" data-bs-target="#addPHModal">
-          <i class="bi bi-plus-lg"></i> Add Program Head
-        </button>
       </div>
+    </div>
+  </section>
 
-      <!-- FILTER BAR -->
-      <div class="filter-bar p-3 mb-3 d-flex align-items-center gap-3 flex-wrap">
-        <div class="search-box" style="width:220px;">
-          <i class="bi bi-search" style="color:#bbb;font-size:12px;"></i>
-          <input type="text" placeholder="Search program head..." style="width:100%;">
-        </div>
-        <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-building" style="font-size:12px;color:#aaa;"></i>
-          <span style="font-size:12px;color:#555;font-weight:500;">College of Criminal Justice Education</span>
+  <!-- STUDENT PROGRESS -->
+  <section id="student-progress" class="page-section mt-4">
+    <div class="section-heading">
+      <div class="ico-wrap"><i class="bi bi-bar-chart-line-fill"></i></div>
+      <div>
+        <h2>Student Progress Monitoring</h2>
+        <p>Track completion, assessment scores &amp; learning status</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h5>All Students Progress</h5>
+        <div class="d-flex gap-2 flex-wrap">
+          <select style="font-size:.79rem;border-radius:8px;border:1.5px solid var(--border);padding:.3rem .65rem;background:#F9FAFB;">
+            <option>All Subjects</option>
+            <option>FIRE101</option><option>FIRE102</option><option>FIRE103</option>
+          </select>
+          <select style="font-size:.79rem;border-radius:8px;border:1.5px solid var(--border);padding:.3rem .65rem;background:#F9FAFB;">
+            <option>All Statuses</option>
+            <option>Active</option><option>Completed</option><option>In Progress</option>
+          </select>
         </div>
       </div>
-
-      <!-- TABLE -->
-      <div class="table-card mb-3 overflow-hidden">
-        <div class="table-responsive">
-          <table class="table ph-table mb-0">
+      <div class="panel-body">
+        <div class="tbl-wrap">
+          <table class="mgmt-table">
             <thead>
               <tr>
-                <th style="width:36px;">
-                  <input class="form-check-input" type="checkbox" style="border-radius:4px;">
-                </th>
-                <th>Program Head</th>
-                <th>Employee ID</th>
-                <th>Email</th>
-                <th>Contact</th>
-                <th>Status</th>
-                <th style="text-align:center;">Actions</th>
+                <th>#</th><th>Student</th><th>Subject</th><th>Level</th><th>Score</th><th>Completion</th><th>Status</th><th>Actions</th>
               </tr>
             </thead>
             <tbody>
-
-              <!-- Row 1 -->
               <tr>
-                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td style="color:var(--text-muted)">01</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
-                    <div class="ph-avatar av1" style="width:32px;height:32px;font-size:11px;">MA</div>
-                    <div>
-                      <div class="fw-semibold" style="font-size:12px;">Maria Santos</div>
-                      <div style="font-size:10px;color:#aaa;">Joined Jan 2024</div>
-                    </div>
+                    <div class="avatar-sm" style="background:var(--red);">JC</div>
+                    John Cruz
                   </div>
                 </td>
-                <td style="color:#777;">EMP-0021</td>
-                
-                <td style="color:#777;">m.santos@school.edu</td>
-                <td style="color:#777;">09171234567</td>
+                <td><span class="subject-code">FIRE101</span></td>
+                <td style="font-weight:700;color:#2980B9;">Level 3</td>
+                <td style="font-weight:700;color:#27AE60;">85%</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:90%"></div></div></div>
+                    <span style="font-size:.79rem;font-weight:600;">90%</span>
+                  </div>
+                </td>
                 <td><span class="badge-active">Active</span></td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center gap-1">
-                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
-                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
-                  </div>
-                </td>
+                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
               </tr>
-
-              <!-- Row 2 -->
               <tr>
-                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td style="color:var(--text-muted)">02</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
-                    <div class="ph-avatar av2" style="width:32px;height:32px;font-size:11px;">JR</div>
-                    <div>
-                      <div class="fw-semibold" style="font-size:12px;">Jose Reyes</div>
-                      <div style="font-size:10px;color:#aaa;">Joined Mar 2023</div>
-                    </div>
+                    <div class="avatar-sm" style="background:var(--red);">MS</div>
+                    Maria Santos
                   </div>
                 </td>
-                <td style="color:#777;">EMP-0018</td>
-                
-                <td style="color:#777;">j.reyes@school.edu</td>
-                <td style="color:#777;">09189876543</td>
+                <td><span class="subject-code">FIRE101</span></td>
+                <td style="font-weight:700;color:#2980B9;">Level 2</td>
+                <td style="font-weight:700;color:#27AE60;">78%</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill mid" style="width:65%"></div></div></div>
+                    <span style="font-size:.79rem;font-weight:600;">65%</span>
+                  </div>
+                </td>
+                <td><span class="badge-inprogress">In Progress</span></td>
+                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
+              </tr>
+              <tr>
+                <td style="color:var(--text-muted)">03</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-sm" style="background:#2980B9;">JD</div>
+                    Jose Dela Cruz
+                  </div>
+                </td>
+                <td><span class="subject-code">FIRE102</span></td>
+                <td style="font-weight:700;color:#2980B9;">Level 4</td>
+                <td style="font-weight:700;color:#27AE60;">92%</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:100%"></div></div></div>
+                    <span style="font-size:.79rem;font-weight:600;">100%</span>
+                  </div>
+                </td>
+                <td><span class="badge-completed">Completed</span></td>
+                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
+              </tr>
+              <tr>
+                <td style="color:var(--text-muted)">04</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-sm" style="background:#8E44AD;">LA</div>
+                    Liza Aquino
+                  </div>
+                </td>
+                <td><span class="subject-code">FIRE103</span></td>
+                <td style="font-weight:700;color:#2980B9;">Level 1</td>
+                <td style="font-weight:700;color:#E67E22;">55%</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:40%"></div></div></div>
+                    <span style="font-size:.79rem;font-weight:600;">40%</span>
+                  </div>
+                </td>
+                <td><span class="badge-inprogress">In Progress</span></td>
+                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
+              </tr>
+              <tr>
+                <td style="color:var(--text-muted)">05</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-sm" style="background:#1ABC9C;">RP</div>
+                    Roberto Pascual
+                  </div>
+                </td>
+                <td><span class="subject-code">FIRE104</span></td>
+                <td style="font-weight:700;color:#2980B9;">Level 3</td>
+                <td style="font-weight:700;color:#27AE60;">88%</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:85%"></div></div></div>
+                    <span style="font-size:.79rem;font-weight:600;">85%</span>
+                  </div>
+                </td>
                 <td><span class="badge-active">Active</span></td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center gap-1">
-                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
-                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
-                  </div>
-                </td>
+                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
               </tr>
-
-              <!-- Row 3 -->
               <tr>
-                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td style="color:var(--text-muted)">06</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
-                    <div class="ph-avatar av3" style="width:32px;height:32px;font-size:11px;">AL</div>
-                    <div>
-                      <div class="fw-semibold" style="font-size:12px;">Ana Lim</div>
-                      <div style="font-size:10px;color:#aaa;">Joined Jun 2022</div>
-                    </div>
+                    <div class="avatar-sm" style="background:#E67E22;">GV</div>
+                    Grace Villanueva
                   </div>
                 </td>
-                <td style="color:#777;">EMP-0014</td>
-                
-                <td style="color:#777;">a.lim@school.edu</td>
-                <td style="color:#777;">09201122334</td>
-                <td><span class="badge-pending">Pending</span></td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center gap-1">
-                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
-                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 4 -->
-              <tr>
-                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
+                <td><span class="subject-code">FIRE105</span></td>
+                <td style="font-weight:700;color:#2980B9;">Level 2</td>
+                <td style="font-weight:700;color:#E67E22;">62%</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
-                    <div class="ph-avatar av4" style="width:32px;height:32px;font-size:11px;">RC</div>
-                    <div>
-                      <div class="fw-semibold" style="font-size:12px;">Ricardo Cruz</div>
-                      <div style="font-size:10px;color:#aaa;">Joined Sep 2021</div>
-                    </div>
+                    <div style="width:75px;"><div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:50%"></div></div></div>
+                    <span style="font-size:.79rem;font-weight:600;">50%</span>
                   </div>
                 </td>
-                <td style="color:#777;">EMP-0009</td>
-                <td>
-                  <div style="font-size:12px;">College of Arts & Sciences</div>
-                  
-                </td>
-                <td style="color:#777;">r.cruz@school.edu</td>
-                <td style="color:#777;">09155566778</td>
-                <td><span class="badge-active">Active</span></td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center gap-1">
-                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
-                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
-                  </div>
-                </td>
+                <td><span class="badge-inprogress">In Progress</span></td>
+                <td><button class="btn-icon view"><i class="bi bi-eye-fill"></i></button></td>
               </tr>
-
-              <!-- Row 5 -->
-              <tr>
-                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="ph-avatar av5" style="width:32px;height:32px;font-size:11px;">GP</div>
-                    <div>
-                      <div class="fw-semibold" style="font-size:12px;">Gloria Pascual</div>
-                      <div style="font-size:10px;color:#aaa;">Joined Feb 2020</div>
-                    </div>
-                  </div>
-                </td>
-                <td style="color:#777;">EMP-0005</td>
-                
-                <td style="color:#777;">g.pascual@school.edu</td>
-                <td style="color:#777;">09279998887</td>
-                <td><span class="badge-inactive">Inactive</span></td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center gap-1">
-                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
-                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 6 -->
-              <tr>
-                <td><input class="form-check-input" type="checkbox" style="border-radius:4px;"></td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="ph-avatar" style="background:linear-gradient(135deg,#34d399,#059669);width:32px;height:32px;font-size:11px;">BT</div>
-                    <div>
-                      <div class="fw-semibold" style="font-size:12px;">Ben Torres</div>
-                      <div style="font-size:10px;color:#aaa;">Joined Nov 2023</div>
-                    </div>
-                  </div>
-                </td>
-                <td style="color:#777;">EMP-0022</td>
-                
-                <td style="color:#777;">b.torres@school.edu</td>
-                <td style="color:#777;">09334455667</td>
-                <td><span class="badge-active">Active</span></td>
-                <td>
-                  <div class="d-flex align-items-center justify-content-center gap-1">
-                    <a href="#" class="tbl-btn edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editPHModal"><i class="bi bi-pencil"></i></a>
-                    <a href="#" class="tbl-btn" title="View" data-bs-toggle="modal" data-bs-target="#viewPHModal"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="tbl-btn del" title="Delete"><i class="bi bi-trash"></i></a>
-                  </div>
-                </td>
-              </tr>
-
             </tbody>
           </table>
         </div>
-      </div>
-
-      <!-- PAGINATION -->
-      <div class="d-flex justify-content-end py-1">
-        <div class="d-flex gap-1">
-          <a href="#" class="page-btn">‹</a>
-          <a href="#" class="page-btn active">1</a>
-          <a href="#" class="page-btn">2</a>
-          <a href="#" class="page-btn">3</a>
-          <a href="#" class="page-btn">›</a>
+        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+          <span style="font-size:.77rem;color:var(--text-muted);">Showing 1–6 of 124 students</span>
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+              <li class="page-item active"><a class="page-link" href="#" style="background:var(--red);border-color:var(--red);">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
-
-    </div><!-- end content -->
-  </div><!-- end main -->
-</div><!-- end wrapper -->
-
-
-<!-- ══ ADD PROGRAM HEAD MODAL ══ -->
-<div class="modal fade" id="addPHModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius:14px;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12);">
-      <div class="modal-header modal-header-custom px-4 py-3">
-        <h5 class="modal-title-custom d-flex align-items-center gap-2">
-          <i class="bi bi-person-badge-fill"></i> Add Program Head
-        </h5>
-        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
-      </div>
-<div class="modal-body px-4 py-3">
-  <div class="row g-3">
-
-    <!-- Employee ID -->
-    <div class="col-12">
-      <label class="form-label">Employee ID</label>
-      <input type="text" class="form-control" placeholder="e.g. EMP-0021">
     </div>
+  </section>
 
-    <!-- First Name -->
-    <div class="col-12 col-sm-6">
-      <label class="form-label">First Name</label>
-      <input type="text" class="form-control" placeholder="e.g. Maria">
-    </div>
-
-    <!-- Middle Name -->
-    <div class="col-12 col-sm-6">
-      <label class="form-label">Middle Name</label>
-      <input type="text" class="form-control" placeholder="e.g. Cruz">
-    </div>
-
-    <!-- Last Name -->
-    <div class="col-12 col-sm-6">
-      <label class="form-label">Last Name</label>
-      <input type="text" class="form-control" placeholder="e.g. Santos">
-    </div>
-
-    <!-- Suffix -->
-    <div class="col-12 col-sm-6">
-      <label class="form-label">Suffix <span class="text-muted fw-normal">(optional)</span></label>
-      <select class="form-select">
-        <option value="" selected>None</option>
-        <option>Jr.</option>
-        <option>Sr.</option>
-        <option>II</option>
-        <option>III</option>
-        <option>IV</option>
-      </select>
-    </div>
-
-    <!-- Gmail -->
-    <div class="col-12">
-      <label class="form-label">Gmail</label>
-      <input type="email" class="form-control" placeholder="e.g. name@gmail.com">
-    </div>
-
-    <!-- Phone Number -->
-    <div class="col-12">
-      <label class="form-label">Phone Number</label>
-      <input type="text" class="form-control" placeholder="e.g. 09XXXXXXXXX">
-    </div>
-
+  <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
+    Triggr3D Admin &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
   </div>
-</div>
-      <div class="modal-footer px-4 py-3 border-top" style="border-color:#f0f0f0!important;">
-        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal" style="font-size:12px;border-radius:8px;">Cancel</button>
-        <button type="button" class="btn btn-sm text-white" style="background:var(--accent);font-size:12px;border-radius:8px;">
-          <i class="bi bi-plus-lg me-1"></i>Add Program Head
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+</main>
 
-<!-- ══ EDIT PROGRAM HEAD MODAL ══ -->
-<div class="modal fade" id="editPHModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius:14px;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12);">
-      <div class="modal-header modal-header-custom px-4 py-3">
-        <h5 class="modal-title-custom d-flex align-items-center gap-2">
-          <i class="bi bi-pencil-square"></i> Edit Program Head
-        </h5>
-        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body px-4 py-3">
-        <div class="row g-3">
-          <div class="col-6">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" value="Maria">
-          </div>
-          <div class="col-6">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" value="Santos">
-          </div>
-          <div class="col-6">
-            <label class="form-label">Employee ID</label>
-            <input type="text" class="form-control" value="EMP-0021">
-          </div>
-          <div class="col-6">
-            <label class="form-label">Contact Number</label>
-            <input type="text" class="form-control" value="09171234567">
-          </div>
-          <div class="col-12">
-            <label class="form-label">Email Address</label>
-            <input type="email" class="form-control" value="m.santos@school.edu">
-          </div>
-          <div class="col-12">
-            <label class="form-label">Department</label>
-            <select class="form-select">
-              <option selected>College of Engineering</option>
-              <option>College of Education</option>
-              <option>College of Business</option>
-              <option>College of Arts & Sciences</option>
-              <option>College of Nursing</option>
-            </select>
-          </div>
-          <div class="col-12">
-            <label class="form-label">Assigned Programs</label>
-            <input type="text" class="form-control" value="BSCS, BSIT">
-          </div>
-          <div class="col-12">
-            <label class="form-label">Status</label>
-            <select class="form-select">
-              <option selected>Active</option>
-              <option>Inactive</option>
-              <option>Pending</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer px-4 py-3 border-top" style="border-color:#f0f0f0!important;">
-        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal" style="font-size:12px;border-radius:8px;">Cancel</button>
-        <button type="button" class="btn btn-sm text-white" style="background:var(--accent);font-size:12px;border-radius:8px;">
-          <i class="bi bi-check-lg me-1"></i>Save Changes
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ VIEW PROGRAM HEAD MODAL ══ -->
-<div class="modal fade" id="viewPHModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius:14px;border:none;box-shadow:0 8px 32px rgba(0,0,0,.12);">
-      <div class="modal-header modal-header-custom px-4 py-3">
-        <h5 class="modal-title-custom d-flex align-items-center gap-2">
-          <i class="bi bi-person-circle"></i> Program Head Profile
-        </h5>
-        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body px-4 py-3">
-        <!-- Profile header -->
-        <div class="d-flex align-items-center gap-3 mb-4">
-          <div class="ph-avatar av1" style="width:52px;height:52px;font-size:16px;font-weight:700;">MA</div>
-          <div>
-            <div class="fw-bold" style="font-size:15px;">Maria Santos</div>
-            <div style="font-size:11px;color:#888;">Program Head · College of Engineering</div>
-            <span class="badge-active mt-1 d-inline-block">Active</span>
-          </div>
-        </div>
-        <hr style="border-color:#f0f0f0;margin:0 0 14px;">
-        <!-- Details grid -->
-        <div class="row g-2" style="font-size:12px;">
-          <div class="col-5 text-muted">Employee ID</div>
-          <div class="col-7 fw-medium">EMP-0021</div>
-          <div class="col-5 text-muted">Email</div>
-          <div class="col-7 fw-medium">m.santos@school.edu</div>
-          <div class="col-5 text-muted">Contact</div>
-          <div class="col-7 fw-medium">09171234567</div>
-          <div class="col-5 text-muted">Department</div>
-          <div class="col-7 fw-medium">College of Engineering</div>
-          <div class="col-5 text-muted">Programs</div>
-          <div class="col-7 fw-medium">BSCS, BSIT</div>
-          <div class="col-5 text-muted">Date Joined</div>
-          <div class="col-7 fw-medium">January 2024</div>
-        </div>
-      </div>
-      <div class="modal-footer px-4 py-3 border-top" style="border-color:#f0f0f0!important;">
-        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal" style="font-size:12px;border-radius:8px;">Close</button>
-        <button type="button" class="btn btn-sm text-white" style="background:var(--accent);font-size:12px;border-radius:8px;" data-bs-toggle="modal" data-bs-target="#editPHModal">
-          <i class="bi bi-pencil me-1"></i>Edit Profile
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
