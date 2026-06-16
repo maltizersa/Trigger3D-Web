@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — FTA System</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-badge { margin-left: auto; background: var(--red); color: #fff; font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* ── LAYOUT ── */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+    .page-section  { padding-top: 1.5rem; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; margin-bottom: 1.25rem; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-header { padding: .85rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    .panel-body { padding: 1.3rem; }
+
+    /* ── PROFILE CARD (top) ── */
+    .profile-hero {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.4rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .profile-pic-wrap { position: relative; flex-shrink: 0; }
+    .profile-pic {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: var(--red);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.8rem; font-weight: 700;
+      border: 3px solid #F1948A;
+      overflow: hidden;
+      position: relative;
+    }
+    .profile-pic img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .pic-overlay {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: rgba(0,0,0,.45);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s; cursor: pointer;
+      font-size: .7rem; color: #fff; font-weight: 600; gap: .25rem;
+      flex-direction: column;
+    }
+    .profile-pic-wrap:hover .pic-overlay { opacity: 1; }
+    .pic-overlay i { font-size: 1rem; }
+
+    .profile-info h4 { font-size: 1.05rem; font-weight: 700; margin: 0 0 .18rem; }
+    .profile-info p  { font-size: .8rem; color: var(--text-muted); margin: 0 0 .5rem; }
+    .role-badge { background: #FDECEA; color: var(--red); font-size: .72rem; font-weight: 700; padding: .22rem .65rem; border-radius: 20px; display: inline-block; }
+
+    .pic-actions { margin-left: auto; display: flex; flex-direction: column; gap: .5rem; }
+
+    /* ── BUTTONS ── */
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-red:hover { background: var(--red-dark); color: #fff; }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-red:hover { background: var(--red); color: #fff; }
+    .btn-outline-gray { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-gray:hover { background: #F4F6F8; border-color: #c5c9ce; color: var(--text-main); }
+    .btn-danger-outline { background: transparent; color: #C0392B; border: 1.5px solid #F1948A; font-size: .78rem; font-weight: 600; padding: .35rem .8rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; }
+    .btn-danger-outline:hover { background: #FDECEA; }
+
+    /* ── FORM STYLES ── */
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-styled { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 38px; padding: 0 .75rem; width: 100%; color: var(--text-main); transition: border-color .15s, background .15s; }
+    .form-control-styled:focus { outline: none; border-color: var(--red); background: #fff; }
+    .form-control-styled:disabled { background: #F4F6F8; color: var(--text-muted); cursor: not-allowed; }
+    textarea.form-control-styled { height: auto; padding: .55rem .75rem; }
+    .form-section-divider { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
+
+    /* ── PASSWORD STRENGTH ── */
+    .pw-strength-wrap { margin-top: .4rem; }
+    .pw-strength-bar { height: 5px; border-radius: 20px; background: #E8EAED; overflow: hidden; }
+    .pw-strength-fill { height: 100%; border-radius: 20px; width: 0; transition: width .3s, background .3s; }
+    .pw-strength-label { font-size: .7rem; color: var(--text-muted); margin-top: .25rem; }
+
+    /* ── SUPPORTED FORMATS note ── */
+    .format-note { font-size: .72rem; color: var(--text-muted); margin-top: .5rem; display: flex; align-items: center; gap: .35rem; }
+
+    /* ── TOAST ── */
+    .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1100; display: flex; flex-direction: column; gap: .5rem; }
+    .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
+    .fta-toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    .page-footer { margin-top: 2rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.25); font-size: .74rem; color: rgba(255,255,255,.85); text-align: center; }
+
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .profile-hero { flex-direction: column; align-items: flex-start; }
+      .pic-actions { margin-left: 0; flex-direction: row; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </button>
+  <a href="manage-program-head.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Admin</small></div>
+  </a>
+  <div class="topbar-right">
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+    <div class="avatar">PH</div>
+    <div class="topbar-user d-none d-sm-block">Maj. R. Santos<small>Program Head</small></div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+  <span class="sidebar-label">Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="program-head-staff-management.html"><i class="bi bi-person-badge-fill"></i> Staff Management <span class="sidebar-badge">8</span></a></li>
+    <li><a href="program-head-student-management.html"><i class="bi bi-people-fill"></i> Student Management <span class="sidebar-badge">10</span></a></li>
+    <li><a href="program-head-subject-management.html"><i class="bi bi-journal-text"></i> Subject Management</a></li>
+    <li><a href="program-head-module-management.html"><i class="bi bi-folder2-open"></i> Module Management</a></li>
+    <li><a href="program-head-reports.html"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+  </ul>
+  <span class="sidebar-label">Account</span>
+  <ul class="sidebar-nav">
+    <li><a href="program-head-profile.html" class="active"><i class="bi bi-person-circle"></i> Profile</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <section class="page-section">
+
+    <!-- ── PANEL ── -->
+    <div class="panel">
+
+      <!-- Banner -->
+      <div class="panel-banner">
+        <div>
+          <h2>Profile</h2>
+          <p>Manage your personal information and account settings</p>
+        </div>
+      </div>
+
+      <!-- ── PROFILE HERO ── -->
+      <div class="profile-hero">
+
+        <!-- Avatar with hover overlay -->
+        <div class="profile-pic-wrap">
+          <div class="profile-pic" id="profilePic">
+            <span id="profileInitials">RCS</span>
+            <img id="profileImg" src="" alt="Profile photo" />
+            <label class="pic-overlay" for="picInput" title="Change photo">
+              <i class="bi bi-camera-fill"></i>
+              <span>Change</span>
+            </label>
+          </div>
+          <input type="file" id="picInput" accept=".jpg,.jpeg,.png" style="display:none" onchange="previewPic(this)" />
+        </div>
+
+        <!-- Name / meta -->
+        <div class="profile-info">
+          <h4>Rex Carl S. Bitoon</h4>
+          <p>rex.bitoon@fta.edu</p>
+          <span class="role-badge"><i class="bi bi-shield-fill me-1"></i>Program Head</span>
+        </div>
+
+        <!-- Picture action buttons -->
+        <div style="margin-left:auto;display:flex;flex-direction:column;gap:.55rem;">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <label for="picInput" class="btn-outline-red" style="cursor:pointer">
+              <i class="bi bi-upload"></i> Upload Picture
+            </label>
+            <label for="picInput" class="btn-outline-gray" style="cursor:pointer">
+              <i class="bi bi-arrow-repeat"></i> Change Picture
+            </label>
+            <button class="btn-danger-outline" onclick="removePic()">
+              <i class="bi bi-trash-fill"></i> Remove Picture
+            </button>
+          </div>
+          <div class="format-note">
+            <i class="bi bi-info-circle"></i> JPG, JPEG, PNG — Max 5 MB
+          </div>
+        </div>
+
+      </div><!-- /profile-hero -->
+
+      <!-- ── PERSONAL INFORMATION ── -->
+      <div class="panel-header">
+        <h5><i class="bi bi-person-fill me-1" style="color:var(--red)"></i> Personal Information</h5>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3">
+          <div class="col-sm-4">
+            <label class="form-label-sm">First Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-styled" value="Rex Carl" />
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label-sm">Middle Name</label>
+            <input type="text" class="form-control-styled" value="S." />
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label-sm">Last Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-styled" value="Bitoon" />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-sm">Email Address <span class="text-danger">*</span></label>
+            <input type="email" class="form-control-styled" value="rex.bitoon@fta.edu" />
+          </div>
+          <div class="col-sm-3">
+            <label class="form-label-sm">Role</label>
+            <input type="text" class="form-control-styled" value="Program Head" disabled />
+          </div>
+          <div class="col-sm-3">
+            <label class="form-label-sm">Staff ID</label>
+            <input type="text" class="form-control-styled" value="PH-2024-001" disabled />
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+          <button class="btn-red" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
+            <i class="bi bi-check-lg"></i> Update Profile
+          </button>
+          <button class="btn-outline-gray">
+            <i class="bi bi-x"></i> Discard Changes
+          </button>
+        </div>
+      </div>
+
+      <!-- ── ACCOUNT SETTINGS / CHANGE PASSWORD ── -->
+      <div class="panel-header">
+        <h5><i class="bi bi-lock-fill me-1" style="color:var(--red)"></i> Change Password</h5>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3" style="max-width:520px">
+          <div class="col-12">
+            <label class="form-label-sm">Current Password <span class="text-danger">*</span></label>
+            <div style="position:relative">
+              <input type="password" class="form-control-styled" id="currentPw" placeholder="Enter current password" style="padding-right:2.5rem" />
+              <button onclick="togglePw('currentPw', this)" style="position:absolute;right:.65rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.95rem;padding:0">
+                <i class="bi bi-eye-slash-fill"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label-sm">New Password <span class="text-danger">*</span></label>
+            <div style="position:relative">
+              <input type="password" class="form-control-styled" id="newPw" placeholder="At least 8 characters" style="padding-right:2.5rem" oninput="checkStrength(this.value)" />
+              <button onclick="togglePw('newPw', this)" style="position:absolute;right:.65rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.95rem;padding:0">
+                <i class="bi bi-eye-slash-fill"></i>
+              </button>
+            </div>
+            <!-- Strength bar -->
+            <div class="pw-strength-wrap">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="strengthFill"></div></div>
+              <div class="pw-strength-label" id="strengthLabel">Password strength</div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label-sm">Confirm New Password <span class="text-danger">*</span></label>
+            <div style="position:relative">
+              <input type="password" class="form-control-styled" id="confirmPw" placeholder="Re-enter new password" style="padding-right:2.5rem" />
+              <button onclick="togglePw('confirmPw', this)" style="position:absolute;right:.65rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.95rem;padding:0">
+                <i class="bi bi-eye-slash-fill"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+          <button class="btn-red" data-bs-toggle="modal" data-bs-target="#changePwModal">
+            <i class="bi bi-lock-fill"></i> Save Changes
+          </button>
+          <button class="btn-outline-gray" onclick="clearPwFields()">
+            <i class="bi bi-x"></i> Cancel
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /panel -->
+
+  </section>
+  <div class="page-footer">
+    FTA Management System &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+  </div>
+</main>
+
+<div class="fta-toast-stack" id="toastStack"></div>
+
+<!-- ── MODAL: UPDATE PROFILE ── -->
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-body text-center" style="padding:1.75rem 1.4rem">
+        <div style="width:60px;height:60px;background:#FDECEA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;font-size:1.5rem;color:var(--red)">
+          <i class="bi bi-person-check-fill"></i>
+        </div>
+        <p style="font-size:.92rem;font-weight:700;margin-bottom:.35rem">Update Profile?</p>
+        <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:0">Your personal information will be updated with the new details.</p>
+      </div>
+      <div class="modal-footer justify-content-center" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" data-bs-dismiss="modal" onclick="showToast('Profile updated successfully!','bi-person-check-fill')">
+          <i class="bi bi-check-lg"></i> Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: CHANGE PASSWORD ── -->
+<div class="modal fade" id="changePwModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:14px;border:none">
+      <div class="modal-body text-center" style="padding:1.75rem 1.4rem">
+        <div style="width:60px;height:60px;background:#FDECEA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;font-size:1.5rem;color:var(--red)">
+          <i class="bi bi-lock-fill"></i>
+        </div>
+        <p style="font-size:.92rem;font-weight:700;margin-bottom:.35rem">Change Password?</p>
+        <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:0">Your account password will be updated. You may be asked to log in again.</p>
+      </div>
+      <div class="modal-footer justify-content-center" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" data-bs-dismiss="modal" onclick="showToast('Password changed successfully!','bi-lock-fill');clearPwFields()">
+          <i class="bi bi-check-lg"></i> Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── profile picture preview ── */
+  function previewPic(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowed.includes(file.type)) { showToast('Only JPG, JPEG, PNG allowed.', 'bi-exclamation-circle-fill'); return; }
+    if (file.size > 5 * 1024 * 1024) { showToast('File exceeds 5 MB limit.', 'bi-exclamation-circle-fill'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('profileImg');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById('profileInitials').style.display = 'none';
+      showToast('Profile picture updated (demo only)', 'bi-image-fill');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removePic() {
+    document.getElementById('profileImg').src = '';
+    document.getElementById('profileImg').style.display = 'none';
+    document.getElementById('profileInitials').style.display = '';
+    document.getElementById('picInput').value = '';
+    showToast('Profile picture removed (demo only)', 'bi-trash-fill');
+  }
+
+  /* ── password show/hide ── */
+  function togglePw(id, btn) {
+    const input = document.getElementById(id);
+    const icon  = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'bi bi-eye-fill';
+    } else {
+      input.type = 'password';
+      icon.className = 'bi bi-eye-slash-fill';
+    }
+  }
+
+  /* ── password strength ── */
+  function checkStrength(val) {
+    const fill  = document.getElementById('strengthFill');
+    const label = document.getElementById('strengthLabel');
+    let score = 0;
+    if (val.length >= 8)             score++;
+    if (/[A-Z]/.test(val))           score++;
+    if (/[0-9]/.test(val))           score++;
+    if (/[^A-Za-z0-9]/.test(val))    score++;
+    const map = [
+      { w: '0%',   c: '#E8EAED', t: 'Password strength' },
+      { w: '25%',  c: '#C0392B', t: 'Weak' },
+      { w: '50%',  c: '#E67E22', t: 'Fair' },
+      { w: '75%',  c: '#F9CA24', t: 'Good' },
+      { w: '100%', c: '#27AE60', t: 'Strong' },
+    ];
+    const s = val.length === 0 ? 0 : score;
+    fill.style.width      = map[s].w;
+    fill.style.background = map[s].c;
+    label.textContent     = map[s].t;
+    label.style.color     = s === 0 ? 'var(--text-muted)' : map[s].c;
+  }
+
+  function clearPwFields() {
+    ['currentPw','newPw','confirmPw'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).type = 'password'; });
+    checkStrength('');
+  }
+
+  /* ── toast ── */
+  function showToast(message, icon) {
+    const stack = document.getElementById('toastStack');
+    const el = document.createElement('div');
+    el.className = 'fta-toast';
+    el.innerHTML = `<i class="bi ${icon || 'bi-info-circle-fill'}"></i><span>${message}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 250); }, 2400);
+  }
+</script>
+</body>
+</html>
