@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trigger3D – View Generated Modules</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    /* ── Pure-CSS sidebar toggle ── */
+    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
+    /* ── Pure-CSS filter tabs (radio-driven) ── */
+    .filter-radio { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
+    /* ── TOP BAR ── */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-search { flex: 1; max-width: 280px; }
+    .topbar-search-wrap { position: relative; }
+    .topbar-search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .topbar-search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; outline: none; }
+    .topbar-search-wrap input:focus { border-color: var(--red); background: #fff; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
+    .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* ── BACKDROP (mobile) ── */
+    .sidebar-backdrop { display: none; }
+
+    /* ── MAIN ── */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
+    .page-header-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
+    .page-header-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
+    .page-header-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: .6rem; }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-body { padding: 1.4rem; }
+
+    /* ── SECTION HEADING ── */
+    .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
+    .section-heading i { color: var(--red); font-size: .95rem; }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.15rem; display: flex; align-items: center; gap: .85rem; height: 100%; }
+    .summary-card-icon { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+    .ic-blue   { background: #eaf3fb; color: #2980b9; }
+    .ic-orange { background: #fef5e7; color: #e67e22; }
+    .ic-purple { background: #f4eafb; color: #8e44ad; }
+    .ic-green  { background: #eafaf1; color: #27ae60; }
+    .summary-card-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; }
+    .summary-card-label { font-size: .72rem; color: var(--text-muted); margin-top: .2rem; }
+
+    /* ── SEARCH & FILTER AREA ── */
+    .search-bar-wrap { position: relative; }
+    .search-bar-wrap i { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .88rem; pointer-events: none; }
+    .search-bar-wrap input { padding-left: 2.2rem; font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 38px; outline: none; transition: border-color .15s; }
+    .search-bar-wrap input:focus { border-color: var(--red); background: #fff; box-shadow: 0 0 0 3px rgba(192,57,43,.08); }
+
+    .filter-select { font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); height: 38px; padding: 0 .85rem; background: #F9FAFB; outline: none; color: var(--text-main); width: 100%; transition: border-color .15s; }
+    .filter-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.08); background: #fff; }
+
+    .btn-search-go { background: var(--red); color: #fff; border: none; border-radius: 8px; height: 38px; padding: 0 1.2rem; font-size: .83rem; font-weight: 600; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: background .15s; white-space: nowrap; }
+    .btn-search-go:hover { background: var(--red-dark); }
+    .btn-clear-filter { background: #fff; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; height: 38px; padding: 0 1rem; font-size: .83rem; font-weight: 500; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; text-decoration: none; transition: border-color .15s; white-space: nowrap; }
+    .btn-clear-filter:hover { border-color: var(--red-light); color: var(--red); }
+
+    /* ── FILTER PILL TABS (pure CSS radio) ── */
+    .filter-pills { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.1rem; }
+    .pill-label {
+      font-size: .76rem; font-weight: 600; padding: .32rem .85rem;
+      border-radius: 20px; border: 1.5px solid var(--border);
+      background: #fff; color: var(--text-muted); cursor: pointer;
+      user-select: none; transition: all .15s;
+    }
+    .pill-label:hover { border-color: var(--red-light); color: var(--red); background: #fdf5f5; }
+
+    #pill-all:checked     ~ .filter-pills label[for="pill-all"],
+    #pill-fire102:checked ~ .filter-pills label[for="pill-fire102"],
+    #pill-fire103:checked ~ .filter-pills label[for="pill-fire103"],
+    #pill-fire104:checked ~ .filter-pills label[for="pill-fire104"],
+    #pill-fire201:checked ~ .filter-pills label[for="pill-fire201"] {
+      background: var(--red); color: #fff; border-color: var(--red);
+    }
+
+    /* Show/hide table rows by subject filter */
+    /* Default: all rows visible */
+    .mod-row { display: table-row; }
+
+    /* When a specific pill is checked, hide rows that don't match */
+    #pill-fire102:checked ~ .modules-panel .mod-row:not(.fire102) { display: none; }
+    #pill-fire103:checked ~ .modules-panel .mod-row:not(.fire103) { display: none; }
+    #pill-fire104:checked ~ .modules-panel .mod-row:not(.fire104) { display: none; }
+    #pill-fire201:checked ~ .modules-panel .mod-row:not(.fire201) { display: none; }
+
+    /* ── MODULE TABLE ── */
+    .mod-table { font-size: .8rem; }
+    .mod-table thead th { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); background: #F9FAFB; border-bottom: 2px solid var(--border); padding: .65rem .9rem; white-space: nowrap; }
+    .mod-table tbody td { padding: .65rem .9rem; vertical-align: middle; border-bottom: 1px solid var(--border); }
+    .mod-table tbody tr:last-child td { border-bottom: none; }
+    .mod-table tbody tr:hover td { background: #fdf8f8; }
+
+    .mod-name-main { font-weight: 600; font-size: .82rem; color: var(--text-main); }
+    .mod-name-file  { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; font-style: italic; }
+
+    /* Subject code pill */
+    .subject-pill { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 700; padding: .18rem .6rem; border-radius: 6px; }
+    .subject-pill.fire102 { background: #eaf3fb; color: #2980b9; }
+    .subject-pill.fire103 { background: #f4eafb; color: #8e44ad; }
+    .subject-pill.fire104 { background: #fef5e7; color: #e67e22; }
+    .subject-pill.fire201 { background: #eafaf1; color: #27ae60; }
+
+    /* Period badge */
+    .pbadge { font-size: .67rem; font-weight: 700; padding: .15rem .55rem; border-radius: 20px; }
+    .pbadge-prelim  { background: #eaf3fb; color: #2980b9; }
+    .pbadge-midterm { background: #f4eafb; color: #8e44ad; }
+    .pbadge-finals  { background: #eafaf1; color: #27ae60; }
+
+    /* File type tag */
+    .ftag { font-size: .65rem; font-weight: 700; padding: .15rem .5rem; border-radius: 5px; background: #F9FAFB; border: 1px solid var(--border); color: var(--text-muted); font-family: monospace; }
+    .ftag.pdf   { background: #fdecea; color: var(--red);    border-color: #f5c2c7; }
+    .ftag.pptx  { background: #fef5e7; color: #e67e22;      border-color: #fddba3; }
+    .ftag.docx  { background: #eaf3fb; color: #2980b9;      border-color: #bcd6ec; }
+    .ftag.mp4   { background: #f4eafb; color: #8e44ad;      border-color: #d7aefb; }
+
+    /* File icon */
+    .file-icon-sm { width: 34px; height: 34px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .file-icon-sm.pdf   { background: #fdecea; color: var(--red); }
+    .file-icon-sm.pptx  { background: #fef5e7; color: #e67e22; }
+    .file-icon-sm.docx  { background: #eaf3fb; color: #2980b9; }
+    .file-icon-sm.mp4   { background: #f4eafb; color: #8e44ad; }
+
+    /* Table action buttons */
+    .tbl-btn { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; text-decoration: none; transition: all .15s; border: 1px solid var(--border); background: #f5f5f5; color: var(--text-muted); }
+    .tbl-btn:hover { background: #fdecea; color: var(--red); border-color: var(--red-light); }
+    .tbl-btn.dl { background: #eafaf1; color: #27ae60; border-color: #a9dfbf; }
+    .tbl-btn.dl:hover { background: #d0f0e0; }
+
+    /* ── ACCESS BADGE ── */
+    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; }
+    .badge-view { background: #eaf3fb; color: #2980b9; }
+
+    /* ── FOOTER ── */
+    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle-label { display: flex; }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
+      #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
+        display: block; position: fixed; top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.35); z-index: 1025;
+      }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hidden checkbox — mobile sidebar -->
+<input type="checkbox" id="sidebar-toggle-checkbox">
+
+<!-- Hidden radios — subject filter pills -->
+<input type="radio" class="filter-radio" id="pill-all"     name="subject-filter" checked>
+<input type="radio" class="filter-radio" id="pill-fire102" name="subject-filter">
+<input type="radio" class="filter-radio" id="pill-fire103" name="subject-filter">
+<input type="radio" class="filter-radio" id="pill-fire104" name="subject-filter">
+<input type="radio" class="filter-radio" id="pill-fire201" name="subject-filter">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </label>
+  <a href="manage-ins.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+  <div class="topbar-search ms-3">
+    <div class="topbar-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search…" />
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
+    <div class="icon-btn"><i class="bi bi-gear"></i></div>
+    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+    <div class="topbar-user d-none d-sm-block">
+      Instr. R. Bautista <small>Instructor</small>
+    </div>
+    <div class="avatar">RB</div>
+  </div>
+</header>
+
+<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+    <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+    <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+  </ul>
+
+  <span class="sidebar-label">Module Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
+    <li><a href="delete-modules.html"><i class="bi bi-trash"></i> Delete Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="generate-records.html"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="view-generated-modules.html" class="active"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Settings</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-icon"><i class="bi bi-eye-fill"></i></div>
+    <div class="page-header-text">
+      <div class="title">View Generated Modules</div>
+      <div class="sub">Browse all uploaded lesson materials across subjects and academic periods.</div>
+    </div>
+    <div class="page-header-badge d-none d-sm-block">Read-only view</div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-blue"><i class="bi bi-folder2-open"></i></div>
+        <div>
+          <div class="summary-card-value">12</div>
+          <div class="summary-card-label">Total Modules</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-orange"><i class="bi bi-journals"></i></div>
+        <div>
+          <div class="summary-card-value">4</div>
+          <div class="summary-card-label">Subjects Covered</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-purple"><i class="bi bi-play-btn"></i></div>
+        <div>
+          <div class="summary-card-value">3</div>
+          <div class="summary-card-label">Video Modules</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-green"><i class="bi bi-calendar3"></i></div>
+        <div>
+          <div class="summary-card-value">Jun 2026</div>
+          <div class="summary-card-label">Last Upload</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search, Filter & Table wrapped in a sibling scope for CSS filter -->
+  <!-- Filter pills (radios) are declared at the top of body so CSS ~ sibling works on .modules-panel -->
+
+  <!-- Search & Filter Panel -->
+  <div class="panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-funnel me-1" style="color:var(--red);"></i>Search &amp; Filter</h2>
+        <p>Find modules by name, subject code, or subject name. Use the pills below to filter by subject.</p>
+      </div>
+      <span class="access-badge badge-view ms-auto"><i class="bi bi-eye me-1"></i>View access</span>
+    </div>
+    <div class="panel-body pb-2">
+      <div class="row g-2 align-items-end">
+        <!-- Search input -->
+        <div class="col-12 col-md-5">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">Search by Module Name, Subject Code or Subject Name</label>
+          <div class="search-bar-wrap">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="e.g. Rifle Assembly, FIRE102, Assembly…">
+          </div>
+        </div>
+        <!-- Subject code dropdown -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">Filter by Subject Code</label>
+          <select class="filter-select">
+            <option value="" selected>All Subject Codes</option>
+            <option>FIRE102</option>
+            <option>FIRE103</option>
+            <option>FIRE104</option>
+            <option>FIRE201</option>
+          </select>
+        </div>
+        <!-- Period dropdown -->
+        <div class="col-12 col-sm-6 col-md-2">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">Period</label>
+          <select class="filter-select">
+            <option value="" selected>All Periods</option>
+            <option>Prelim</option>
+            <option>Midterm</option>
+            <option>Finals</option>
+          </select>
+        </div>
+        <!-- Buttons -->
+        <div class="col-12 col-md-2 d-flex gap-2">
+          <button type="button" class="btn-search-go flex-fill"><i class="bi bi-search"></i> Search</button>
+          <a href="view-generated-modules.html" class="btn-clear-filter"><i class="bi bi-x"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick filter pills -->
+      <div class="mt-3 pt-3" style="border-top: 1px solid var(--border);">
+        <span style="font-size:.73rem;font-weight:700;color:var(--text-muted);margin-right:.6rem;vertical-align:middle;">Quick filter:</span>
+        <div class="filter-pills d-inline-flex flex-wrap gap-2 mt-0">
+          <label class="pill-label" for="pill-all">All Subjects</label>
+          <label class="pill-label" for="pill-fire102"><span style="color:#2980b9;">●</span> FIRE102 — Assembly</label>
+          <label class="pill-label" for="pill-fire103"><span style="color:#8e44ad;">●</span> FIRE103 — Disassembly</label>
+          <label class="pill-label" for="pill-fire104"><span style="color:#e67e22;">●</span> FIRE104 — Field Stripping</label>
+          <label class="pill-label" for="pill-fire201"><span style="color:#27ae60;">●</span> FIRE201 — Maintenance</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modules Table — .modules-panel is the CSS sibling target for pill filters -->
+  <div class="panel modules-panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-grid-3x3-gap me-1" style="color:var(--red);"></i>All Uploaded Modules</h2>
+        <p>Showing all modules across subjects. Use the filters above to narrow results.</p>
+      </div>
+      <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">12 modules</span>
+    </div>
+    <div class="panel-body p-0">
+      <div class="table-responsive">
+        <table class="table mod-table mb-0">
+          <thead>
+            <tr>
+              <th style="width:44px;">#</th>
+              <th>Module Name</th>
+              <th>Subject Code</th>
+              <th>Subject Name</th>
+              <th>Period</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Upload Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- FIRE102 rows -->
+            <tr class="mod-row fire102">
+              <td style="color:var(--text-muted);font-size:.72rem;">01</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pdf"><i class="bi bi-filetype-pdf"></i></div>
+                  <div>
+                    <div class="mod-name-main">Rifle Assembly — Introduction</div>
+                    <div class="mod-name-file">Rifle Assembly — Introduction.pdf</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire102">FIRE102</span></td>
+              <td style="font-size:.8rem;">Assembly</td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftag pdf">PDF</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">2.4 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 2, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire102">
+              <td style="color:var(--text-muted);font-size:.72rem;">02</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pptx"><i class="bi bi-filetype-pptx"></i></div>
+                  <div>
+                    <div class="mod-name-main">Parts Identification — Slide Deck</div>
+                    <div class="mod-name-file">Parts Identification — Slide Deck.pptx</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire102">FIRE102</span></td>
+              <td style="font-size:.8rem;">Assembly</td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftag pptx">PPTX</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">5.1 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 4, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire102">
+              <td style="color:var(--text-muted);font-size:.72rem;">03</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm mp4"><i class="bi bi-play-btn-fill"></i></div>
+                  <div>
+                    <div class="mod-name-main">Safety Protocols — Video Walkthrough</div>
+                    <div class="mod-name-file">Safety Protocols — Video Walkthrough.mp4</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire102">FIRE102</span></td>
+              <td style="font-size:.8rem;">Assembly</td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftag mp4">MP4</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">48.7 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 5, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire102">
+              <td style="color:var(--text-muted);font-size:.72rem;">04</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pdf"><i class="bi bi-filetype-pdf"></i></div>
+                  <div>
+                    <div class="mod-name-main">Step-by-step Assembly Guide</div>
+                    <div class="mod-name-file">Step-by-step Assembly Guide.pdf</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire102">FIRE102</span></td>
+              <td style="font-size:.8rem;">Assembly</td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftag pdf">PDF</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">3.2 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 10, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- FIRE103 rows -->
+            <tr class="mod-row fire103">
+              <td style="color:var(--text-muted);font-size:.72rem;">05</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pdf"><i class="bi bi-filetype-pdf"></i></div>
+                  <div>
+                    <div class="mod-name-main">Step-by-step Disassembly Guide</div>
+                    <div class="mod-name-file">Step-by-step Disassembly Guide.pdf</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire103">FIRE103</span></td>
+              <td style="font-size:.8rem;">Disassembly</td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftag pdf">PDF</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">3.8 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 10, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire103">
+              <td style="color:var(--text-muted);font-size:.72rem;">06</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm docx"><i class="bi bi-filetype-docx"></i></div>
+                  <div>
+                    <div class="mod-name-main">Practical Exam Rubric — Midterm</div>
+                    <div class="mod-name-file">Practical Exam Rubric — Midterm.docx</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire103">FIRE103</span></td>
+              <td style="font-size:.8rem;">Disassembly</td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftag docx">DOCX</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">1.2 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 11, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire103">
+              <td style="color:var(--text-muted);font-size:.72rem;">07</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm mp4"><i class="bi bi-play-btn-fill"></i></div>
+                  <div>
+                    <div class="mod-name-main">Disassembly Demonstration — Live Session</div>
+                    <div class="mod-name-file">Disassembly Demonstration.mp4</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire103">FIRE103</span></td>
+              <td style="font-size:.8rem;">Disassembly</td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftag mp4">MP4</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">62.4 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 8, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- FIRE104 rows -->
+            <tr class="mod-row fire104">
+              <td style="color:var(--text-muted);font-size:.72rem;">08</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pptx"><i class="bi bi-filetype-pptx"></i></div>
+                  <div>
+                    <div class="mod-name-main">Field Stripping — Overview Slides</div>
+                    <div class="mod-name-file">Field Stripping Overview.pptx</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire104">FIRE104</span></td>
+              <td style="font-size:.8rem;">Field Stripping</td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftag pptx">PPTX</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">7.5 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 6, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire104">
+              <td style="color:var(--text-muted);font-size:.72rem;">09</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pdf"><i class="bi bi-filetype-pdf"></i></div>
+                  <div>
+                    <div class="mod-name-main">Stripping Sequence — Reference Card</div>
+                    <div class="mod-name-file">Stripping Sequence Reference.pdf</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire104">FIRE104</span></td>
+              <td style="font-size:.8rem;">Field Stripping</td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftag pdf">PDF</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">0.9 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 12, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- FIRE201 rows -->
+            <tr class="mod-row fire201">
+              <td style="color:var(--text-muted);font-size:.72rem;">10</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pdf"><i class="bi bi-filetype-pdf"></i></div>
+                  <div>
+                    <div class="mod-name-main">Maintenance Schedule &amp; Checklist</div>
+                    <div class="mod-name-file">Maintenance Schedule 2026.pdf</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire201">FIRE201</span></td>
+              <td style="font-size:.8rem;">Maintenance</td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftag pdf">PDF</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">1.7 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 7, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire201">
+              <td style="color:var(--text-muted);font-size:.72rem;">11</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm docx"><i class="bi bi-filetype-docx"></i></div>
+                  <div>
+                    <div class="mod-name-main">Cleaning &amp; Lubrication Procedures</div>
+                    <div class="mod-name-file">Cleaning Lubrication Procedures.docx</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire201">FIRE201</span></td>
+              <td style="font-size:.8rem;">Maintenance</td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftag docx">DOCX</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">2.1 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 13, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="mod-row fire201">
+              <td style="color:var(--text-muted);font-size:.72rem;">12</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="file-icon-sm pptx"><i class="bi bi-filetype-pptx"></i></div>
+                  <div>
+                    <div class="mod-name-main">Preventive Maintenance — Finals Review</div>
+                    <div class="mod-name-file">Preventive Maintenance Finals.pptx</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="subject-pill fire201">FIRE201</span></td>
+              <td style="font-size:.8rem;">Maintenance</td>
+              <td><span class="pbadge pbadge-finals">Finals</span></td>
+              <td><span class="ftag pptx">PPTX</span></td>
+              <td style="font-size:.75rem;color:var(--text-muted);">4.3 MB</td>
+              <td style="font-size:.75rem;white-space:nowrap;">Jun 15, 2026</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn" title="Preview"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table footer row count -->
+      <div class="d-flex align-items-center px-3 py-2" style="border-top: 1px solid var(--border); background: #F9FAFB;">
+        <span style="font-size:.73rem; color:var(--text-muted);">12 modules found across 4 subjects &nbsp;·&nbsp; AY 2025–2026</span>
+        <a href="upload-modules.html" class="ms-auto" style="font-size:.73rem; color:var(--red); font-weight:600; text-decoration:none;">
+          <i class="bi bi-plus-circle me-1"></i>Upload New Module
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="portal-footer">
+    Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
+  </div>
+
+</main>
+</body>
+</html>

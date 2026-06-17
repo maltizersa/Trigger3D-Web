@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trigger3D – Download Modules</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    /* ── Pure-CSS toggles ── */
+    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+    .filter-radio { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
+    /* ── TOP BAR ── */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-search { flex: 1; max-width: 280px; }
+    .topbar-search-wrap { position: relative; }
+    .topbar-search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .topbar-search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; outline: none; }
+    .topbar-search-wrap input:focus { border-color: var(--red); background: #fff; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
+    .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* ── BACKDROP ── */
+    .sidebar-backdrop { display: none; }
+
+    /* ── MAIN ── */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
+    .page-header-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
+    .page-header-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
+    .page-header-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-body { padding: 1.4rem; }
+
+    /* ── SECTION HEADING ── */
+    .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
+    .section-heading i { color: var(--red); font-size: .95rem; }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.15rem; display: flex; align-items: center; gap: .85rem; height: 100%; }
+    .summary-card-icon { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+    .ic-blue   { background: #eaf3fb; color: #2980b9; }
+    .ic-green  { background: #eafaf1; color: #27ae60; }
+    .ic-purple { background: #f4eafb; color: #8e44ad; }
+    .ic-orange { background: #fef5e7; color: #e67e22; }
+    .ic-red    { background: #fdecea; color: var(--red); }
+    .summary-card-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; }
+    .summary-card-label { font-size: .72rem; color: var(--text-muted); margin-top: .2rem; }
+
+    /* ── SEARCH & FILTER ── */
+    .search-bar-wrap { position: relative; }
+    .search-bar-wrap i { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .88rem; pointer-events: none; }
+    .search-bar-wrap input { padding-left: 2.2rem; font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 38px; outline: none; transition: border-color .15s; }
+    .search-bar-wrap input:focus { border-color: var(--red); background: #fff; box-shadow: 0 0 0 3px rgba(192,57,43,.08); }
+    .filter-select { font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); height: 38px; padding: 0 .85rem; background: #F9FAFB; outline: none; color: var(--text-main); width: 100%; transition: border-color .15s; }
+    .filter-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.08); background: #fff; }
+
+    /* ── BUTTONS ── */
+    .btn-search-go { background: var(--red); color: #fff; border: none; border-radius: 8px; height: 38px; padding: 0 1.2rem; font-size: .83rem; font-weight: 600; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: background .15s; white-space: nowrap; }
+    .btn-search-go:hover { background: var(--red-dark); }
+    .btn-clear-filter { background: #fff; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; height: 38px; padding: 0 1rem; font-size: .83rem; font-weight: 500; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; transition: border-color .15s; white-space: nowrap; cursor: pointer; }
+    .btn-clear-filter:hover { border-color: var(--red-light); color: var(--red); }
+
+    /* ── PILL TABS (pure CSS) ── */
+    .filter-pills { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .pill-label { font-size: .76rem; font-weight: 600; padding: .32rem .85rem; border-radius: 20px; border: 1.5px solid var(--border); background: #fff; color: var(--text-muted); cursor: pointer; user-select: none; transition: all .15s; }
+    .pill-label:hover { border-color: var(--red-light); color: var(--red); background: #fdf5f5; }
+
+    #pill-all:checked     ~ .files-panel .pill-scope label[for="pill-all"],
+    #pill-pdf:checked     ~ .files-panel .pill-scope label[for="pill-pdf"],
+    #pill-docx:checked    ~ .files-panel .pill-scope label[for="pill-docx"],
+    #pill-pptx:checked    ~ .files-panel .pill-scope label[for="pill-pptx"],
+    #pill-zip:checked     ~ .files-panel .pill-scope label[for="pill-zip"],
+    #pill-report:checked  ~ .files-panel .pill-scope label[for="pill-report"] {
+      background: var(--red); color: #fff; border-color: var(--red);
+    }
+
+    /* Hide/show rows by file type pill */
+    #pill-pdf:checked    ~ .files-panel .dl-row:not(.type-pdf)    { display: none; }
+    #pill-docx:checked   ~ .files-panel .dl-row:not(.type-docx)   { display: none; }
+    #pill-pptx:checked   ~ .files-panel .dl-row:not(.type-pptx)   { display: none; }
+    #pill-zip:checked    ~ .files-panel .dl-row:not(.type-zip)     { display: none; }
+    #pill-report:checked ~ .files-panel .dl-row:not(.type-report)  { display: none; }
+
+    /* ── TABLE ── */
+    .dl-table { font-size: .8rem; }
+    .dl-table thead th { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); background: #F9FAFB; border-bottom: 2px solid var(--border); padding: .65rem .9rem; white-space: nowrap; }
+    .dl-table tbody td { padding: .65rem .9rem; vertical-align: middle; border-bottom: 1px solid var(--border); color: var(--text-main); }
+    .dl-table tbody tr:last-child td { border-bottom: none; }
+    .dl-table tbody tr:hover td { background: #fdf8f8; }
+    .dl-row { display: table-row; }
+
+    .file-name-main { font-weight: 600; font-size: .82rem; color: var(--text-main); }
+    .file-name-sub  { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+
+    /* File icon */
+    .ficon { width: 34px; height: 34px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .ficon.pdf    { background: #fdecea; color: var(--red); }
+    .ficon.pptx   { background: #fef5e7; color: #e67e22; }
+    .ficon.docx   { background: #eaf3fb; color: #2980b9; }
+    .ficon.mp4    { background: #f4eafb; color: #8e44ad; }
+    .ficon.zip    { background: #eafaf1; color: #27ae60; }
+    .ficon.report { background: #fef5e7; color: #e67e22; }
+
+    /* Subject pill */
+    .subject-pill { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 700; padding: .18rem .6rem; border-radius: 6px; }
+    .subject-pill.fire102 { background: #eaf3fb; color: #2980b9; }
+    .subject-pill.fire103 { background: #f4eafb; color: #8e44ad; }
+    .subject-pill.fire104 { background: #fef5e7; color: #e67e22; }
+    .subject-pill.fire201 { background: #eafaf1; color: #27ae60; }
+
+    /* Period badge */
+    .pbadge { font-size: .67rem; font-weight: 700; padding: .15rem .55rem; border-radius: 20px; white-space: nowrap; }
+    .pbadge-prelim  { background: #eaf3fb; color: #2980b9; }
+    .pbadge-midterm { background: #f4eafb; color: #8e44ad; }
+    .pbadge-finals  { background: #eafaf1; color: #27ae60; }
+
+    /* File type tag */
+    .ftag { font-size: .65rem; font-weight: 700; padding: .15rem .5rem; border-radius: 5px; border: 1px solid var(--border); font-family: monospace; }
+    .ftag.pdf    { background: #fdecea; color: var(--red);  border-color: #f5c2c7; }
+    .ftag.pptx   { background: #fef5e7; color: #e67e22;    border-color: #fddba3; }
+    .ftag.docx   { background: #eaf3fb; color: #2980b9;    border-color: #bcd6ec; }
+    .ftag.zip    { background: #eafaf1; color: #27ae60;    border-color: #a9dfbf; }
+    .ftag.report { background: #fef5e7; color: #e67e22;    border-color: #fddba3; }
+    .ftag.mp4    { background: #f4eafb; color: #8e44ad;    border-color: #d7aefb; }
+
+    /* Status badges */
+    .sbadge { font-size: .67rem; font-weight: 700; padding: .18rem .6rem; border-radius: 20px; white-space: nowrap; }
+    .sbadge-ready    { background: #eafaf1; color: #27ae60; }
+    .sbadge-pending  { background: #fef5e7; color: #e67e22; }
+    .sbadge-new      { background: #eaf3fb; color: #2980b9; }
+
+    /* Table action buttons */
+    .tbl-btn { height: 28px; border-radius: 6px; display: inline-flex; align-items: center; gap: .3rem; font-size: .76rem; font-weight: 600; text-decoration: none; padding: 0 .7rem; transition: all .15s; border: 1px solid; white-space: nowrap; cursor: pointer; }
+    .tbl-btn-dl   { background: var(--red); color: #fff; border-color: var(--red); }
+    .tbl-btn-dl:hover { background: var(--red-dark); border-color: var(--red-dark); color: #fff; }
+    .tbl-btn-view { background: #fff; color: var(--text-muted); border-color: var(--border); }
+    .tbl-btn-view:hover { background: #fdecea; color: var(--red); border-color: var(--red-light); }
+
+    /* ── RECENT DOWNLOADS ── */
+    .recent-item { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem; border-bottom: 1px solid var(--border); }
+    .recent-item:last-child { border-bottom: none; }
+    .recent-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; }
+    .recent-meta { flex: 1; min-width: 0; }
+    .recent-name { font-weight: 600; font-size: .8rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recent-sub  { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+    .recent-time { font-size: .68rem; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── ACCESS BADGE ── */
+    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; }
+    .badge-dl { background: #eafaf1; color: #27ae60; }
+
+    /* ── NOTICE BAR ── */
+    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; }
+    .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
+    .notice-label { font-weight: 700; color: #e67e22; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 2.5rem 1rem; }
+    .empty-state i { font-size: 2.8rem; color: var(--border); margin-bottom: .65rem; display: block; }
+    .empty-state p { font-size: .82rem; color: var(--text-muted); margin: 0; }
+
+    /* ── FOOTER ── */
+    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle-label { display: flex; }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
+      #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
+        display: block; position: fixed; top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.35); z-index: 1025;
+      }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Pure-CSS controls -->
+<input type="checkbox" id="sidebar-toggle-checkbox">
+<input type="radio" class="filter-radio" id="pill-all"    name="type-filter" checked>
+<input type="radio" class="filter-radio" id="pill-pdf"    name="type-filter">
+<input type="radio" class="filter-radio" id="pill-docx"   name="type-filter">
+<input type="radio" class="filter-radio" id="pill-pptx"   name="type-filter">
+<input type="radio" class="filter-radio" id="pill-zip"    name="type-filter">
+<input type="radio" class="filter-radio" id="pill-report" name="type-filter">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </label>
+  <a href="manage-ins.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+  <div class="topbar-search ms-3">
+    <div class="topbar-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search…" />
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
+    <div class="icon-btn"><i class="bi bi-gear"></i></div>
+    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+    <div class="topbar-user d-none d-sm-block">Instr. R. Bautista <small>Instructor</small></div>
+    <div class="avatar">RB</div>
+  </div>
+</header>
+
+<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+    <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+    <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+  </ul>
+
+  <span class="sidebar-label">Module Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
+    <li><a href="delete-modules.html"><i class="bi bi-trash"></i> Delete Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="generate-records.html"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="view-generated-modules.html"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+    <li><a href="download-modules.html" class="active"><i class="bi bi-download"></i> Download Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Settings</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-icon"><i class="bi bi-download"></i></div>
+    <div class="page-header-text">
+      <div class="title">Download Modules</div>
+      <div class="sub">Access and download finalized module packages, PDF reports, and student files for offline use or external submission.</div>
+    </div>
+    <div class="page-header-badge d-none d-sm-block">FIRE102 — Assembly</div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-blue"><i class="bi bi-files"></i></div>
+        <div>
+          <div class="summary-card-value">18</div>
+          <div class="summary-card-label">Total Downloadable Files</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-green"><i class="bi bi-archive"></i></div>
+        <div>
+          <div class="summary-card-value">5</div>
+          <div class="summary-card-label">Module Packages</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-red"><i class="bi bi-file-earmark-pdf"></i></div>
+        <div>
+          <div class="summary-card-value">8</div>
+          <div class="summary-card-label">PDF Reports</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-purple"><i class="bi bi-person-lines-fill"></i></div>
+        <div>
+          <div class="summary-card-value">5</div>
+          <div class="summary-card-label">Student Files</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice -->
+  <div class="alert d-flex align-items-start gap-3 mb-4" role="alert"
+       style="border-radius:10px;font-size:.82rem;border:1.5px solid #fddba3;background:#fffbec;">
+    <i class="bi bi-info-circle-fill fs-5 flex-shrink-0 mt-1" style="color:#e67e22;"></i>
+    <div>
+      <strong>Offline use &amp; external submission.</strong> Downloaded files are intended for offline use, printing, and external submission only. Do not redistribute module packages outside of official channels. Ensure you are downloading the latest version — check the upload date before saving.
+    </div>
+  </div>
+
+  <!-- Search, Filter Pills & Table wrapped to share CSS sibling scope -->
+
+  <!-- Search & Filter Panel -->
+  <div class="panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-funnel me-1" style="color:var(--red);"></i>Search &amp; Filter Files</h2>
+        <p>Find files by name, subject code, subject name, period, or type. Use quick-filter pills to narrow by file type.</p>
+      </div>
+      <span class="access-badge badge-dl ms-auto"><i class="bi bi-download me-1"></i>Download access</span>
+    </div>
+    <div class="panel-body pb-2">
+      <!-- Inputs row -->
+      <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">
+            File Name, Subject Code or Subject Name
+          </label>
+          <div class="search-bar-wrap">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="e.g. FIRE102, Assembly, Introduction…">
+          </div>
+        </div>
+        <div class="col-6 col-md-2">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">Subject Code</label>
+          <select class="filter-select">
+            <option value="" selected>All Codes</option>
+            <option>FIRE102</option>
+            <option>FIRE103</option>
+            <option>FIRE104</option>
+            <option>FIRE201</option>
+          </select>
+        </div>
+        <div class="col-6 col-md-2">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">Academic Period</label>
+          <select class="filter-select">
+            <option value="" selected>All Periods</option>
+            <option>Prelim</option>
+            <option>Midterm</option>
+            <option>Finals</option>
+          </select>
+        </div>
+        <div class="col-6 col-md-2">
+          <label class="form-label" style="font-size:.78rem;font-weight:600;color:var(--text-main);margin-bottom:.3rem;">File Type</label>
+          <select class="filter-select">
+            <option value="" selected>All Types</option>
+            <option>PDF</option>
+            <option>DOCX</option>
+            <option>PPTX</option>
+            <option>ZIP</option>
+            <option>Report</option>
+          </select>
+        </div>
+        <div class="col-6 col-md-2 d-flex gap-2">
+          <button type="button" class="btn-search-go flex-fill"><i class="bi bi-search"></i> Search</button>
+          <a href="download-modules.html" class="btn-clear-filter"><i class="bi bi-x"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick-filter pills (type) -->
+      <div class="mt-3 pt-3 d-flex flex-wrap align-items-center gap-2" style="border-top:1px solid var(--border);">
+        <span style="font-size:.73rem;font-weight:700;color:var(--text-muted);">Filter by type:</span>
+        <!-- These labels are siblings to the radios at top of body AND parents of .files-panel via CSS ~ combinator -->
+        <div class="pill-scope filter-pills">
+          <label class="pill-label" for="pill-all">All Files</label>
+          <label class="pill-label" for="pill-pdf"><i class="bi bi-filetype-pdf" style="color:var(--red);"></i> PDF</label>
+          <label class="pill-label" for="pill-docx"><i class="bi bi-filetype-docx" style="color:#2980b9;"></i> DOCX</label>
+          <label class="pill-label" for="pill-pptx"><i class="bi bi-filetype-pptx" style="color:#e67e22;"></i> PPTX</label>
+          <label class="pill-label" for="pill-zip"><i class="bi bi-file-zip" style="color:#27ae60;"></i> ZIP</label>
+          <label class="pill-label" for="pill-report"><i class="bi bi-file-earmark-bar-graph" style="color:#e67e22;"></i> Report</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Files Table + Recent Downloads in 2-col layout -->
+  <div class="row g-4 mb-4">
+
+    <!-- Files Table (7 cols wide) — .files-panel is the CSS target for pill row filtering -->
+    <div class="col-12 col-xl-8">
+      <div class="panel files-panel">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-table me-1" style="color:var(--red);"></i>Available Downloads</h2>
+            <p>All downloadable files for AY 2025–2026. Click Download to save a file.</p>
+          </div>
+          <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">18 files</span>
+        </div>
+
+        <!-- Pill labels must be inside .files-panel to be valid ~ sibling targets from the body-level radios -->
+        <!-- Re-declare pills invisibly so CSS sibling ~ works from body-level radio → .files-panel rows -->
+        <div class="panel-body p-0">
+          <div class="table-responsive">
+            <table class="table dl-table mb-0">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Code</th>
+                  <th>Subject</th>
+                  <th>Period</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Uploaded</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- PDF files -->
+                <tr class="dl-row type-pdf">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pdf"><i class="bi bi-filetype-pdf"></i></div>
+                      <div>
+                        <div class="file-name-main">Rifle Assembly — Introduction</div>
+                        <div class="file-name-sub">Rifle_Assembly_Intro.pdf</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire102">FIRE102</span></td>
+                  <td style="font-size:.78rem;">Assembly</td>
+                  <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+                  <td><span class="ftag pdf">PDF</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">2.4 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 2, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-pdf">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pdf"><i class="bi bi-filetype-pdf"></i></div>
+                      <div>
+                        <div class="file-name-main">Step-by-step Disassembly Guide</div>
+                        <div class="file-name-sub">Disassembly_Guide.pdf</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire103">FIRE103</span></td>
+                  <td style="font-size:.78rem;">Disassembly</td>
+                  <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+                  <td><span class="ftag pdf">PDF</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">3.8 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 10, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-pdf">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pdf"><i class="bi bi-filetype-pdf"></i></div>
+                      <div>
+                        <div class="file-name-main">Stripping Sequence Reference Card</div>
+                        <div class="file-name-sub">Stripping_Sequence_Ref.pdf</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire104">FIRE104</span></td>
+                  <td style="font-size:.78rem;">Field Stripping</td>
+                  <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+                  <td><span class="ftag pdf">PDF</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">0.9 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 12, 2026</td>
+                  <td><span class="sbadge sbadge-new">New</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-pdf">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pdf"><i class="bi bi-filetype-pdf"></i></div>
+                      <div>
+                        <div class="file-name-main">Maintenance Schedule 2026</div>
+                        <div class="file-name-sub">Maintenance_Schedule_2026.pdf</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire201">FIRE201</span></td>
+                  <td style="font-size:.78rem;">Maintenance</td>
+                  <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+                  <td><span class="ftag pdf">PDF</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">1.7 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 7, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- PPTX files -->
+                <tr class="dl-row type-pptx">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pptx"><i class="bi bi-filetype-pptx"></i></div>
+                      <div>
+                        <div class="file-name-main">Parts Identification — Slide Deck</div>
+                        <div class="file-name-sub">Parts_Identification.pptx</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire102">FIRE102</span></td>
+                  <td style="font-size:.78rem;">Assembly</td>
+                  <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+                  <td><span class="ftag pptx">PPTX</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">5.1 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 4, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-pptx">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pptx"><i class="bi bi-filetype-pptx"></i></div>
+                      <div>
+                        <div class="file-name-main">Field Stripping — Overview Slides</div>
+                        <div class="file-name-sub">Field_Stripping_Overview.pptx</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire104">FIRE104</span></td>
+                  <td style="font-size:.78rem;">Field Stripping</td>
+                  <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+                  <td><span class="ftag pptx">PPTX</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">7.5 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 6, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-pptx">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon pptx"><i class="bi bi-filetype-pptx"></i></div>
+                      <div>
+                        <div class="file-name-main">Preventive Maintenance — Finals Review</div>
+                        <div class="file-name-sub">Preventive_Maintenance_Finals.pptx</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire201">FIRE201</span></td>
+                  <td style="font-size:.78rem;">Maintenance</td>
+                  <td><span class="pbadge pbadge-finals">Finals</span></td>
+                  <td><span class="ftag pptx">PPTX</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">4.3 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 15, 2026</td>
+                  <td><span class="sbadge sbadge-new">New</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- DOCX files -->
+                <tr class="dl-row type-docx">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon docx"><i class="bi bi-filetype-docx"></i></div>
+                      <div>
+                        <div class="file-name-main">Practical Exam Rubric — Midterm</div>
+                        <div class="file-name-sub">Practical_Exam_Rubric_Midterm.docx</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire103">FIRE103</span></td>
+                  <td style="font-size:.78rem;">Disassembly</td>
+                  <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+                  <td><span class="ftag docx">DOCX</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">1.2 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 11, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-docx">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon docx"><i class="bi bi-filetype-docx"></i></div>
+                      <div>
+                        <div class="file-name-main">Cleaning &amp; Lubrication Procedures</div>
+                        <div class="file-name-sub">Cleaning_Lubrication.docx</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire201">FIRE201</span></td>
+                  <td style="font-size:.78rem;">Maintenance</td>
+                  <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+                  <td><span class="ftag docx">DOCX</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">2.1 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 13, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- ZIP packages -->
+                <tr class="dl-row type-zip">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon zip"><i class="bi bi-file-zip"></i></div>
+                      <div>
+                        <div class="file-name-main">FIRE102 — Prelim Module Package</div>
+                        <div class="file-name-sub">FIRE102_Prelim_Package.zip</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire102">FIRE102</span></td>
+                  <td style="font-size:.78rem;">Assembly</td>
+                  <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+                  <td><span class="ftag zip">ZIP</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">58.4 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 5, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-zip">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon zip"><i class="bi bi-file-zip"></i></div>
+                      <div>
+                        <div class="file-name-main">FIRE103 — Midterm Module Package</div>
+                        <div class="file-name-sub">FIRE103_Midterm_Package.zip</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire103">FIRE103</span></td>
+                  <td style="font-size:.78rem;">Disassembly</td>
+                  <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+                  <td><span class="ftag zip">ZIP</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">70.1 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 11, 2026</td>
+                  <td><span class="sbadge sbadge-new">New</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-zip">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon zip"><i class="bi bi-file-zip"></i></div>
+                      <div>
+                        <div class="file-name-main">FIRE201 — Full Term Package</div>
+                        <div class="file-name-sub">FIRE201_Full_Term.zip</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire201">FIRE201</span></td>
+                  <td style="font-size:.78rem;">Maintenance</td>
+                  <td><span class="pbadge pbadge-finals">Finals</span></td>
+                  <td><span class="ftag zip">ZIP</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">92.8 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 16, 2026</td>
+                  <td><span class="sbadge sbadge-pending">Pending</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Report files -->
+                <tr class="dl-row type-report">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon report"><i class="bi bi-file-earmark-bar-graph"></i></div>
+                      <div>
+                        <div class="file-name-main">Student Progress Report — Prelim</div>
+                        <div class="file-name-sub">Progress_Report_Prelim.pdf</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire102">FIRE102</span></td>
+                  <td style="font-size:.78rem;">Assembly</td>
+                  <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+                  <td><span class="ftag report">Report</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">1.1 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 14, 2026</td>
+                  <td><span class="sbadge sbadge-ready">Ready</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="dl-row type-report">
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="ficon report"><i class="bi bi-file-earmark-bar-graph"></i></div>
+                      <div>
+                        <div class="file-name-main">Assessment Summary — Midterm</div>
+                        <div class="file-name-sub">Assessment_Summary_Midterm.pdf</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="subject-pill fire103">FIRE103</span></td>
+                  <td style="font-size:.78rem;">Disassembly</td>
+                  <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+                  <td><span class="ftag report">Report</span></td>
+                  <td style="font-size:.74rem;color:var(--text-muted);white-space:nowrap;">0.8 MB</td>
+                  <td style="font-size:.74rem;white-space:nowrap;">Jun 15, 2026</td>
+                  <td><span class="sbadge sbadge-new">New</span></td>
+                  <td>
+                    <div class="d-flex gap-1 flex-nowrap">
+                      <a href="#" class="tbl-btn tbl-btn-dl"><i class="bi bi-download"></i> Download</a>
+                      <a href="#" class="tbl-btn tbl-btn-view"><i class="bi bi-eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Table footer -->
+          <div class="d-flex align-items-center px-3 py-2" style="border-top:1px solid var(--border);background:#F9FAFB;">
+            <span style="font-size:.73rem;color:var(--text-muted);">14 of 18 files shown &nbsp;·&nbsp; Use filters to narrow results</span>
+            <a href="upload-modules.html" class="ms-auto" style="font-size:.73rem;color:var(--red);font-weight:600;text-decoration:none;">
+              <i class="bi bi-plus-circle me-1"></i>Upload New Module
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Downloads sidebar -->
+    <div class="col-12 col-xl-4">
+      <div class="panel mb-4">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-clock-history me-1" style="color:var(--red);"></i>Recent Downloads</h2>
+            <p>Files downloaded by you this session.</p>
+          </div>
+          <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">5 today</span>
+        </div>
+
+        <div class="recent-item">
+          <div class="recent-icon zip"><i class="bi bi-file-zip"></i></div>
+          <div class="recent-meta">
+            <div class="recent-name">FIRE102 — Prelim Module Package.zip</div>
+            <div class="recent-sub">FIRE102 · Prelim · 58.4 MB</div>
+          </div>
+          <div class="recent-time">10:51 AM</div>
+        </div>
+
+        <div class="recent-item">
+          <div class="recent-icon pdf"><i class="bi bi-filetype-pdf"></i></div>
+          <div class="recent-meta">
+            <div class="recent-name">Rifle Assembly — Introduction.pdf</div>
+            <div class="recent-sub">FIRE102 · Prelim · 2.4 MB</div>
+          </div>
+          <div class="recent-time">10:44 AM</div>
+        </div>
+
+        <div class="recent-item">
+          <div class="recent-icon report"><i class="bi bi-file-earmark-bar-graph"></i></div>
+          <div class="recent-meta">
+            <div class="recent-name">Student Progress Report — Prelim</div>
+            <div class="recent-sub">FIRE102 · Prelim · 1.1 MB</div>
+          </div>
+          <div class="recent-time">10:20 AM</div>
+        </div>
+
+        <div class="recent-item">
+          <div class="recent-icon docx"><i class="bi bi-filetype-docx"></i></div>
+          <div class="recent-meta">
+            <div class="recent-name">Practical Exam Rubric — Midterm.docx</div>
+            <div class="recent-sub">FIRE103 · Midterm · 1.2 MB</div>
+          </div>
+          <div class="recent-time">9:55 AM</div>
+        </div>
+
+        <div class="recent-item">
+          <div class="recent-icon pptx"><i class="bi bi-filetype-pptx"></i></div>
+          <div class="recent-meta">
+            <div class="recent-name">Parts Identification — Slide Deck.pptx</div>
+            <div class="recent-sub">FIRE102 · Prelim · 5.1 MB</div>
+          </div>
+          <div class="recent-time">9:30 AM</div>
+        </div>
+
+      </div>
+
+      <!-- Empty state (shown when no files match — decorative; no JS) -->
+      <div class="panel">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-inbox me-1" style="color:var(--red);"></i>No Results</h2>
+            <p>This is shown when no files match your search.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>No downloadable modules available.<br>
+               <span style="font-size:.75rem;">Try adjusting your filters or <a href="upload-modules.html" style="color:var(--red);font-weight:600;">upload a new module</a>.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /row -->
+
+  <!-- Notice Bar -->
+  <div class="notice-bar mb-4">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <div>
+      <span class="notice-label">Download Notice —</span>
+      Downloaded files are intended for offline use, printing, and external submission only. Do not share module packages outside official channels. Always verify the upload date to ensure you have the latest version before submitting externally.
+    </div>
+  </div>
+
+  <div class="portal-footer">
+    Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
+  </div>
+
+</main>
+</body>
+</html>

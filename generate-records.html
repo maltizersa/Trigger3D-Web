@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trigger3D – Generate Records</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
+    /* ── TOP BAR ── */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-search { flex: 1; max-width: 280px; }
+    .topbar-search-wrap { position: relative; }
+    .topbar-search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .topbar-search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; outline: none; }
+    .topbar-search-wrap input:focus { border-color: var(--red); background: #fff; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
+    .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* ── BACKDROP ── */
+    .sidebar-backdrop { display: none; }
+
+    /* ── MAIN ── */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
+    .page-header-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
+    .page-header-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
+    .page-header-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-body { padding: 1.4rem; }
+
+    /* ── SECTION HEADING ── */
+    .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
+    .section-heading i { color: var(--red); font-size: .95rem; }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.15rem; display: flex; align-items: center; gap: .85rem; height: 100%; }
+    .summary-card-icon { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+    .ic-blue   { background: #eaf3fb; color: #2980b9; }
+    .ic-green  { background: #eafaf1; color: #27ae60; }
+    .ic-purple { background: #f4eafb; color: #8e44ad; }
+    .ic-orange { background: #fef5e7; color: #e67e22; }
+    .ic-red    { background: #fdecea; color: var(--red); }
+    .summary-card-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; }
+    .summary-card-label { font-size: .72rem; color: var(--text-muted); margin-top: .2rem; }
+
+    /* ── FORM STYLES ── */
+    .form-label-sm { font-size: .8rem; font-weight: 600; color: var(--text-main); margin-bottom: .35rem; display: block; }
+    .form-control, .form-select { font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); }
+    .form-control:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.1); }
+
+    /* ── BUTTONS ── */
+    .btn-generate { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: .5rem 1.3rem; font-size: .84rem; font-weight: 600; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; transition: background .15s; text-decoration: none; }
+    .btn-generate:hover { background: var(--red-dark); color: #fff; }
+    .btn-pdf-export { background: #fff; color: var(--red); border: 1.5px solid var(--red); border-radius: 8px; padding: .48rem 1.1rem; font-size: .84rem; font-weight: 600; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; transition: all .15s; text-decoration: none; }
+    .btn-pdf-export:hover { background: var(--red); color: #fff; }
+    .btn-print-rec { background: #fff; color: var(--text-main); border: 1.5px solid var(--border); border-radius: 8px; padding: .48rem 1.1rem; font-size: .84rem; font-weight: 600; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; transition: border-color .15s; text-decoration: none; }
+    .btn-print-rec:hover { border-color: var(--red-light); color: var(--red); }
+    .btn-reset { background: #F9FAFB; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; padding: .48rem 1.1rem; font-size: .84rem; font-weight: 500; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; text-decoration: none; transition: border-color .15s; }
+    .btn-reset:hover { border-color: var(--red-light); color: var(--red); }
+
+    /* ── TABLE ── */
+    .rec-table { font-size: .8rem; }
+    .rec-table thead th { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); background: #F9FAFB; border-bottom: 2px solid var(--border); padding: .65rem .85rem; white-space: nowrap; }
+    .rec-table tbody td { padding: .65rem .85rem; vertical-align: middle; border-bottom: 1px solid var(--border); color: var(--text-main); }
+    .rec-table tbody tr:last-child td { border-bottom: none; }
+    .rec-table tbody tr:hover td { background: #fdf8f8; }
+    .rec-name { font-weight: 600; font-size: .81rem; }
+    .rec-id   { font-size: .7rem; color: var(--text-muted); font-family: monospace; }
+
+    /* Status badges */
+    .sbadge { font-size: .67rem; font-weight: 700; padding: .18rem .6rem; border-radius: 20px; white-space: nowrap; }
+    .sbadge-generated { background: #eafaf1; color: #27ae60; }
+    .sbadge-pending   { background: #fef5e7; color: #e67e22; }
+    .sbadge-approved  { background: #eaf3fb; color: #2980b9; }
+
+    /* Record type badge */
+    .rtbadge { font-size: .67rem; font-weight: 700; padding: .15rem .55rem; border-radius: 6px; background: #F9FAFB; border: 1px solid var(--border); color: var(--text-muted); }
+
+    /* Table action buttons */
+    .tbl-btn { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; text-decoration: none; transition: all .15s; border: 1px solid var(--border); background: #f5f5f5; color: var(--text-muted); }
+    .tbl-btn:hover { background: #fdecea; color: var(--red); border-color: var(--red-light); }
+    .tbl-btn.view { background: #eaf3fb; color: #2980b9; border-color: #bcd6ec; }
+    .tbl-btn.view:hover { background: #d4eaf8; }
+    .tbl-btn.dl { background: #eafaf1; color: #27ae60; border-color: #a9dfbf; }
+    .tbl-btn.dl:hover { background: #d0f0e0; }
+
+    /* ── RECENT ACTIVITY LIST ── */
+    .activity-item { display: flex; align-items: flex-start; gap: .75rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .activity-meta { flex: 1; min-width: 0; }
+    .activity-title { font-weight: 600; font-size: .8rem; color: var(--text-main); }
+    .activity-sub   { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+    .activity-time  { font-size: .68rem; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── NOTICE BAR ── */
+    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; }
+    .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
+    .notice-label { font-weight: 700; color: #e67e22; }
+
+    /* ── ACCESS BADGE ── */
+    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; }
+    .badge-records { background: #eaf3fb; color: #2980b9; }
+
+    /* ── FOOTER ── */
+    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle-label { display: flex; }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
+      #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
+        display: block; position: fixed; top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.35); z-index: 1025;
+      }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle-checkbox">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </label>
+  <a href="manage-ins.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+  <div class="topbar-search ms-3">
+    <div class="topbar-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search…" />
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
+    <div class="icon-btn"><i class="bi bi-gear"></i></div>
+    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+    <div class="topbar-user d-none d-sm-block">
+      Instr. R. Bautista <small>Instructor</small>
+    </div>
+    <div class="avatar">RB</div>
+  </div>
+</header>
+
+<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+    <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+    <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+  </ul>
+
+  <span class="sidebar-label">Module Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
+    <li><a href="delete-modules.html"><i class="bi bi-trash"></i> Delete Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="generate-records.html" class="active"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="#"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Settings</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+    <div class="page-header-text">
+      <div class="title">Generate Records</div>
+      <div class="sub">Produce official student records, enrollment certificates, and completion documents for export or printing.</div>
+    </div>
+    <div class="page-header-badge d-none d-sm-block">FIRE102 — Assembly</div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-blue"><i class="bi bi-file-earmark-text"></i></div>
+        <div>
+          <div class="summary-card-value">142</div>
+          <div class="summary-card-label">Total Records Generated</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-green"><i class="bi bi-patch-check"></i></div>
+        <div>
+          <div class="summary-card-value">58</div>
+          <div class="summary-card-label">Enrollment Certificates</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-purple"><i class="bi bi-award"></i></div>
+        <div>
+          <div class="summary-card-value">47</div>
+          <div class="summary-card-label">Completion Certificates</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon ic-orange"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+          <div class="summary-card-value">6</div>
+          <div class="summary-card-label">Pending Requests</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice Alert -->
+  <div class="alert alert-warning d-flex align-items-start gap-3 mb-4" role="alert" style="border-radius:10px; font-size:.82rem; border: 1.5px solid #ffe08a; background: #fffbec;">
+    <i class="bi bi-info-circle-fill fs-5 flex-shrink-0 mt-1" style="color:#e67e22;"></i>
+    <div>
+      <strong>Review before exporting.</strong> Generated records should be carefully reviewed for accuracy before printing or exporting as official documents. Records submitted with errors must be voided and re-generated. Contact the Program Head if approval is required before release.
+    </div>
+  </div>
+
+  <!-- Two-column layout: Form + Recent Activity -->
+  <div class="row g-4 mb-4">
+
+    <!-- Record Generation Form -->
+    <div class="col-12 col-lg-7">
+      <div class="panel h-100">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-pencil-square me-1" style="color:var(--red);"></i>Record Generation Form</h2>
+            <p>Fill in student details and select a record type to generate an official document.</p>
+          </div>
+          <span class="access-badge badge-records ms-auto"><i class="bi bi-file-earmark-check me-1"></i>Records access</span>
+        </div>
+        <div class="panel-body">
+
+          <div class="section-heading">
+            <i class="bi bi-person-lines-fill"></i> Student Information
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12 col-sm-6">
+              <label class="form-label-sm" for="std-name">Student Name <span class="text-danger">*</span></label>
+              <input type="text" id="std-name" class="form-control" placeholder="e.g. Juan Dela Cruz">
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="form-label-sm" for="std-id">Student ID <span class="text-danger">*</span></label>
+              <input type="text" id="std-id" class="form-control" placeholder="e.g. 2024-00123">
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="form-label-sm" for="std-subject">Subject</label>
+              <select id="std-subject" class="form-select">
+                <option value="" disabled selected>Select subject…</option>
+                <option>FIRE102 — Assembly</option>
+                <option>FIRE103 — Disassembly</option>
+                <option>FIRE104 — Field Stripping</option>
+                <option>FIRE201 — Maintenance</option>
+              </select>
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="form-label-sm" for="std-ay">Academic Year <span class="text-danger">*</span></label>
+              <select id="std-ay" class="form-select">
+                <option value="" disabled selected>Select year…</option>
+                <option selected>2025 – 2026 (Current)</option>
+                <option>2024 – 2025</option>
+                <option>2023 – 2024</option>
+                <option>2022 – 2023</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-heading mt-4">
+            <i class="bi bi-file-earmark-ruled"></i> Record Details
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label-sm" for="rec-type">Record Type <span class="text-danger">*</span></label>
+              <select id="rec-type" class="form-select">
+                <option value="" disabled selected>Select record type…</option>
+                <option>Student Record</option>
+                <option>Enrollment Certificate</option>
+                <option>Completion Certificate</option>
+                <option>Assessment Report</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label-sm" for="rec-remarks">Remarks / Notes <span class="text-muted" style="font-weight:400;">(optional)</span></label>
+              <textarea id="rec-remarks" class="form-control" rows="3" placeholder="Add any notes or special instructions for this record…" style="resize:vertical;"></textarea>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex flex-wrap gap-2 mt-4 pt-3" style="border-top: 1px solid var(--border);">
+            <button type="button" class="btn-generate">
+              <i class="bi bi-file-earmark-plus-fill"></i> Generate Record
+            </button>
+            <button type="button" class="btn-pdf-export">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Export PDF
+            </button>
+            <button type="button" class="btn-print-rec">
+              <i class="bi bi-printer-fill"></i> Print Record
+            </button>
+            <a href="generate-records.html" class="btn-reset ms-auto">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset Form
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="col-12 col-lg-5">
+      <div class="panel h-100">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-clock-history me-1" style="color:var(--red);"></i>Recent Activity</h2>
+            <p>Latest records generated in this session and today.</p>
+          </div>
+          <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">5 today</span>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon ic-green"><i class="bi bi-award"></i></div>
+          <div class="activity-meta">
+            <div class="activity-title">Completion Certificate — J. Dela Cruz</div>
+            <div class="activity-sub">FIRE102 · 2025–2026 · Generated by Instr. R. Bautista</div>
+          </div>
+          <div class="activity-time">10:42 AM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon ic-blue"><i class="bi bi-file-earmark-text"></i></div>
+          <div class="activity-meta">
+            <div class="activity-title">Student Record — M. Santos</div>
+            <div class="activity-sub">FIRE103 · 2025–2026 · Generated by Instr. R. Bautista</div>
+          </div>
+          <div class="activity-time">10:15 AM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon ic-purple"><i class="bi bi-patch-check"></i></div>
+          <div class="activity-meta">
+            <div class="activity-title">Enrollment Certificate — R. Reyes</div>
+            <div class="activity-sub">FIRE102 · 2025–2026 · Generated by Instr. R. Bautista</div>
+          </div>
+          <div class="activity-time">9:58 AM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon ic-orange"><i class="bi bi-clipboard2-data"></i></div>
+          <div class="activity-meta">
+            <div class="activity-title">Assessment Report — C. Lopez</div>
+            <div class="activity-sub">FIRE104 · 2025–2026 · Generated by Instr. R. Bautista</div>
+          </div>
+          <div class="activity-time">9:30 AM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon ic-green"><i class="bi bi-award"></i></div>
+          <div class="activity-meta">
+            <div class="activity-title">Completion Certificate — A. Garcia</div>
+            <div class="activity-sub">FIRE201 · 2025–2026 · Generated by Instr. R. Bautista</div>
+          </div>
+          <div class="activity-time">9:05 AM</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /row -->
+
+  <!-- Generated Records Table -->
+  <div class="panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-table me-1" style="color:var(--red);"></i>Generated Records</h2>
+        <p>Full history of records produced under your account this term.</p>
+      </div>
+      <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">142 total</span>
+    </div>
+    <div class="panel-body p-0">
+      <div class="table-responsive">
+        <table class="table rec-table mb-0">
+          <thead>
+            <tr>
+              <th>Record ID</th>
+              <th>Student Name</th>
+              <th>Record Type</th>
+              <th>Date Generated</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="rec-id">#REC-0142</span></td>
+              <td>
+                <div class="rec-name">Juan Dela Cruz</div>
+                <div class="rec-id">ID: 2024-00187</div>
+              </td>
+              <td><span class="rtbadge">Completion Cert.</span></td>
+              <td><span style="font-size:.75rem;">Jun 18, 2026</span></td>
+              <td><span class="sbadge sbadge-generated">Generated</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                  <a href="#" class="tbl-btn" title="Print"><i class="bi bi-printer"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="rec-id">#REC-0141</span></td>
+              <td>
+                <div class="rec-name">Maria Santos</div>
+                <div class="rec-id">ID: 2024-00201</div>
+              </td>
+              <td><span class="rtbadge">Student Record</span></td>
+              <td><span style="font-size:.75rem;">Jun 18, 2026</span></td>
+              <td><span class="sbadge sbadge-approved">Approved</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                  <a href="#" class="tbl-btn" title="Print"><i class="bi bi-printer"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="rec-id">#REC-0140</span></td>
+              <td>
+                <div class="rec-name">Ramon Reyes</div>
+                <div class="rec-id">ID: 2024-00089</div>
+              </td>
+              <td><span class="rtbadge">Enrollment Cert.</span></td>
+              <td><span style="font-size:.75rem;">Jun 18, 2026</span></td>
+              <td><span class="sbadge sbadge-generated">Generated</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                  <a href="#" class="tbl-btn" title="Print"><i class="bi bi-printer"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="rec-id">#REC-0139</span></td>
+              <td>
+                <div class="rec-name">Carmela Lopez</div>
+                <div class="rec-id">ID: 2024-00154</div>
+              </td>
+              <td><span class="rtbadge">Assessment Report</span></td>
+              <td><span style="font-size:.75rem;">Jun 18, 2026</span></td>
+              <td><span class="sbadge sbadge-pending">Pending</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                  <a href="#" class="tbl-btn" title="Print"><i class="bi bi-printer"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="rec-id">#REC-0138</span></td>
+              <td>
+                <div class="rec-name">Antonio Garcia</div>
+                <div class="rec-id">ID: 2024-00063</div>
+              </td>
+              <td><span class="rtbadge">Completion Cert.</span></td>
+              <td><span style="font-size:.75rem;">Jun 18, 2026</span></td>
+              <td><span class="sbadge sbadge-approved">Approved</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                  <a href="#" class="tbl-btn" title="Print"><i class="bi bi-printer"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="rec-id">#REC-0137</span></td>
+              <td>
+                <div class="rec-name">Diana Torres</div>
+                <div class="rec-id">ID: 2024-00210</div>
+              </td>
+              <td><span class="rtbadge">Enrollment Cert.</span></td>
+              <td><span style="font-size:.75rem;">Jun 17, 2026</span></td>
+              <td><span class="sbadge sbadge-pending">Pending</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn dl" title="Download"><i class="bi bi-download"></i></a>
+                  <a href="#" class="tbl-btn" title="Print"><i class="bi bi-printer"></i></a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex align-items-center justify-content-between px-3 py-2" style="border-top: 1px solid var(--border); background: #F9FAFB;">
+        <span style="font-size:.73rem; color:var(--text-muted);">Showing 6 of 142 records</span>
+        <nav>
+          <ul class="pagination pagination-sm mb-0" style="gap:.2rem;">
+            <li class="page-item disabled"><a class="page-link" href="#" style="border-radius:6px; font-size:.73rem;">‹</a></li>
+            <li class="page-item active"><a class="page-link" href="#" style="border-radius:6px; font-size:.73rem; background:var(--red); border-color:var(--red);">1</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.73rem;">2</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.73rem;">3</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.73rem;">›</a></li>
+          </ul>
+        </nav>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notice Bar -->
+  <div class="notice-bar mb-4">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <div>
+      <span class="notice-label">Records Notice —</span>
+      All generated records are logged with the instructor's name, date, and time. Official documents require Program Head approval before release to students. Use the <strong>Export PDF</strong> or <strong>Print</strong> buttons after generation.
+    </div>
+  </div>
+
+  <div class="portal-footer">
+    Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
+  </div>
+
+</main>
+
+</body>
+</html>

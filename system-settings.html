@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Settings — FTA System</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+
+    /* Hidden checkbox drives the mobile sidebar — pure CSS, zero JavaScript */
+    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
+    .topbar-search { flex: 1; max-width: 280px; }
+    .topbar-search-wrap { position: relative; }
+    .topbar-search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .topbar-search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; outline: none; }
+    .topbar-search-wrap input:focus { border-color: var(--red); background: #fff; }
+    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
+    .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; cursor: pointer; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* ── BACKDROP (mobile only) ── */
+    .sidebar-backdrop { display: none; }
+
+    /* ── LAYOUT ── */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+    .page-section  { padding-top: 1.5rem; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; margin-bottom: 1.25rem; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-header { padding: .85rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+    .panel-header h5 { margin: 0; font-size: .9rem; font-weight: 700; }
+    .panel-body { padding: 1.3rem; }
+
+    /* ── PROFILE HERO ── */
+    .profile-hero { display: flex; align-items: center; gap: 1.5rem; padding: 1.4rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .profile-pic-wrap { position: relative; flex-shrink: 0; }
+    .profile-pic { width: 88px; height: 88px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.8rem; font-weight: 700; border: 3px solid #F1948A; overflow: hidden; }
+    .profile-pic img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+    .profile-info h4 { font-size: 1.05rem; font-weight: 700; margin: 0 0 .18rem; }
+    .profile-info p  { font-size: .8rem; color: var(--text-muted); margin: 0 0 .5rem; }
+    .role-badge { background: #FDECEA; color: var(--red); font-size: .72rem; font-weight: 700; padding: .22rem .65rem; border-radius: 20px; display: inline-block; }
+
+    /* ── BUTTONS ── */
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-red:hover { background: var(--red-dark); color: #fff; }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-red:hover { background: var(--red); color: #fff; }
+    .btn-outline-gray { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-gray:hover { background: #F4F6F8; border-color: #c5c9ce; color: var(--text-main); }
+    .btn-danger-outline { background: transparent; color: #C0392B; border: 1.5px solid #F1948A; font-size: .78rem; font-weight: 600; padding: .35rem .8rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; }
+    .btn-danger-outline:hover { background: #FDECEA; }
+
+    /* ── FORM STYLES ── */
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-styled { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 38px; padding: 0 .75rem; width: 100%; color: var(--text-main); transition: border-color .15s, background .15s; }
+    .form-control-styled:focus { outline: none; border-color: var(--red); background: #fff; }
+    .form-control-styled:disabled,
+    .form-control-styled[readonly] { background: #F4F6F8; color: var(--text-muted); cursor: not-allowed; }
+    select.form-control-styled { appearance: auto; }
+    .format-note { font-size: .72rem; color: var(--text-muted); margin-top: .5rem; display: flex; align-items: center; gap: .35rem; }
+
+    /* ── TOGGLE SWITCH (pure Bootstrap form-switch) ── */
+    .form-switch .form-check-input { width: 2.4em; height: 1.3em; cursor: pointer; }
+    .form-switch .form-check-input:checked { background-color: var(--red); border-color: var(--red); }
+    .form-switch .form-check-input:focus { box-shadow: 0 0 0 .2rem rgba(192,57,43,.2); border-color: var(--red); }
+    .pref-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: .85rem 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .pref-row:last-child { border-bottom: none; }
+    .pref-text strong { font-size: .85rem; display: block; margin-bottom: .15rem; }
+    .pref-text span { font-size: .76rem; color: var(--text-muted); }
+
+    /* ── FOOTER ── */
+    .page-footer { margin-top: 2rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.25); font-size: .74rem; color: rgba(255,255,255,.85); text-align: center; }
+
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle-label { display: flex; }
+
+      #sidebar-toggle-checkbox:checked ~ .sidebar {
+        transform: translateX(0);
+      }
+      #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,.35);
+        z-index: 1025;
+      }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .profile-hero { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hidden checkbox driving the mobile sidebar — pure CSS, no JavaScript -->
+<input type="checkbox" id="sidebar-toggle-checkbox">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </label>
+  <a href="manage-ins.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+
+  <div class="topbar-search ms-3">
+    <div class="topbar-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search…" />
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
+    <div class="icon-btn"><i class="bi bi-gear"></i></div>
+    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+    <div class="topbar-user d-none d-sm-block">
+      Prof. J. Reyes <small>Instructor</small>
+    </div>
+    <div class="avatar">JR</div>
+  </div>
+</header>
+
+<!-- Backdrop: tapping it (it's a label) closes the sidebar on mobile -->
+<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+    <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+    <li><a href="manage-assessment.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+  </ul>
+
+  <span class="sidebar-label">Module Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
+    <li><a href="delete-modules.html"><i class="bi bi-trash"></i> Delete Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="generate-records.html"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="view-generated-modules.html"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+    <li><a href="download-modules.html"><i class="bi bi-download"></i> Download Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Settings</span>
+  <ul class="sidebar-nav">
+    <li><a href="system-settings.html" class="active"><i class="bi bi-gear"></i> System Settings</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <section class="page-section">
+
+    <!-- ── PANEL ── -->
+    <div class="panel">
+
+      <!-- Banner -->
+      <div class="panel-banner">
+        <div>
+          <h2>System Settings</h2>
+          <p>Manage your profile, account security, and preferences</p>
+        </div>
+      </div>
+
+      <!-- ── PROFILE HERO ── -->
+      <div class="profile-hero">
+        <div class="profile-pic-wrap">
+          <div class="profile-pic">
+            <span>JR</span>
+            <img src="" alt="Profile photo" />
+          </div>
+        </div>
+
+        <div class="profile-info">
+          <h4>Prof. Jonathan Reyes</h4>
+          <p>j.reyes@fta.edu</p>
+          <span class="role-badge"><i class="bi bi-mortarboard-fill me-1"></i>Instructor</span>
+        </div>
+
+        <div style="margin-left:auto;display:flex;flex-direction:column;gap:.55rem;">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <label for="picInput" class="btn-outline-red" style="cursor:pointer">
+              <i class="bi bi-upload"></i> Upload Picture
+            </label>
+            <button class="btn-danger-outline" type="button">
+              <i class="bi bi-trash-fill"></i> Remove Picture
+            </button>
+          </div>
+          <input type="file" id="picInput" accept=".jpg,.jpeg,.png" style="display:none" />
+          <div class="format-note">
+            <i class="bi bi-info-circle"></i> JPG, JPEG, PNG — Max 5 MB
+          </div>
+        </div>
+      </div><!-- /profile-hero -->
+
+      <!-- ── PROFILE INFORMATION ── -->
+      <div class="panel-header">
+        <h5><i class="bi bi-person-fill me-1" style="color:var(--red)"></i> Profile Information</h5>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3">
+          <div class="col-sm-4">
+            <label class="form-label-sm">First Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-styled" value="Jonathan" />
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label-sm">Middle Name</label>
+            <input type="text" class="form-control-styled" value="M." />
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label-sm">Last Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-styled" value="Reyes" />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-sm">Email Address <span class="text-danger">*</span></label>
+            <input type="email" class="form-control-styled" value="j.reyes@fta.edu" />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-sm">Contact Number</label>
+            <input type="text" class="form-control-styled" value="+63 912 345 6789" />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-sm">Instructor ID</label>
+            <input type="text" class="form-control-styled" value="INS-2024-014" readonly />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-sm">Role</label>
+            <input type="text" class="form-control-styled" value="Instructor" readonly />
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+          <button class="btn-red" type="submit">
+            <i class="bi bi-check-lg"></i> Save Changes
+          </button>
+          <button class="btn-outline-gray" type="reset">
+            <i class="bi bi-x"></i> Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- ── ACCOUNT SETTINGS ── -->
+      <div class="panel-header">
+        <h5><i class="bi bi-person-gear me-1" style="color:var(--red)"></i> Account Settings</h5>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3" style="max-width:520px">
+          <div class="col-12">
+            <label class="form-label-sm">Username <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-styled" value="jreyes.instructor" />
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:1.4rem 0 1.1rem;" />
+
+        <p style="font-size:.85rem;font-weight:700;margin-bottom:.9rem;">
+          <i class="bi bi-lock-fill me-1" style="color:var(--red)"></i> Change Password
+        </p>
+
+        <div class="row g-3" style="max-width:520px">
+          <div class="col-12">
+            <label class="form-label-sm">Current Password <span class="text-danger">*</span></label>
+            <input type="password" class="form-control-styled" placeholder="Enter current password" />
+          </div>
+          <div class="col-12">
+            <label class="form-label-sm">New Password <span class="text-danger">*</span></label>
+            <input type="password" class="form-control-styled" placeholder="At least 8 characters" />
+          </div>
+          <div class="col-12">
+            <label class="form-label-sm">Confirm Password <span class="text-danger">*</span></label>
+            <input type="password" class="form-control-styled" placeholder="Re-enter new password" />
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+          <button class="btn-red" type="submit">
+            <i class="bi bi-lock-fill"></i> Save Changes
+          </button>
+          <button class="btn-outline-gray" type="reset">
+            <i class="bi bi-x"></i> Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- ── PREFERENCES ── -->
+      <div class="panel-header">
+        <h5><i class="bi bi-sliders me-1" style="color:var(--red)"></i> Preferences</h5>
+      </div>
+      <div class="panel-body">
+
+        <div class="pref-row">
+          <div class="pref-text">
+            <strong>Notification Settings</strong>
+            <span>Receive in-app alerts for new assignments, grades, and announcements</span>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="notifSwitch" checked />
+          </div>
+        </div>
+
+        <div class="pref-row">
+          <div class="pref-text">
+            <strong>Email Notifications</strong>
+            <span>Get email updates for important system activity and reminders</span>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="emailSwitch" checked />
+          </div>
+        </div>
+
+        <div class="pref-row">
+          <div class="pref-text">
+            <strong>System Theme</strong>
+            <span>Choose how the interface appears on your device</span>
+          </div>
+          <div style="min-width:160px;">
+            <select class="form-control-styled">
+              <option selected>Light</option>
+              <option>Dark</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+          <button class="btn-red" type="submit">
+            <i class="bi bi-check-lg"></i> Save Changes
+          </button>
+          <button class="btn-outline-gray" type="reset">
+            <i class="bi bi-x"></i> Cancel
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /panel -->
+
+  </section>
+  <div class="page-footer">
+    FTA Management System &nbsp;·&nbsp; Instructor Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+  </div>
+</main>
+
+</body>
+</html>
