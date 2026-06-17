@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trigger3D – Delete Modules</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
+    /* ── TOP BAR ── */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-search { flex: 1; max-width: 280px; }
+    .topbar-search-wrap { position: relative; }
+    .topbar-search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .topbar-search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; outline: none; }
+    .topbar-search-wrap input:focus { border-color: var(--red); background: #fff; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
+    .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; cursor: pointer; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* ── BACKDROP ── */
+    .sidebar-backdrop { display: none; }
+
+    /* ── MAIN ── */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+
+    /* ── PANEL ── */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-body { padding: 1.4rem; }
+
+    /* ── PAGE HEADER BANNER ── */
+    .page-header { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
+    .page-header-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
+    .page-header-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
+    .page-header-badge { margin-left: auto; background: rgba(0,0,0,.35); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; border: 1px solid rgba(255,255,255,.25); }
+
+    /* ── SECTION HEADING ── */
+    .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
+    .section-heading i { color: var(--red); font-size: .95rem; }
+
+    /* ── ACCESS BADGE ── */
+    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; margin-top: .45rem; }
+    .badge-delete { background: #fdecea; color: var(--red); }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.15rem; display: flex; align-items: center; gap: .85rem; }
+    .summary-card-icon { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+    .summary-card-icon.total    { background: #eaf3fb; color: #2980b9; }
+    .summary-card-icon.archived { background: #f4eafb; color: #8e44ad; }
+    .summary-card-icon.review   { background: #fef5e7; color: #e67e22; }
+    .summary-card-icon.deleted  { background: #fdecea; color: var(--red); }
+    .summary-card-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; }
+    .summary-card-label { font-size: .72rem; color: var(--text-muted); margin-top: .2rem; }
+
+    /* ── FORM STYLES ── */
+    .form-label-sm { font-size: .8rem; font-weight: 600; color: var(--text-main); margin-bottom: .35rem; }
+    .form-control, .form-select { font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); }
+    .form-control:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.1); }
+
+    /* ── BUTTONS ── */
+    .btn-search { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: .5rem 1.4rem; font-size: .84rem; font-weight: 600; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; transition: background .15s; }
+    .btn-search:hover { background: var(--red-dark); }
+    .btn-clear { background: #fff; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; padding: .5rem 1.2rem; font-size: .84rem; font-weight: 500; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; text-decoration: none; transition: border-color .15s; }
+    .btn-clear:hover { border-color: var(--red-light); color: var(--red); }
+    .btn-danger-solid { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: .55rem 1.5rem; font-size: .85rem; font-weight: 700; display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; transition: background .15s; }
+    .btn-danger-solid:hover { background: var(--red-dark); }
+    .btn-cancel-outline { background: #fff; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; padding: .5rem 1.2rem; font-size: .85rem; font-weight: 500; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; text-decoration: none; transition: border-color .15s; }
+    .btn-cancel-outline:hover { border-color: var(--red-light); color: var(--red); }
+
+    /* ── TABLE ── */
+    .module-table { font-size: .8rem; }
+    .module-table thead th { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); background: #F9FAFB; border-bottom: 2px solid var(--border); padding: .65rem .85rem; white-space: nowrap; }
+    .module-table tbody td { padding: .65rem .85rem; vertical-align: middle; border-bottom: 1px solid var(--border); color: var(--text-main); }
+    .module-table tbody tr:last-child td { border-bottom: none; }
+    .module-table tbody tr:hover td { background: #fdf8f8; }
+    .table-module-name { font-weight: 600; font-size: .81rem; }
+    .table-module-sub  { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+
+    .tbl-btn { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; text-decoration: none; transition: all .15s; border: 1px solid var(--border); background: #f5f5f5; color: var(--text-muted); }
+    .tbl-btn:hover { background: #fdecea; color: var(--red); border-color: var(--red-light); }
+    .tbl-btn.view { background: #eaf3fb; color: #2980b9; border-color: #bcd6ec; }
+    .tbl-btn.view:hover { background: #d4eaf8; }
+
+    /* ── STATUS BADGES ── */
+    .sbadge { font-size: .67rem; font-weight: 700; padding: .18rem .6rem; border-radius: 20px; white-space: nowrap; }
+    .sbadge-active   { background: #eafaf1; color: #27ae60; }
+    .sbadge-archived { background: #f4eafb; color: #8e44ad; }
+    .sbadge-outdated { background: #fef5e7; color: #e67e22; }
+
+    /* ── PERIOD BADGE ── */
+    .pbadge { font-size: .67rem; font-weight: 700; padding: .15rem .55rem; border-radius: 20px; white-space: nowrap; }
+    .pbadge-prelim  { background: #eaf3fb; color: #2980b9; }
+    .pbadge-midterm { background: #f4eafb; color: #8e44ad; }
+    .pbadge-finals  { background: #eafaf1; color: #27ae60; }
+
+    /* ── FILE TYPE BADGE ── */
+    .ftbadge { font-size: .65rem; font-weight: 700; padding: .15rem .5rem; border-radius: 6px; background: #F9FAFB; border: 1px solid var(--border); color: var(--text-muted); font-family: monospace; }
+
+    /* ── PENDING DELETION CARD ── */
+    .pending-item { display: flex; align-items: center; gap: .8rem; border: 1px solid #fcd9d9; border-radius: 8px; padding: .65rem .9rem; background: #fff8f8; }
+    .pending-item + .pending-item { margin-top: .5rem; }
+    .pending-icon { width: 32px; height: 32px; border-radius: 7px; background: #fdecea; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: .9rem; flex-shrink: 0; }
+    .pending-meta { flex: 1; min-width: 0; }
+    .pending-name { font-weight: 600; font-size: .8rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pending-info { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+    .pending-remove { width: 26px; height: 26px; border-radius: 5px; background: #fff; border: 1px solid #f5c2c7; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: .78rem; cursor: pointer; flex-shrink: 0; }
+    .pending-remove:hover { background: var(--red); color: #fff; }
+
+    /* ── CONFIRMATION CARD ── */
+    .confirm-card { border: 2px solid #f5c2c7; border-radius: 10px; padding: 1.25rem 1.4rem; background: #fff8f8; }
+    .confirm-warning { background: #fdecea; border: 1px solid #f5c2c7; border-radius: 8px; padding: .75rem 1rem; font-size: .78rem; color: #7b1b12; margin-bottom: 1.2rem; display: flex; gap: .65rem; align-items: flex-start; }
+    .confirm-warning i { color: var(--red); font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
+
+    /* ── RECENT DELETIONS ── */
+    .del-list-item { display: flex; align-items: flex-start; gap: .75rem; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
+    .del-list-item:last-child { border-bottom: none; }
+    .del-list-icon { width: 32px; height: 32px; border-radius: 7px; background: #fdecea; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: .88rem; flex-shrink: 0; margin-top: .05rem; }
+    .del-list-meta { flex: 1; min-width: 0; }
+    .del-list-name { font-weight: 600; font-size: .8rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .del-list-info { font-size: .7rem; color: var(--text-muted); margin-top: .15rem; }
+    .del-list-date { font-size: .7rem; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── NOTICE BAR ── */
+    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; margin-top: 1.1rem; }
+    .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
+    .notice-label { font-weight: 700; color: #e67e22; }
+
+    /* ── FOOTER ── */
+    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle-label { display: flex; }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
+      #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
+        display: block; position: fixed; top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.35); z-index: 1025;
+      }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle-checkbox">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </label>
+  <a href="manage-ins.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+
+  <div class="topbar-search ms-3">
+    <div class="topbar-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search…" />
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
+    <div class="icon-btn"><i class="bi bi-gear"></i></div>
+    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+    <div class="topbar-user d-none d-sm-block">
+      Instr. R. Bautista <small>Instructor</small>
+    </div>
+    <div class="avatar">RB</div>
+  </div>
+</header>
+
+<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+    <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+    <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+  </ul>
+
+  <span class="sidebar-label">Module Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
+    <li><a href="delete-modules.html" class="active"><i class="bi bi-trash"></i> Delete Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="#"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+  </ul>
+
+  <span class="sidebar-label">Settings</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
+    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-icon"><i class="bi bi-trash3-fill"></i></div>
+    <div class="page-header-text">
+      <div class="title">Delete Modules</div>
+      <div class="sub">Remove outdated or incorrect lesson materials from the system.</div>
+    </div>
+    <div class="page-header-badge d-none d-sm-block"><i class="bi bi-exclamation-triangle-fill me-1"></i>Permanent Action</div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon total"><i class="bi bi-folder2-open"></i></div>
+        <div>
+          <div class="summary-card-value">7</div>
+          <div class="summary-card-label">Total Uploaded Modules</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon archived"><i class="bi bi-archive"></i></div>
+        <div>
+          <div class="summary-card-value">2</div>
+          <div class="summary-card-label">Archived Modules</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon review"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+          <div class="summary-card-value">1</div>
+          <div class="summary-card-label">Pending Review</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="summary-card">
+        <div class="summary-card-icon deleted"><i class="bi bi-trash3"></i></div>
+        <div>
+          <div class="summary-card-value">3</div>
+          <div class="summary-card-label">Deleted This Month</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danger Warning Alert -->
+  <div class="alert alert-danger d-flex align-items-start gap-3 mb-4" role="alert" style="border-radius:10px; font-size:.82rem; border: 1.5px solid #f5c2c7;">
+    <i class="bi bi-exclamation-triangle-fill fs-5 flex-shrink-0 mt-1" style="color:var(--red);"></i>
+    <div>
+      <strong>Warning — Deletion is permanent and cannot be undone.</strong><br>
+      Ensure the selected module is no longer needed before proceeding. Deleted modules are removed immediately and cannot be recovered from this portal. If in doubt, consider archiving instead.
+    </div>
+  </div>
+
+  <!-- Search & Filter Panel -->
+  <div class="panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-funnel me-1" style="color:var(--red);"></i>Search &amp; Filter Modules</h2>
+        <p>Narrow down modules by title, subject, period, or type before selecting for deletion.</p>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <label class="form-label-sm" for="search-title">Module Title</label>
+          <input type="text" id="search-title" class="form-control" placeholder="Search by module title…">
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label-sm" for="filter-subject">Subject</label>
+          <select id="filter-subject" class="form-select">
+            <option value="" selected>All Subjects</option>
+            <option>FIRE102 — Assembly</option>
+            <option>FIRE103 — Disassembly</option>
+            <option>FIRE104 — Field Stripping</option>
+            <option>FIRE201 — Maintenance</option>
+          </select>
+        </div>
+        <div class="col-6 col-lg-3">
+          <label class="form-label-sm" for="filter-period">Academic Period</label>
+          <select id="filter-period" class="form-select">
+            <option value="" selected>All Periods</option>
+            <option>Prelim</option>
+            <option>Midterm</option>
+            <option>Finals</option>
+          </select>
+        </div>
+        <div class="col-6 col-lg-3">
+          <label class="form-label-sm" for="filter-type">Module Type</label>
+          <select id="filter-type" class="form-select">
+            <option value="" selected>All Types</option>
+            <option>Lecture Material</option>
+            <option>Practical Guide</option>
+            <option>Assessment Material</option>
+            <option>Reference Document</option>
+            <option>Video Lesson</option>
+          </select>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-3 flex-wrap">
+        <button type="button" class="btn-search">
+          <i class="bi bi-search"></i> Search Modules
+        </button>
+        <a href="delete-modules.html" class="btn-clear">
+          <i class="bi bi-x-circle"></i> Clear Filters
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module List Table -->
+  <div class="panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-table me-1" style="color:var(--red);"></i>Module List</h2>
+        <p>Select modules to mark for deletion. Review status before acting.</p>
+      </div>
+      <span class="access-badge badge-delete ms-auto"><i class="bi bi-shield-exclamation me-1"></i>Delete access</span>
+    </div>
+    <div class="panel-body p-0">
+      <div class="table-responsive">
+        <table class="table module-table mb-0">
+          <thead>
+            <tr>
+              <th style="width:36px;"><input type="checkbox" class="form-check-input" title="Select all"></th>
+              <th>Module ID</th>
+              <th>Module Title</th>
+              <th>Subject</th>
+              <th>Lesson</th>
+              <th>Period</th>
+              <th>File Type</th>
+              <th>Upload Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="form-check-input"></td>
+              <td><span style="font-size:.7rem; color:var(--text-muted); font-family:monospace;">#MOD-001</span></td>
+              <td>
+                <div class="table-module-name">Rifle Assembly — Introduction</div>
+                <div class="table-module-sub">Rifle Assembly — Introduction.pdf</div>
+              </td>
+              <td><span style="font-size:.78rem;">FIRE102</span></td>
+              <td><span style="font-size:.78rem;">Lesson 1</span></td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftbadge">PDF</span></td>
+              <td><span style="font-size:.75rem;">Jun 2, 2026</span></td>
+              <td><span class="sbadge sbadge-active">Active</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn" title="Delete"><i class="bi bi-trash3"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input"></td>
+              <td><span style="font-size:.7rem; color:var(--text-muted); font-family:monospace;">#MOD-002</span></td>
+              <td>
+                <div class="table-module-name">Parts Identification — Slide Deck</div>
+                <div class="table-module-sub">Parts Identification — Slide Deck.pptx</div>
+              </td>
+              <td><span style="font-size:.78rem;">FIRE102</span></td>
+              <td><span style="font-size:.78rem;">Lesson 2</span></td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftbadge">PPTX</span></td>
+              <td><span style="font-size:.75rem;">Jun 4, 2026</span></td>
+              <td><span class="sbadge sbadge-archived">Archived</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn" title="Delete"><i class="bi bi-trash3"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input"></td>
+              <td><span style="font-size:.7rem; color:var(--text-muted); font-family:monospace;">#MOD-003</span></td>
+              <td>
+                <div class="table-module-name">Safety Protocols — Video Walkthrough</div>
+                <div class="table-module-sub">Safety Protocols — Video Walkthrough.mp4</div>
+              </td>
+              <td><span style="font-size:.78rem;">FIRE102</span></td>
+              <td><span style="font-size:.78rem;">Lesson 4</span></td>
+              <td><span class="pbadge pbadge-prelim">Prelim</span></td>
+              <td><span class="ftbadge">MP4</span></td>
+              <td><span style="font-size:.75rem;">Jun 5, 2026</span></td>
+              <td><span class="sbadge sbadge-active">Active</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn" title="Delete"><i class="bi bi-trash3"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input"></td>
+              <td><span style="font-size:.7rem; color:var(--text-muted); font-family:monospace;">#MOD-004</span></td>
+              <td>
+                <div class="table-module-name">Step-by-step Disassembly Guide</div>
+                <div class="table-module-sub">Step-by-step Disassembly Guide.pdf</div>
+              </td>
+              <td><span style="font-size:.78rem;">FIRE103</span></td>
+              <td><span style="font-size:.78rem;">Lesson 3</span></td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftbadge">PDF</span></td>
+              <td><span style="font-size:.75rem;">Jun 10, 2026</span></td>
+              <td><span class="sbadge sbadge-outdated">Outdated</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn" title="Delete"><i class="bi bi-trash3"></i></a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input"></td>
+              <td><span style="font-size:.7rem; color:var(--text-muted); font-family:monospace;">#MOD-005</span></td>
+              <td>
+                <div class="table-module-name">Practical Exam Rubric — Midterm</div>
+                <div class="table-module-sub">Practical Exam Rubric — Midterm.docx</div>
+              </td>
+              <td><span style="font-size:.78rem;">FIRE103</span></td>
+              <td><span style="font-size:.78rem;">Assessment</span></td>
+              <td><span class="pbadge pbadge-midterm">Midterm</span></td>
+              <td><span class="ftbadge">DOCX</span></td>
+              <td><span style="font-size:.75rem;">Jun 11, 2026</span></td>
+              <td><span class="sbadge sbadge-archived">Archived</span></td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#" class="tbl-btn view" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="tbl-btn" title="Delete"><i class="bi bi-trash3"></i></a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-column: Pending Deletion + Confirmation -->
+  <div class="row g-4 mb-4">
+
+    <!-- Pending Deletion -->
+    <div class="col-12 col-lg-5">
+      <div class="panel h-100">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-clock-history me-1" style="color:var(--red);"></i>Pending Deletion</h2>
+            <p>Modules selected and queued for removal.</p>
+          </div>
+          <span class="ms-auto badge" style="background:#fdecea; color:var(--red); font-size:.72rem; font-weight:700;">2 selected</span>
+        </div>
+        <div class="panel-body">
+
+          <div class="pending-item">
+            <div class="pending-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+            <div class="pending-meta">
+              <div class="pending-name">Step-by-step Disassembly Guide.pdf</div>
+              <div class="pending-info">FIRE103 · Midterm · Uploaded Jun 10, 2026</div>
+            </div>
+            <div class="pending-remove" title="Remove from queue"><i class="bi bi-x"></i></div>
+          </div>
+
+          <div class="pending-item">
+            <div class="pending-icon"><i class="bi bi-file-earmark-word"></i></div>
+            <div class="pending-meta">
+              <div class="pending-name">Practical Exam Rubric — Midterm.docx</div>
+              <div class="pending-info">FIRE103 · Midterm · Uploaded Jun 11, 2026</div>
+            </div>
+            <div class="pending-remove" title="Remove from queue"><i class="bi bi-x"></i></div>
+          </div>
+
+          <div class="mt-3 pt-3" style="border-top: 1px solid var(--border);">
+            <button type="button" class="btn-danger-solid w-100">
+              <i class="bi bi-trash3-fill"></i> Delete Selected Modules
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deletion Confirmation -->
+    <div class="col-12 col-lg-7">
+      <div class="panel h-100">
+        <div class="panel-banner">
+          <div>
+            <h2><i class="bi bi-shield-exclamation me-1" style="color:var(--red);"></i>Deletion Confirmation</h2>
+            <p>Complete this form to authorize the permanent removal of selected modules.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="confirm-card">
+
+            <div class="confirm-warning">
+              <i class="bi bi-exclamation-octagon-fill"></i>
+              <div>By submitting this form, you acknowledge that the selected modules will be <strong>permanently removed from the system</strong> and cannot be recovered.</div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <label class="form-label-sm" for="confirm-name">Instructor Name <span class="text-danger">*</span></label>
+                <input type="text" id="confirm-name" class="form-control" placeholder="e.g. R. Bautista" value="R. Bautista">
+              </div>
+              <div class="col-12 col-sm-6">
+                <label class="form-label-sm" for="confirm-reason">Reason for Deletion <span class="text-danger">*</span></label>
+                <select id="confirm-reason" class="form-select">
+                  <option value="" disabled selected>Select reason…</option>
+                  <option>Outdated content</option>
+                  <option>Uploaded by mistake</option>
+                  <option>Replaced by newer version</option>
+                  <option>Duplicate file</option>
+                  <option>Content error</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label-sm" for="confirm-notes">Additional Notes <span class="text-muted" style="font-weight:400;">(optional)</span></label>
+                <textarea id="confirm-notes" class="form-control" rows="2" placeholder="Briefly describe why this module is being removed…" style="resize:vertical;"></textarea>
+              </div>
+              <div class="col-12">
+                <div class="form-check" style="font-size:.82rem;">
+                  <input class="form-check-input" type="checkbox" id="confirm-check" style="border-color: var(--red);">
+                  <label class="form-check-label" for="confirm-check" style="color:var(--text-main);">
+                    I confirm that the modules listed above should be <strong>permanently deleted</strong> and that this action <strong>cannot be undone</strong>.
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3 flex-wrap">
+              <button type="button" class="btn-danger-solid">
+                <i class="bi bi-trash3-fill"></i> Confirm Deletion
+              </button>
+              <a href="delete-modules.html" class="btn-cancel-outline">
+                <i class="bi bi-x"></i> Cancel
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row -->
+
+  <!-- Recent Deletions -->
+  <div class="panel mb-4">
+    <div class="panel-banner">
+      <div>
+        <h2><i class="bi bi-clock-history me-1" style="color:var(--red);"></i>Recent Deletions</h2>
+        <p>Audit trail of modules removed this month.</p>
+      </div>
+      <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">3 this month</span>
+    </div>
+    <div class="panel-body p-0">
+
+      <div class="del-list-item">
+        <div class="del-list-icon"><i class="bi bi-filetype-pdf"></i></div>
+        <div class="del-list-meta">
+          <div class="del-list-name">Old Assembly Reference v1.pdf</div>
+          <div class="del-list-info">FIRE102 · Prelim · Deleted by Instr. R. Bautista · Reason: Replaced by newer version</div>
+        </div>
+        <div class="del-list-date">Jun 14, 2026</div>
+      </div>
+
+      <div class="del-list-item">
+        <div class="del-list-icon"><i class="bi bi-filetype-pptx"></i></div>
+        <div class="del-list-meta">
+          <div class="del-list-name">Draft Lecture Slides — Unfinished.pptx</div>
+          <div class="del-list-info">FIRE104 · Prelim · Deleted by Instr. R. Bautista · Reason: Uploaded by mistake</div>
+        </div>
+        <div class="del-list-date">Jun 9, 2026</div>
+      </div>
+
+      <div class="del-list-item">
+        <div class="del-list-icon"><i class="bi bi-filetype-pdf"></i></div>
+        <div class="del-list-meta">
+          <div class="del-list-name">Maintenance Checklist — 2024 Edition.pdf</div>
+          <div class="del-list-info">FIRE201 · Midterm · Deleted by Instr. R. Bautista · Reason: Outdated content</div>
+        </div>
+        <div class="del-list-date">Jun 3, 2026</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notice Bar -->
+  <div class="notice-bar">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <div>
+      <span class="notice-label">Deletion Notice —</span>
+      All deletions are logged with the instructor's name, reason, and timestamp. Deleted modules are permanently removed and cannot be recovered. If a module needs to be re-uploaded, use the <a href="upload-modules.html" style="color:#e67e22; font-weight:600;">Upload Modules</a> page.
+    </div>
+  </div>
+
+  <div class="portal-footer">
+    Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
+  </div>
+
+</main>
+
+</body>
+</html>
