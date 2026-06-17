@@ -77,16 +77,20 @@
     .welcome-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
     .welcome-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
 
-    /* ── STAT CARDS ── */
-    .stat-card { border-radius: 10px; padding: 1rem 1.1rem; color: #fff; position: relative; overflow: hidden; height: 100%; }
-    .stat-card .stat-icon { position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); opacity: .3; font-size: 2.4rem; }
-    .stat-card .stat-number { font-size: 1.65rem; font-weight: 700; line-height: 1; }
-    .stat-card .stat-label  { font-size: .72rem; opacity: .85; margin-top: .15rem; }
-    .stat-card .stat-sub    { font-size: .68rem; opacity: .7; margin-top: .4rem; }
-    .stat-red    { background: rgba(0,0,0,.22); }
-    .stat-orange { background: #e67e22; }
-    .stat-purple { background: #8e44ad; }
-    .stat-teal   { background: #1abc9c; }
+    /* ── STAT CARDS (copied from Program Head dashboard) ── */
+    .stat-card { border-radius: 14px; padding: 1.2rem 1.3rem; color: #fff; position: relative; overflow: hidden; height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,.12); }
+    .stat-card::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.12); }
+    .stat-card::after  { content: ''; position: absolute; right: 20px; top: 30px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.08); }
+    .stat-card .card-icon { position: absolute; top: 1rem; right: 1rem; font-size: 1.4rem; opacity: .7; }
+    .stat-card .stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .stat-card .stat-label { font-size: .75rem; opacity: .85; margin-top: .3rem; }
+    .stat-card .stat-delta { font-size: .7rem; opacity: .8; margin-top: .25rem; }
+    .stat-card.red    { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+    .stat-card.orange { background: linear-gradient(135deg, #E67E22, #D35400); }
+    .stat-card.blue   { background: linear-gradient(135deg, #2980B9, #1A5276); }
+    .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
+    .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
+    .stat-card.purple { background: linear-gradient(135deg, #8E44AD, #6C3483); }
 
     /* ── SECTION HEADING ── */
     .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
@@ -235,38 +239,38 @@
     <div class="welcome-badge d-none d-sm-block">FIRE102 — Assembly</div>
   </div>
 
-  <!-- Stat Cards -->
+  <!-- Stat Cards (design copied from Program Head dashboard) -->
   <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-red">
-        <i class="bi bi-people stat-icon"></i>
-        <div class="stat-number">48</div>
+      <div class="stat-card red">
+        <i class="bi bi-people card-icon"></i>
+        <div class="stat-value">48</div>
         <div class="stat-label">My Students</div>
-        <div class="stat-sub">↑ +3 enrolled this term</div>
+        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+3 enrolled this term</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-orange">
-        <i class="bi bi-journal-bookmark stat-icon"></i>
-        <div class="stat-number">6</div>
+      <div class="stat-card orange">
+        <i class="bi bi-journal-bookmark card-icon"></i>
+        <div class="stat-value">6</div>
         <div class="stat-label">Active Subjects</div>
-        <div class="stat-sub">↑ +1 this term</div>
+        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+1 this term</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-purple">
-        <i class="bi bi-file-earmark stat-icon"></i>
-        <div class="stat-number">34</div>
+      <div class="stat-card purple">
+        <i class="bi bi-file-earmark card-icon"></i>
+        <div class="stat-value">34</div>
         <div class="stat-label">Modules Uploaded</div>
-        <div class="stat-sub">↑ +5 new uploads</div>
+        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+5 new uploads</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-teal">
-        <i class="bi bi-check-circle stat-icon"></i>
-        <div class="stat-number">72%</div>
+      <div class="stat-card teal">
+        <i class="bi bi-check-circle card-icon"></i>
+        <div class="stat-value">72%</div>
         <div class="stat-label">Avg Completion</div>
-        <div class="stat-sub">↑ 72% rate</div>
+        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>72% rate</div>
       </div>
     </div>
   </div>
