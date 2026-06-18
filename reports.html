@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reports — FTA System</title>
+  <title>Activity Logs &amp; Reports — FTA System</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
@@ -109,7 +109,7 @@
     .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
     .section-heading i { color: var(--red); font-size: .95rem; }
 
-    /* ── REPORT SELECTION CARDS ── */
+    /* ── REPORT / SUMMARY CARDS ── */
     .report-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .55rem; height: 100%; transition: box-shadow .15s, border-color .15s; }
     .report-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); border-color: var(--red-light); }
     .report-card-top { display: flex; align-items: flex-start; gap: .8rem; }
@@ -136,10 +136,25 @@
     .status-complete   { background: #eafaf1; color: #27ae60; }
     .status-processing { background: #fef5e7; color: #e67e22; }
     .status-failed      { background: #fdf1f0; color: var(--red); }
+    .status-pending     { background: #eaf3fb; color: #2980b9; }
+    .status-updated     { background: #f4eafb; color: #8e44ad; }
+    .status-deleted      { background: #f4f6f8; color: var(--text-muted); }
     .row-actions { display: flex; gap: .35rem; flex-wrap: wrap; }
     .table-responsive-wrap { overflow-x: auto; }
 
-    /* ── ACTIVITY LIST ── */
+    /* User cell with mini avatar, used in the activity log table */
+    .user-cell { display: flex; align-items: center; gap: .55rem; }
+    .user-mini-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--red-light); color: #fff; font-size: .68rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .role-tag { font-size: .68rem; font-weight: 600; padding: .16rem .5rem; border-radius: 20px; display: inline-block; }
+    .role-instructor { background: #fdf1f0; color: var(--red); }
+    .role-student    { background: #eaf3fb; color: #2980b9; }
+    .role-admin      { background: #fef5e7; color: #e67e22; }
+
+    /* Activity-type icon chip, used in the activity log table */
+    .activity-type-chip { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; font-weight: 600; }
+    .activity-type-chip i { font-size: .85rem; color: var(--red); }
+
+    /* ── ACTIVITY LIST / TIMELINE ── */
     .activity-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; height: 100%; }
     .activity-card .acard-title { font-size: .82rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; margin-bottom: .85rem; }
     .activity-card .acard-title i { color: var(--red); }
@@ -149,8 +164,32 @@
     .activity-dot.green  { background: #eafaf1; color: #27ae60; }
     .activity-dot.blue   { background: #eaf3fb; color: #2980b9; }
     .activity-dot.orange { background: #fef5e7; color: #e67e22; }
+    .activity-dot.purple { background: #f4eafb; color: #8e44ad; }
+    .activity-dot.red    { background: #fdf1f0; color: var(--red); }
     .activity-text .atitle { font-size: .78rem; font-weight: 600; color: var(--text-main); line-height: 1.35; }
     .activity-text .atime  { font-size: .68rem; color: var(--text-muted); margin-top: .1rem; }
+
+    /* Timeline variant — vertical connecting line down the left edge */
+    .timeline-wrap { position: relative; padding-left: 2.1rem; }
+    .timeline-wrap::before { content: ""; position: absolute; left: .95rem; top: .3rem; bottom: .3rem; width: 2px; background: var(--border); }
+    .timeline-item { position: relative; padding-bottom: 1.1rem; }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot { position: absolute; left: -2.1rem; top: 0; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .82rem; background: #fff; border: 2px solid var(--border); z-index: 1; }
+    .timeline-dot.green  { color: #27ae60; border-color: #cdf0dc; background: #eafaf1; }
+    .timeline-dot.blue   { color: #2980b9; border-color: #cfe6f7; background: #eaf3fb; }
+    .timeline-dot.orange { color: #e67e22; border-color: #fbe1bb; background: #fef5e7; }
+    .timeline-dot.purple { color: #8e44ad; border-color: #e7cdf4; background: #f4eafb; }
+    .timeline-title { font-size: .82rem; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+    .timeline-meta { font-size: .7rem; color: var(--text-muted); margin-top: .2rem; display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+    .timeline-meta .dot-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); display: inline-block; }
+
+    /* ── PROGRESS BAR (level / completion) ── */
+    .progress-styled { height: 7px; border-radius: 20px; background: #F4F6F8; overflow: hidden; }
+    .progress-styled .bar { height: 100%; border-radius: 20px; }
+    .bar-green  { background: #27ae60; }
+    .bar-orange { background: #e67e22; }
+    .bar-red    { background: var(--red); }
+    .bar-teal   { background: #1abc9c; }
 
     /* ── FOOTER ── */
     .page-footer { margin-top: 2rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.25); font-size: .74rem; color: rgba(255,255,255,.85); text-align: center; }
@@ -256,46 +295,46 @@
 <main class="main-content">
   <section class="page-section">
 
-    <!-- ── REPORTS OVERVIEW ── -->
+    <!-- ── PAGE OVERVIEW BANNER ── -->
     <div class="panel">
       <div class="panel-banner">
         <div>
-          <h2>Reports</h2>
-          <p>View, generate, filter, download, and print academic reports</p>
+          <h2>Reports &amp; Activity Logs</h2>
+          <p>Monitor student progress and track system activity across your subjects</p>
         </div>
       </div>
       <div class="panel-body">
         <div class="row g-3">
           <div class="col-6 col-lg-3">
-            <div class="stat-card stat-red">
-              <i class="bi bi-file-earmark-bar-graph stat-icon"></i>
-              <div class="stat-number">128</div>
-              <div class="stat-label">Total Reports Generated</div>
-              <div class="stat-sub">↑ +12 this month</div>
-            </div>
-          </div>
-          <div class="col-6 col-lg-3">
             <div class="stat-card stat-teal">
-              <i class="bi bi-graph-up-arrow stat-icon"></i>
-              <div class="stat-number">46</div>
-              <div class="stat-label">Student Progress Reports</div>
-              <div class="stat-sub">↑ +5 this month</div>
+              <i class="bi bi-journal-check stat-icon"></i>
+              <div class="stat-number">63</div>
+              <div class="stat-label">Modules Completed</div>
+              <div class="stat-sub">↑ +8 this week</div>
             </div>
           </div>
           <div class="col-6 col-lg-3">
             <div class="stat-card stat-orange">
-              <i class="bi bi-clipboard-check stat-icon"></i>
-              <div class="stat-number">37</div>
-              <div class="stat-label">Assessment Reports</div>
-              <div class="stat-sub">↑ +3 this month</div>
+              <i class="bi bi-clipboard2-check stat-icon"></i>
+              <div class="stat-number">41</div>
+              <div class="stat-label">Assessments Completed</div>
+              <div class="stat-sub">↑ +6 this week</div>
             </div>
           </div>
           <div class="col-6 col-lg-3">
             <div class="stat-card stat-purple">
-              <i class="bi bi-journal-text stat-icon"></i>
-              <div class="stat-number">45</div>
-              <div class="stat-label">Module Reports</div>
-              <div class="stat-sub">↑ +4 this month</div>
+              <i class="bi bi-layers stat-icon"></i>
+              <div class="stat-number">17</div>
+              <div class="stat-label">Level Progressions</div>
+              <div class="stat-sub">↑ +3 this week</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="stat-card stat-red">
+              <i class="bi bi-send-check stat-icon"></i>
+              <div class="stat-number">52</div>
+              <div class="stat-label">Student Submissions</div>
+              <div class="stat-sub">↑ +11 this week</div>
             </div>
           </div>
         </div>
@@ -305,25 +344,16 @@
     <!-- ── FILTERS ── -->
     <div class="panel">
       <div class="panel-header">
-        <h5><i class="bi bi-funnel-fill me-1" style="color:var(--red)"></i> Report Filters</h5>
+        <h5><i class="bi bi-funnel-fill me-1" style="color:var(--red)"></i> Activity Filters</h5>
       </div>
       <div class="panel-body">
         <div class="row g-3">
           <div class="col-sm-6 col-lg-3">
-            <label class="form-label-sm">Academic Year</label>
-            <select class="form-control-styled">
-              <option selected>2025–2026</option>
-              <option>2024–2025</option>
-              <option>2023–2024</option>
-            </select>
-          </div>
-          <div class="col-sm-6 col-lg-3">
-            <label class="form-label-sm">Semester</label>
-            <select class="form-control-styled">
-              <option selected>1st Semester</option>
-              <option>2nd Semester</option>
-              <option>Summer Term</option>
-            </select>
+            <label class="form-label-sm">Search Activity</label>
+            <div class="topbar-search-wrap">
+              <i class="bi bi-search"></i>
+              <input type="text" class="form-control-styled" placeholder="Search by student or activity…" />
+            </div>
           </div>
           <div class="col-sm-6 col-lg-3">
             <label class="form-label-sm">Subject Code</label>
@@ -335,38 +365,25 @@
             </select>
           </div>
           <div class="col-sm-6 col-lg-3">
-            <label class="form-label-sm">Subject Name</label>
-            <input type="text" class="form-control-styled" placeholder="e.g. Weapon Assembly" />
-          </div>
-          <div class="col-sm-6 col-lg-3">
-            <label class="form-label-sm">Report Type</label>
+            <label class="form-label-sm">Activity Type</label>
             <select class="form-control-styled">
-              <option selected>All Types</option>
-              <option>Student Progress</option>
-              <option>Class Performance</option>
-              <option>Assessment Results</option>
-              <option>Module Completion</option>
-              <option>Enrollment</option>
-              <option>Final Grades</option>
+              <option selected>All Activity Types</option>
+              <option>Module Completed</option>
+              <option>Assessment Completed</option>
+              <option>Assessment Submitted</option>
+              <option>Level Progression</option>
+              <option>Module Uploaded</option>
             </select>
           </div>
           <div class="col-sm-6 col-lg-3">
-            <label class="form-label-sm">Date From</label>
+            <label class="form-label-sm">Date</label>
             <input type="date" class="form-control-styled" />
-          </div>
-          <div class="col-sm-6 col-lg-3">
-            <label class="form-label-sm">Date To</label>
-            <input type="date" class="form-control-styled" />
-          </div>
-          <div class="col-sm-6 col-lg-3 d-flex align-items-end">
-            <div class="d-flex gap-2 w-100">
-              <button class="btn-red w-100" type="submit">
-                <i class="bi bi-funnel"></i> Apply Filters
-              </button>
-            </div>
           </div>
         </div>
         <div class="d-flex gap-2 mt-3 flex-wrap">
+          <button class="btn-red" type="submit">
+            <i class="bi bi-funnel"></i> Apply Filters
+          </button>
           <button class="btn-outline-gray" type="reset">
             <i class="bi bi-x"></i> Clear Filters
           </button>
@@ -374,325 +391,296 @@
       </div>
     </div><!-- /filters panel -->
 
-    <!-- ── AVAILABLE REPORTS ── -->
+    <!-- ── ACTIVITY LOG TABLE ── -->
     <div class="panel">
       <div class="panel-header">
-        <h5><i class="bi bi-grid-fill me-1" style="color:var(--red)"></i> Available Reports</h5>
-      </div>
-      <div class="panel-body">
-        <div class="row g-3">
-
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="report-card">
-              <div class="report-card-top">
-                <div class="report-icon green"><i class="bi bi-graph-up-arrow"></i></div>
-                <div>
-                  <div class="rtitle">Student Progress Report</div>
-                  <div class="rdesc">Tracks individual student advancement across modules and assessments.</div>
-                </div>
-              </div>
-              <div class="report-card-footer">
-                <span class="subject-tag">FIRE102</span>
-                <a href="#" class="link-view">View <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="report-card">
-              <div class="report-card-top">
-                <div class="report-icon blue"><i class="bi bi-bar-chart-steps"></i></div>
-                <div>
-                  <div class="rtitle">Class Performance Report</div>
-                  <div class="rdesc">Summarizes overall class performance trends and grade distribution.</div>
-                </div>
-              </div>
-              <div class="report-card-footer">
-                <span class="subject-tag">FIRE105</span>
-                <a href="#" class="link-view">View <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="report-card">
-              <div class="report-card-top">
-                <div class="report-icon orange"><i class="bi bi-clipboard-check"></i></div>
-                <div>
-                  <div class="rtitle">Assessment Results Report</div>
-                  <div class="rdesc">Detailed breakdown of quiz, practical exam, and evaluation scores.</div>
-                </div>
-              </div>
-              <div class="report-card-footer">
-                <span class="subject-tag">FIRE110</span>
-                <a href="#" class="link-view">View <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="report-card">
-              <div class="report-card-top">
-                <div class="report-icon purple"><i class="bi bi-journal-text"></i></div>
-                <div>
-                  <div class="rtitle">Module Completion Report</div>
-                  <div class="rdesc">Shows completion rates and pending modules per student or class.</div>
-                </div>
-              </div>
-              <div class="report-card-footer">
-                <span class="subject-tag">FIRE102</span>
-                <a href="#" class="link-view">View <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="report-card">
-              <div class="report-card-top">
-                <div class="report-icon teal"><i class="bi bi-person-check"></i></div>
-                <div>
-                  <div class="rtitle">Enrollment Report</div>
-                  <div class="rdesc">Lists enrolled students per subject, including add/drop history.</div>
-                </div>
-              </div>
-              <div class="report-card-footer">
-                <span class="subject-tag">All Subjects</span>
-                <a href="#" class="link-view">View <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="report-card">
-              <div class="report-card-top">
-                <div class="report-icon red"><i class="bi bi-award"></i></div>
-                <div>
-                  <div class="rtitle">Final Grades Report</div>
-                  <div class="rdesc">Official summary of final grades per subject for the term.</div>
-                </div>
-              </div>
-              <div class="report-card-footer">
-                <span class="subject-tag">FIRE105</span>
-                <a href="#" class="link-view">View <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div><!-- /available reports panel -->
-
-    <!-- ── GENERATED REPORTS TABLE ── -->
-    <div class="panel">
-      <div class="panel-header">
-        <h5><i class="bi bi-table me-1" style="color:var(--red)"></i> Generated Reports</h5>
-        <button class="btn-outline-red" type="button">
-          <i class="bi bi-plus-lg"></i> Generate New Report
-        </button>
+        <h5><i class="bi bi-table me-1" style="color:var(--red)"></i> Student Activity Log</h5>
+        <span class="subject-tag"><i class="bi bi-info-circle me-1"></i> Showing activity for your subjects</span>
       </div>
       <div class="panel-body">
         <div class="table-responsive-wrap">
           <table class="fta-table">
             <thead>
               <tr>
-                <th>Report ID</th>
-                <th>Report Type</th>
-                <th>Subject Code</th>
-                <th>Subject Name</th>
-                <th>Generated By</th>
-                <th>Date Generated</th>
+                <th>Date &amp; Time</th>
+                <th>Student</th>
+                <th>Role</th>
+                <th>Activity Type</th>
+                <th>Description</th>
                 <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="report-id">RPT-2026-0142</td>
-                <td>Student Progress</td>
-                <td>FIRE102</td>
-                <td>Weapon Assembly</td>
-                <td>Prof. J. Reyes</td>
-                <td>June 17, 2026</td>
+                <td>June 18, 2026 — 9:42 AM</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">MD</div>
+                    <span>M. Dela Cruz</span>
+                  </div>
+                </td>
+                <td><span class="role-tag role-student">Student</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-journal-check"></i> Module Completed</span></td>
+                <td>Completed "Weapon Assembly Basics" module under FIRE102</td>
                 <td><span class="status-badge status-complete">Completed</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-eye"></i> View</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-download"></i> Download</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-printer"></i> Print</button>
-                  </div>
-                </td>
               </tr>
               <tr>
-                <td class="report-id">RPT-2026-0141</td>
-                <td>Assessment Results</td>
-                <td>FIRE110</td>
-                <td>Marksmanship Basics</td>
-                <td>Prof. J. Reyes</td>
-                <td>June 16, 2026</td>
+                <td>June 18, 2026 — 8:55 AM</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">RS</div>
+                    <span>R. Santiago</span>
+                  </div>
+                </td>
+                <td><span class="role-tag role-student">Student</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-send-check"></i> Assessment Submitted</span></td>
+                <td>Submitted answers for "Marksmanship Basics" practical exam under FIRE110</td>
+                <td><span class="status-badge status-pending">Pending Review</span></td>
+              </tr>
+              <tr>
+                <td>June 17, 2026 — 4:18 PM</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">AT</div>
+                    <span>A. Tan</span>
+                  </div>
+                </td>
+                <td><span class="role-tag role-student">Student</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-clipboard2-check"></i> Assessment Completed</span></td>
+                <td>Completed quiz "Tactical Movement Fundamentals" under FIRE105 with passing score</td>
                 <td><span class="status-badge status-complete">Completed</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-eye"></i> View</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-download"></i> Download</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-printer"></i> Print</button>
-                  </div>
-                </td>
               </tr>
               <tr>
-                <td class="report-id">RPT-2026-0140</td>
-                <td>Module Completion</td>
-                <td>FIRE105</td>
-                <td>Tactical Movement</td>
-                <td>Prof. J. Reyes</td>
-                <td>June 15, 2026</td>
-                <td><span class="status-badge status-processing">Processing</span></td>
+                <td>June 17, 2026 — 2:05 PM</td>
                 <td>
-                  <div class="row-actions">
-                    <button class="btn-sm-outline" type="button" disabled><i class="bi bi-eye"></i> View</button>
-                    <button class="btn-sm-outline" type="button" disabled><i class="bi bi-download"></i> Download</button>
-                    <button class="btn-sm-outline" type="button" disabled><i class="bi bi-printer"></i> Print</button>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">JR</div>
+                    <span>Prof. J. Reyes</span>
                   </div>
                 </td>
+                <td><span class="role-tag role-instructor">Instructor</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-upload"></i> Module Uploaded</span></td>
+                <td>Uploaded new module "Field Stripping Procedures" to FIRE102</td>
+                <td><span class="status-badge status-complete">Uploaded</span></td>
               </tr>
               <tr>
-                <td class="report-id">RPT-2026-0139</td>
-                <td>Final Grades</td>
-                <td>FIRE102</td>
-                <td>Weapon Assembly</td>
-                <td>Prof. J. Reyes</td>
-                <td>June 12, 2026</td>
-                <td><span class="status-badge status-complete">Completed</span></td>
+                <td>June 16, 2026 — 11:30 AM</td>
                 <td>
-                  <div class="row-actions">
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-eye"></i> View</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-download"></i> Download</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-printer"></i> Print</button>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">LF</div>
+                    <span>L. Fernandez</span>
                   </div>
                 </td>
+                <td><span class="role-tag role-student">Student</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-layers"></i> Level Progression</span></td>
+                <td>Advanced from "Beginner" to "Intermediate" level in FIRE110</td>
+                <td><span class="status-badge status-updated">Updated</span></td>
               </tr>
               <tr>
-                <td class="report-id">RPT-2026-0138</td>
-                <td>Enrollment</td>
-                <td>FIRE110</td>
-                <td>Marksmanship Basics</td>
-                <td>Prof. J. Reyes</td>
-                <td>June 10, 2026</td>
+                <td>June 16, 2026 — 9:12 AM</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">CP</div>
+                    <span>C. Pascual</span>
+                  </div>
+                </td>
+                <td><span class="role-tag role-student">Student</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-x-circle"></i> Assessment Result</span></td>
+                <td>Did not meet passing score on "Marksmanship Basics" practical exam, retake scheduled</td>
                 <td><span class="status-badge status-failed">Failed</span></td>
-                <td>
-                  <div class="row-actions">
-                    <button class="btn-sm-red" type="button"><i class="bi bi-arrow-repeat"></i> Retry</button>
-                  </div>
-                </td>
               </tr>
               <tr>
-                <td class="report-id">RPT-2026-0137</td>
-                <td>Class Performance</td>
-                <td>FIRE105</td>
-                <td>Tactical Movement</td>
-                <td>Prof. J. Reyes</td>
-                <td>June 8, 2026</td>
-                <td><span class="status-badge status-complete">Completed</span></td>
+                <td>June 15, 2026 — 3:47 PM</td>
                 <td>
-                  <div class="row-actions">
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-eye"></i> View</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-download"></i> Download</button>
-                    <button class="btn-sm-outline" type="button"><i class="bi bi-printer"></i> Print</button>
+                  <div class="user-cell">
+                    <div class="user-mini-avatar">JR</div>
+                    <span>Prof. J. Reyes</span>
                   </div>
                 </td>
+                <td><span class="role-tag role-instructor">Instructor</span></td>
+                <td><span class="activity-type-chip"><i class="bi bi-pencil-square"></i> Module Updated</span></td>
+                <td>Updated content and resources for "Tactical Movement" module under FIRE105</td>
+                <td><span class="status-badge status-updated">Updated</span></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </div><!-- /table panel -->
+    </div><!-- /activity log table panel -->
 
-    <!-- ── RECENT ACTIVITY ── -->
+    <!-- ── STUDENT PROGRESS SNAPSHOT ── -->
     <div class="panel">
       <div class="panel-header">
-        <h5><i class="bi bi-clock-history me-1" style="color:var(--red)"></i> Recent Activity</h5>
+        <h5><i class="bi bi-bar-chart-line me-1" style="color:var(--red)"></i> Student Progress Snapshot</h5>
       </div>
       <div class="panel-body">
         <div class="row g-3">
 
-          <div class="col-12 col-lg-4">
-            <div class="activity-card">
-              <div class="acard-title"><i class="bi bi-file-earmark-plus"></i> Recently Generated</div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="report-card">
+              <div class="report-card-top">
+                <div class="report-icon green"><i class="bi bi-journal-check"></i></div>
+                <div>
+                  <div class="rtitle">M. Dela Cruz</div>
+                  <div class="rdesc">Module completion progress for FIRE102</div>
+                </div>
+              </div>
+              <div class="progress-styled"><div class="bar bar-green" style="width: 86%;"></div></div>
+              <div class="report-card-footer">
+                <span class="subject-tag">FIRE102</span>
+                <span class="link-view">86% Complete</span>
+              </div>
+            </div>
+          </div>
 
-              <div class="activity-item">
-                <div class="activity-dot green"><i class="bi bi-file-earmark-bar-graph"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Student Progress Report — FIRE102</div>
-                  <div class="atime">Just now</div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="report-card">
+              <div class="report-card-top">
+                <div class="report-icon blue"><i class="bi bi-clipboard2-check"></i></div>
+                <div>
+                  <div class="rtitle">A. Tan</div>
+                  <div class="rdesc">Assessment completion progress for FIRE105</div>
                 </div>
               </div>
-              <div class="activity-item">
-                <div class="activity-dot green"><i class="bi bi-file-earmark-bar-graph"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Assessment Results Report — FIRE110</div>
-                  <div class="atime">1 hour ago</div>
+              <div class="progress-styled"><div class="bar bar-teal" style="width: 72%;"></div></div>
+              <div class="report-card-footer">
+                <span class="subject-tag">FIRE105</span>
+                <span class="link-view">72% Complete</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="report-card">
+              <div class="report-card-top">
+                <div class="report-icon purple"><i class="bi bi-layers"></i></div>
+                <div>
+                  <div class="rtitle">L. Fernandez</div>
+                  <div class="rdesc">Learning level progression for FIRE110</div>
                 </div>
               </div>
-              <div class="activity-item">
-                <div class="activity-dot green"><i class="bi bi-file-earmark-bar-graph"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Module Completion Report — FIRE105</div>
-                  <div class="atime">Yesterday</div>
+              <div class="progress-styled"><div class="bar bar-orange" style="width: 54%;"></div></div>
+              <div class="report-card-footer">
+                <span class="subject-tag">FIRE110</span>
+                <span class="link-view">Intermediate</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="report-card">
+              <div class="report-card-top">
+                <div class="report-icon orange"><i class="bi bi-send-check"></i></div>
+                <div>
+                  <div class="rtitle">R. Santiago</div>
+                  <div class="rdesc">Submission review status for FIRE110</div>
+                </div>
+              </div>
+              <div class="progress-styled"><div class="bar bar-red" style="width: 40%;"></div></div>
+              <div class="report-card-footer">
+                <span class="subject-tag">FIRE110</span>
+                <span class="link-view">Awaiting Review</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="report-card">
+              <div class="report-card-top">
+                <div class="report-icon red"><i class="bi bi-x-circle"></i></div>
+                <div>
+                  <div class="rtitle">C. Pascual</div>
+                  <div class="rdesc">Assessment retake progress for FIRE110</div>
+                </div>
+              </div>
+              <div class="progress-styled"><div class="bar bar-red" style="width: 28%;"></div></div>
+              <div class="report-card-footer">
+                <span class="subject-tag">FIRE110</span>
+                <span class="link-view">Retake Pending</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="report-card">
+              <div class="report-card-top">
+                <div class="report-icon teal"><i class="bi bi-graph-up-arrow"></i></div>
+                <div>
+                  <div class="rtitle">Class Average — FIRE102</div>
+                  <div class="rdesc">Overall module completion across enrolled students</div>
+                </div>
+              </div>
+              <div class="progress-styled"><div class="bar bar-teal" style="width: 68%;"></div></div>
+              <div class="report-card-footer">
+                <span class="subject-tag">All Students</span>
+                <span class="link-view">68% Average</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div><!-- /progress snapshot panel -->
+
+    <!-- ── RECENT ACTIVITY TIMELINE ── -->
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-clock-history me-1" style="color:var(--red)"></i> Recent Activity Timeline</h5>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3">
+
+          <div class="col-12 col-lg-6">
+            <div class="activity-card">
+              <div class="acard-title"><i class="bi bi-people"></i> Student Activities</div>
+              <div class="timeline-wrap">
+                <div class="timeline-item">
+                  <div class="timeline-dot green"><i class="bi bi-journal-check"></i></div>
+                  <div class="timeline-title">M. Dela Cruz completed module "Weapon Assembly Basics"</div>
+                  <div class="timeline-meta">FIRE102 <span class="dot-sep"></span> 22 minutes ago</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot blue"><i class="bi bi-send-check"></i></div>
+                  <div class="timeline-title">R. Santiago submitted "Marksmanship Basics" practical exam</div>
+                  <div class="timeline-meta">FIRE110 <span class="dot-sep"></span> 1 hour ago</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot purple"><i class="bi bi-layers"></i></div>
+                  <div class="timeline-title">L. Fernandez reached a new learning level: Intermediate</div>
+                  <div class="timeline-meta">FIRE110 <span class="dot-sep"></span> Yesterday</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot orange"><i class="bi bi-clipboard2-check"></i></div>
+                  <div class="timeline-title">A. Tan completed assessment "Tactical Movement Fundamentals"</div>
+                  <div class="timeline-meta">FIRE105 <span class="dot-sep"></span> Yesterday</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-lg-4">
+          <div class="col-12 col-lg-6">
             <div class="activity-card">
-              <div class="acard-title"><i class="bi bi-download"></i> Recently Downloaded</div>
-
-              <div class="activity-item">
-                <div class="activity-dot blue"><i class="bi bi-download"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Final Grades Report — FIRE102</div>
-                  <div class="atime">10 minutes ago</div>
+              <div class="acard-title"><i class="bi bi-person-workspace"></i> Instructor &amp; System Activities</div>
+              <div class="timeline-wrap">
+                <div class="timeline-item">
+                  <div class="timeline-dot green"><i class="bi bi-upload"></i></div>
+                  <div class="timeline-title">You uploaded module "Field Stripping Procedures"</div>
+                  <div class="timeline-meta">FIRE102 <span class="dot-sep"></span> 3 hours ago</div>
                 </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot blue"><i class="bi bi-download"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Class Performance Report — FIRE105</div>
-                  <div class="atime">3 hours ago</div>
+                <div class="timeline-item">
+                  <div class="timeline-dot blue"><i class="bi bi-pencil-square"></i></div>
+                  <div class="timeline-title">You updated module "Tactical Movement"</div>
+                  <div class="timeline-meta">FIRE105 <span class="dot-sep"></span> Yesterday</div>
                 </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot blue"><i class="bi bi-download"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Enrollment Report — All Subjects</div>
-                  <div class="atime">2 days ago</div>
+                <div class="timeline-item">
+                  <div class="timeline-dot purple"><i class="bi bi-check2-square"></i></div>
+                  <div class="timeline-title">You created assessment "Marksmanship Basics Practical Exam"</div>
+                  <div class="timeline-meta">FIRE110 <span class="dot-sep"></span> 2 days ago</div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-lg-4">
-            <div class="activity-card">
-              <div class="acard-title"><i class="bi bi-printer"></i> Recently Printed</div>
-
-              <div class="activity-item">
-                <div class="activity-dot orange"><i class="bi bi-printer"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Student Progress Report — FIRE102</div>
-                  <div class="atime">30 minutes ago</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot orange"><i class="bi bi-printer"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Assessment Results Report — FIRE110</div>
-                  <div class="atime">Yesterday</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot orange"><i class="bi bi-printer"></i></div>
-                <div class="activity-text">
-                  <div class="atitle">Final Grades Report — FIRE105</div>
-                  <div class="atime">3 days ago</div>
+                <div class="timeline-item">
+                  <div class="timeline-dot orange"><i class="bi bi-person-plus"></i></div>
+                  <div class="timeline-title">Administrator added new student to FIRE102 roster</div>
+                  <div class="timeline-meta">FIRE102 <span class="dot-sep"></span> 3 days ago</div>
                 </div>
               </div>
             </div>
@@ -700,11 +688,11 @@
 
         </div>
       </div>
-    </div><!-- /recent activity panel -->
+    </div><!-- /timeline panel -->
 
   </section>
   <div class="page-footer">
-    FTA Management System &nbsp;·&nbsp; Instructor Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+    Trigger3D &nbsp;·&nbsp; Instructor Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
   </div>
 </main>
 
