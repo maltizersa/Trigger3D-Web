@@ -50,7 +50,6 @@
     .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
     .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
     .sidebar-footer a:hover { color: var(--red); }
-
     .sidebar-backdrop { display: none; }
 
     /* ── MAIN ── */
@@ -63,7 +62,7 @@
     .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .1rem; }
     .page-header-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
 
-    /* ── STAT CARDS (copied from Program Head dashboard) ── */
+    /* ── STAT CARDS ── */
     .stat-card { border-radius: 14px; padding: 1.2rem 1.3rem; color: #fff; position: relative; overflow: hidden; height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,.12); }
     .stat-card::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.12); }
     .stat-card::after  { content: ''; position: absolute; right: 20px; top: 30px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.08); }
@@ -73,10 +72,10 @@
     .stat-card .stat-delta { font-size: .7rem; opacity: .8; margin-top: .25rem; }
     .stat-card.red    { background: linear-gradient(135deg, #E74C3C, #C0392B); }
     .stat-card.orange { background: linear-gradient(135deg, #E67E22, #D35400); }
-    .stat-card.blue   { background: linear-gradient(135deg, #2980B9, #1A5276); }
     .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
-    .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
     .stat-card.purple { background: linear-gradient(135deg, #8E44AD, #6C3483); }
+    .stat-card.blue   { background: linear-gradient(135deg, #2980B9, #1A5276); }
+    .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
 
     /* ── PANEL ── */
     .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; margin-bottom: 1.25rem; }
@@ -88,12 +87,6 @@
     /* ── SECTION LABEL ── */
     .section-label { font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: .6rem; }
 
-    /* ── SUBJECT PERF CARD ── */
-    .subject-card { border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1rem; height: 100%; }
-    .subject-card .subject-name { font-size: .84rem; font-weight: 700; color: var(--text-main); margin-bottom: .15rem; }
-    .subject-card .subject-meta { font-size: .72rem; color: var(--text-muted); margin-bottom: .55rem; }
-    .subject-card .progress { height: 7px; border-radius: 99px; }
-
     /* ── TABLE STYLES ── */
     .progress-table th { font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); border-bottom-width: 1px; white-space: nowrap; }
     .progress-table td { font-size: .8rem; vertical-align: middle; color: var(--text-main); }
@@ -101,28 +94,44 @@
     .student-name { font-weight: 600; font-size: .82rem; color: var(--text-main); }
     .student-id   { font-size: .7rem; color: var(--text-muted); }
 
-    /* ── RISK INDICATOR ── */
-    .risk-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-    .risk-high   { background: #e74c3c; }
-    .risk-medium { background: #f39c12; }
-    .risk-low    { background: #27ae60; }
-
     /* ── LEVEL BADGE PILLS ── */
     .level-pill { font-size: .68rem; font-weight: 700; padding: .2rem .65rem; border-radius: 20px; display: inline-block; }
-    .level-advanced     { background: #e8f4fd; color: #2471a3; }
-    .level-intermediate { background: #fef9e7; color: #b7950b; }
-    .level-beginner     { background: #fdf2f8; color: #884ea0; }
-    .level-remedial     { background: #fdedec; color: #c0392b; }
+    .level-1 { background: #fdedec; color: #c0392b; }
+    .level-2 { background: #fef9e7; color: #b7950b; }
+    .level-3 { background: #fdf2f8; color: #884ea0; }
+    .level-4 { background: #eaf3fb; color: #2471a3; }
+    .level-5 { background: #eafaf1; color: #1a7a43; }
 
-    /* ── ASSESSMENT STATUS ── */
-    .assess-row td { font-size: .8rem; vertical-align: middle; }
-    .assess-row th { font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); white-space: nowrap; }
+    /* ── RATING STARS ── */
+    .rating-stars { color: #F9CA24; font-size: .75rem; letter-spacing: .05em; }
 
     /* ── FILTER BAR ── */
     .filter-bar { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
-    .filter-bar .form-select, .filter-bar .form-control { font-size: .8rem; height: 32px; padding: .2rem .55rem; border-radius: 7px; border: 1.5px solid var(--border); }
-    .filter-bar .form-select:focus, .filter-bar .form-control:focus { border-color: var(--red); box-shadow: none; }
+    .filter-bar .form-select,
+    .filter-bar .form-control { font-size: .8rem; height: 32px; padding: .2rem .55rem; border-radius: 7px; border: 1.5px solid var(--border); }
+    .filter-bar .form-select:focus,
+    .filter-bar .form-control:focus { border-color: var(--red); box-shadow: none; }
     .filter-bar label { font-size: .78rem; color: var(--text-muted); white-space: nowrap; }
+
+    /* ── STUDENT DETAIL CARD ── */
+    .student-detail-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; }
+    .student-detail-card .detail-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); font-weight: 700; }
+    .student-detail-card .detail-value { font-size: .85rem; font-weight: 600; color: var(--text-main); margin-top: .1rem; }
+
+    /* ── PROGRESS MINI STATS ── */
+    .mini-stat { border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1rem; text-align: center; }
+    .mini-stat .mini-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); line-height: 1; }
+    .mini-stat .mini-lbl { font-size: .68rem; color: var(--text-muted); margin-top: .25rem; text-transform: uppercase; letter-spacing: .05em; }
+
+    /* ── ANCHOR TARGET DETAIL VIEW ── */
+    .student-detail-section { display: none; }
+    .student-detail-section:target { display: block; }
+
+    /* ── ACTION BUTTON ── */
+    .btn-view { font-size: .73rem; padding: .22rem .65rem; border-radius: 6px; border: 1.5px solid var(--red); color: var(--red); background: transparent; text-decoration: none; white-space: nowrap; }
+    .btn-view:hover { background: #FDECEA; color: var(--red); }
+    .btn-back { font-size: .78rem; padding: .3rem .85rem; border-radius: 7px; border: 1.5px solid var(--border); color: var(--text-muted); background: #F9FAFB; text-decoration: none; }
+    .btn-back:hover { color: var(--red); border-color: var(--red-light); }
 
     /* ── PORTAL FOOTER ── */
     .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; }
@@ -148,7 +157,7 @@
 
 <input type="checkbox" id="sidebar-toggle-checkbox">
 
-<!-- TOP BAR -->
+<!-- ═══ TOP BAR ═══ -->
 <header class="topbar">
   <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
     <i class="bi bi-list"></i>
@@ -170,7 +179,7 @@
 
 <label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
 
-<!-- SIDEBAR -->
+<!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar" id="sidebar">
   <span class="sidebar-label">Main</span>
   <ul class="sidebar-nav">
@@ -208,7 +217,7 @@
   </div>
 </aside>
 
-<!-- MAIN -->
+<!-- ═══ MAIN CONTENT ═══ -->
 <main class="main-content">
 
   <!-- Page Header -->
@@ -216,12 +225,12 @@
     <div class="page-header-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
     <div class="page-header-text">
       <div class="title">Check Student Progress</div>
-      <div class="sub">Monitor individual and class-level progress across all subjects · Academic Year 2025–2026</div>
+      <div class="sub">Monitor individual student progress, levels, assessment completion, and scores · Academic Year 2025–2026</div>
     </div>
     <div class="page-header-badge d-none d-sm-block">FIRE102 — Assembly</div>
   </div>
 
-  <!-- Summary Stat Cards (design copied from Program Head dashboard) -->
+  <!-- ═══ SUMMARY STAT CARDS ═══ -->
   <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
       <div class="stat-card red">
@@ -233,601 +242,855 @@
     </div>
     <div class="col-6 col-lg-3">
       <div class="stat-card teal">
-        <i class="bi bi-patch-check card-icon"></i>
-        <div class="stat-value">72%</div>
-        <div class="stat-label">Avg Completion Rate</div>
-        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>4% vs last term</div>
+        <i class="bi bi-check2-all card-icon"></i>
+        <div class="stat-value">312</div>
+        <div class="stat-label">Assessments Completed</div>
+        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+24 this week</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="stat-card orange">
-        <i class="bi bi-exclamation-triangle card-icon"></i>
-        <div class="stat-value">7</div>
-        <div class="stat-label">Students at Risk</div>
-        <div class="stat-delta">Below 50% completion</div>
+        <i class="bi bi-star-fill card-icon"></i>
+        <div class="stat-value">4.2</div>
+        <div class="stat-label">Average Rating</div>
+        <div class="stat-delta">Out of 5.0 across all students</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="stat-card purple">
-        <i class="bi bi-check2-all card-icon"></i>
-        <div class="stat-value">119</div>
-        <div class="stat-label">Completed Assessments</div>
-        <div class="stat-delta">Out of 144 scheduled</div>
+        <i class="bi bi-award card-icon"></i>
+        <div class="stat-value">78.5</div>
+        <div class="stat-label">Average Score</div>
+        <div class="stat-delta">Out of 100 across all assessments</div>
       </div>
     </div>
   </div>
 
-  <!-- Tabs Navigation -->
+  <!-- ═══ STUDENT DIRECTORY ═══ -->
   <div class="panel">
-    <div class="panel-body pb-0 pt-3 px-3">
-      <ul class="nav nav-tabs" id="progressTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress-pane" type="button" role="tab" style="font-size:.82rem;">
-            <i class="bi bi-bar-chart-line me-1"></i>Progress Monitoring
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="levels-tab" data-bs-toggle="tab" data-bs-target="#levels-pane" type="button" role="tab" style="font-size:.82rem;">
-            <i class="bi bi-layers me-1"></i>Student Levels
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="assess-tab" data-bs-toggle="tab" data-bs-target="#assess-pane" type="button" role="tab" style="font-size:.82rem;">
-            <i class="bi bi-check2-square me-1"></i>Assessment Status
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="subject-tab" data-bs-toggle="tab" data-bs-target="#subject-pane" type="button" role="tab" style="font-size:.82rem;">
-            <i class="bi bi-journal-bookmark me-1"></i>Subject Overview
-          </button>
-        </li>
-      </ul>
+    <div class="panel-header">
+      <h5><i class="bi bi-people-fill"></i> Student Directory</h5>
+      <span style="font-size:.74rem;color:var(--text-muted);">48 students enrolled · Academic Year 2025–2026</span>
     </div>
+    <div class="panel-body">
 
-    <div class="tab-content" id="progressTabContent">
-
-      <!-- ═══════════════════════════════ TAB 1: PROGRESS MONITORING ═══════════════════════════════ -->
-      <div class="tab-pane fade show active" id="progress-pane" role="tabpanel">
-        <div class="panel-body">
-
-          <!-- Filter Bar -->
-          <div class="filter-bar mb-3">
-            <label>Filter:</label>
-            <select class="form-select" id="subjectFilterSelect" style="width:auto;">
-              <option value="all">All Subjects</option>
-              <option value="FIRE102">FIRE102 — Assembly</option>
-              <option value="FIRE103">FIRE103 — Operations</option>
-              <option value="FIRE104">FIRE104 — Safety</option>
-            </select>
-            <select class="form-select" id="levelFilterSelect" style="width:auto;">
-              <option value="all">All Levels</option>
-              <option value="Advanced">Advanced</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Remedial">Remedial</option>
-            </select>
-            <select class="form-select" id="statusFilterSelect" style="width:auto;">
-              <option value="all">All Status</option>
-              <option value="On Track">On Track</option>
-              <option value="At Risk">At Risk</option>
-              <option value="Completed">Completed</option>
-            </select>
-            <input type="text" class="form-control" id="studentSearchInput" placeholder="Search student…" style="width:160px;" />
-          </div>
-
-          <!-- Table -->
-          <div class="table-responsive">
-            <table class="table table-hover progress-table align-middle mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>Student</th>
-                  <th class="d-none d-md-table-cell">Level</th>
-                  <th>Subject</th>
-                  <th>Module Progress</th>
-                  <th class="d-none d-sm-table-cell">Completion</th>
-                  <th>Status</th>
-                  <th class="d-none d-lg-table-cell">Last Active</th>
-                </tr>
-              </thead>
-              <tbody id="studentsTableBody"></tbody>
-            </table>
-          </div>
-
-          <!-- Pagination -->
-          <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
-            <div style="font-size:.76rem;color:var(--text-muted);" id="studentsSummaryText"></div>
-            <nav>
-              <ul class="pagination pagination-sm mb-0" id="studentsPagination"></ul>
-            </nav>
-          </div>
-
-        </div>
+      <!-- Search & Filter Bar -->
+      <div class="filter-bar mb-3">
+        <label>Search:</label>
+        <input
+          type="text"
+          name="search_id"
+          class="form-control"
+          placeholder="Student ID…"
+          style="width:130px;"
+          aria-label="Search by Student ID"
+        />
+        <input
+          type="text"
+          name="search_name"
+          class="form-control"
+          placeholder="Student name…"
+          style="width:160px;"
+          aria-label="Search by Student Name"
+        />
+        <label>Filter:</label>
+        <select name="filter_level" class="form-select" style="width:auto;" aria-label="Filter by Level">
+          <option value="">All Levels</option>
+          <option value="1">Level 1</option>
+          <option value="2">Level 2</option>
+          <option value="3">Level 3</option>
+          <option value="4">Level 4</option>
+          <option value="5">Level 5</option>
+        </select>
+        <select name="filter_status" class="form-select" style="width:auto;" aria-label="Filter by Status">
+          <option value="">All Status</option>
+          <option value="on_track">On Track</option>
+          <option value="at_risk">At Risk</option>
+          <option value="completed">Completed</option>
+        </select>
+        <button type="submit" class="btn btn-sm" style="background:var(--red);color:#fff;font-size:.78rem;border-radius:7px;height:32px;padding:.2rem .85rem;border:none;">
+          <i class="bi bi-search me-1"></i>Search
+        </button>
       </div>
 
-      <!-- ═══════════════════════════════ TAB 2: STUDENT LEVELS ═══════════════════════════════ -->
-      <div class="tab-pane fade" id="levels-pane" role="tabpanel">
-        <div class="panel-body">
-
-          <!-- Level distribution summary -->
-          <div class="row g-3 mb-4">
-            <div class="col-6 col-md-3">
-              <div class="text-center p-3 border rounded-3 h-100" style="border-color:#d4e9f7 !important;background:#eaf3fb;">
-                <div style="font-size:1.6rem;font-weight:700;color:#2471a3;">14</div>
-                <div style="font-size:.73rem;font-weight:700;color:#2471a3;">Advanced</div>
-                <div style="font-size:.68rem;color:var(--text-muted);">29% of class</div>
-                <div class="progress mt-2" style="height:5px;">
-                  <div class="progress-bar" style="width:29%;background:#2471a3;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="text-center p-3 border rounded-3 h-100" style="border-color:#f9e79f !important;background:#fef9e7;">
-                <div style="font-size:1.6rem;font-weight:700;color:#b7950b;">18</div>
-                <div style="font-size:.73rem;font-weight:700;color:#b7950b;">Intermediate</div>
-                <div style="font-size:.68rem;color:var(--text-muted);">38% of class</div>
-                <div class="progress mt-2" style="height:5px;">
-                  <div class="progress-bar" style="width:38%;background:#b7950b;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="text-center p-3 border rounded-3 h-100" style="border-color:#e8d5f5 !important;background:#fdf2f8;">
-                <div style="font-size:1.6rem;font-weight:700;color:#884ea0;">10</div>
-                <div style="font-size:.73rem;font-weight:700;color:#884ea0;">Beginner</div>
-                <div style="font-size:.68rem;color:var(--text-muted);">21% of class</div>
-                <div class="progress mt-2" style="height:5px;">
-                  <div class="progress-bar" style="width:21%;background:#884ea0;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="text-center p-3 border rounded-3 h-100" style="border-color:#fadbd8 !important;background:#fdedec;">
-                <div style="font-size:1.6rem;font-weight:700;color:#c0392b;">6</div>
-                <div style="font-size:.73rem;font-weight:700;color:#c0392b;">Remedial</div>
-                <div style="font-size:.68rem;color:var(--text-muted);">12% of class</div>
-                <div class="progress mt-2" style="height:5px;">
-                  <div class="progress-bar bg-danger" style="width:12%;"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="section-label">Student Level List</div>
-          <div class="table-responsive">
-            <table class="table table-hover progress-table align-middle mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>Student</th>
-                  <th>Current Level</th>
-                  <th class="d-none d-md-table-cell">Assigned Subject</th>
-                  <th>Overall Score</th>
-                  <th class="d-none d-sm-table-cell">Practical Eval</th>
-                  <th class="d-none d-lg-table-cell">Theory Eval</th>
-                  <th>Remark</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><div class="student-name">Dela Cruz, Maria</div><div class="student-id">STU-2025-0041</div></td>
-                  <td><span class="level-pill level-advanced">Advanced</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE102</td>
-                  <td><strong>94</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-success-subtle text-success">Excellent</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-success-subtle text-success">Excellent</span></td>
-                  <td style="font-size:.74rem;color:var(--text-muted);">Top performer</td>
-                </tr>
-                <tr>
-                  <td><div class="student-name">Torres, Miguel R.</div><div class="student-id">STU-2025-0063</div></td>
-                  <td><span class="level-pill level-advanced">Advanced</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE104</td>
-                  <td><strong>88</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-success-subtle text-success">Excellent</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-primary-subtle text-primary">Good</span></td>
-                  <td style="font-size:.74rem;color:var(--text-muted);">Consistent</td>
-                </tr>
-                <tr>
-                  <td><div class="student-name">Santos, Juan P.</div><div class="student-id">STU-2025-0038</div></td>
-                  <td><span class="level-pill level-intermediate">Intermediate</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE102</td>
-                  <td><strong>76</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary">Good</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-primary-subtle text-primary">Good</span></td>
-                  <td style="font-size:.74rem;color:var(--text-muted);">Improving</td>
-                </tr>
-                <tr>
-                  <td><div class="student-name">Mendoza, Carlo L.</div><div class="student-id">STU-2025-0055</div></td>
-                  <td><span class="level-pill level-intermediate">Intermediate</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE103</td>
-                  <td><strong>72</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary">Good</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-warning-subtle text-warning">Average</span></td>
-                  <td style="font-size:.74rem;color:var(--text-muted);">Needs review</td>
-                </tr>
-                <tr>
-                  <td><div class="student-name">Aquino, Bianca F.</div><div class="student-id">STU-2025-0071</div></td>
-                  <td><span class="level-pill level-beginner">Beginner</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE102</td>
-                  <td><strong>61</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-warning-subtle text-warning">Average</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-warning-subtle text-warning">Average</span></td>
-                  <td style="font-size:.74rem;color:var(--text-muted);">On schedule</td>
-                </tr>
-                <tr class="table-danger">
-                  <td><div class="student-name">Reyes, Ana B.</div><div class="student-id">STU-2025-0022</div></td>
-                  <td><span class="level-pill level-remedial">Remedial</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE102</td>
-                  <td><strong>42</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger">Poor</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-danger-subtle text-danger">Poor</span></td>
-                  <td style="font-size:.74rem;color:#c0392b;font-weight:600;">⚠ Intervention needed</td>
-                </tr>
-                <tr class="table-danger">
-                  <td><div class="student-name">Villanueva, Renz A.</div><div class="student-id">STU-2025-0044</div></td>
-                  <td><span class="level-pill level-remedial">Remedial</span></td>
-                  <td class="d-none d-md-table-cell" style="font-size:.78rem;">FIRE103</td>
-                  <td><strong>35</strong>/100</td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger">Poor</span></td>
-                  <td class="d-none d-lg-table-cell"><span class="badge bg-danger-subtle text-danger">Poor</span></td>
-                  <td style="font-size:.74rem;color:#c0392b;font-weight:600;">⚠ Intervention needed</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
+      <!-- Student Directory Table -->
+      <div class="table-responsive">
+        <table class="table table-hover progress-table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Student ID</th>
+              <th>Full Name</th>
+              <th class="d-none d-xl-table-cell">Gmail</th>
+              <th class="d-none d-lg-table-cell">Phone</th>
+              <th>Level</th>
+              <th class="d-none d-md-table-cell">Assessments</th>
+              <th class="d-none d-sm-table-cell">Avg Rating</th>
+              <th class="d-none d-sm-table-cell">Avg Score</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr>
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0041</span></td>
+              <td>
+                <div class="student-name">Dela Cruz, Maria A.</div>
+                <div class="student-id">Maria A. Dela Cruz</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">m.adelacruz@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 912 345 6789</td>
+              <td><span class="level-pill level-5">Level 5</span></td>
+              <td class="d-none d-md-table-cell"><strong>18</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★★★★</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">4.9</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>94.2</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">On Track</span></td>
+              <td><a href="#detail-stu-0041" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0038</span></td>
+              <td>
+                <div class="student-name">Santos, Juan P.</div>
+                <div class="student-id">Juan P. Santos</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">jp.santos@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 917 234 5678</td>
+              <td><span class="level-pill level-3">Level 3</span></td>
+              <td class="d-none d-md-table-cell"><strong>14</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★★★☆</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">4.1</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>76.8</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">On Track</span></td>
+              <td><a href="#detail-stu-0038" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 3 -->
+            <tr class="table-warning">
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0022</span></td>
+              <td>
+                <div class="student-name">Reyes, Ana B.</div>
+                <div class="student-id">Ana B. Reyes</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">ana.breyes@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 918 123 4567</td>
+              <td><span class="level-pill level-1">Level 1</span></td>
+              <td class="d-none d-md-table-cell"><strong>5</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★☆☆☆</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">2.4</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>42.0</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.68rem;">At Risk</span></td>
+              <td><a href="#detail-stu-0022" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0055</span></td>
+              <td>
+                <div class="student-name">Mendoza, Carlo L.</div>
+                <div class="student-id">Carlo L. Mendoza</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">carlo.lmendoza@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 920 987 6543</td>
+              <td><span class="level-pill level-3">Level 3</span></td>
+              <td class="d-none d-md-table-cell"><strong>12</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★★★☆</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">3.8</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>72.3</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">On Track</span></td>
+              <td><a href="#detail-stu-0055" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 5 -->
+            <tr class="table-warning">
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0019</span></td>
+              <td>
+                <div class="student-name">Garcia, Liza M.</div>
+                <div class="student-id">Liza M. Garcia</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">liza.mgarcia@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 915 654 3210</td>
+              <td><span class="level-pill level-1">Level 1</span></td>
+              <td class="d-none d-md-table-cell"><strong>4</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★☆☆☆</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">2.1</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>25.5</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.68rem;">At Risk</span></td>
+              <td><a href="#detail-stu-0019" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 6 -->
+            <tr>
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0063</span></td>
+              <td>
+                <div class="student-name">Torres, Miguel R.</div>
+                <div class="student-id">Miguel R. Torres</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">miguel.rtorres@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 916 321 0987</td>
+              <td><span class="level-pill level-4">Level 4</span></td>
+              <td class="d-none d-md-table-cell"><strong>16</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★★★★</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">4.7</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>88.4</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size:.68rem;">Completed</span></td>
+              <td><a href="#detail-stu-0063" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 7 -->
+            <tr>
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0071</span></td>
+              <td>
+                <div class="student-name">Aquino, Bianca F.</div>
+                <div class="student-id">Bianca F. Aquino</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">bianca.faquino@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 919 456 7890</td>
+              <td><span class="level-pill level-2">Level 2</span></td>
+              <td class="d-none d-md-table-cell"><strong>9</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★★☆☆</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">3.2</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>61.7</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">On Track</span></td>
+              <td><a href="#detail-stu-0071" class="btn-view">View</a></td>
+            </tr>
+            <!-- Row 8 -->
+            <tr class="table-warning">
+              <td><span class="student-id fw-600" style="font-weight:600;">STU-2025-0044</span></td>
+              <td>
+                <div class="student-name">Villanueva, Renz A.</div>
+                <div class="student-id">Renz A. Villanueva</div>
+              </td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">renz.avillanueva@gmail.com</td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">+63 913 789 0123</td>
+              <td><span class="level-pill level-1">Level 1</span></td>
+              <td class="d-none d-md-table-cell"><strong>3</strong> <span style="font-size:.7rem;color:var(--text-muted);">completed</span></td>
+              <td class="d-none d-sm-table-cell">
+                <span class="rating-stars">★★☆☆☆</span>
+                <span style="font-size:.74rem;font-weight:700;margin-left:2px;">1.9</span>
+              </td>
+              <td class="d-none d-sm-table-cell"><strong>35.1</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.68rem;">At Risk</span></td>
+              <td><a href="#detail-stu-0044" class="btn-view">View</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- ═══════════════════════════════ TAB 3: ASSESSMENT STATUS ═══════════════════════════════ -->
-      <div class="tab-pane fade" id="assess-pane" role="tabpanel">
-        <div class="panel-body">
-
-          <!-- Assessment Stats Row -->
-          <div class="row g-3 mb-4">
-            <div class="col-6 col-md-3">
-              <div class="border rounded-3 p-3 text-center h-100">
-                <div style="font-size:1.5rem;font-weight:700;color:var(--text-main);">6</div>
-                <div style="font-size:.73rem;color:var(--text-muted);">Total Assessments</div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="border rounded-3 p-3 text-center h-100" style="background:#eafaf1;border-color:#a9dfbf !important;">
-                <div style="font-size:1.5rem;font-weight:700;color:#27ae60;">4</div>
-                <div style="font-size:.73rem;color:#27ae60;">Completed</div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="border rounded-3 p-3 text-center h-100" style="background:#fef9e7;border-color:#f9e79f !important;">
-                <div style="font-size:1.5rem;font-weight:700;color:#b7950b;">1</div>
-                <div style="font-size:.73rem;color:#b7950b;">In Progress</div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="border rounded-3 p-3 text-center h-100" style="background:#fdedec;border-color:#fadbd8 !important;">
-                <div style="font-size:1.5rem;font-weight:700;color:#c0392b;">1</div>
-                <div style="font-size:.73rem;color:#c0392b;">Upcoming</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="section-label">Assessment Schedule &amp; Status</div>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-              <thead class="table-light">
-                <tr class="assess-row">
-                  <th>Assessment</th>
-                  <th class="d-none d-md-table-cell">Subject</th>
-                  <th class="d-none d-sm-table-cell">Type</th>
-                  <th>Scheduled Date</th>
-                  <th>Submissions</th>
-                  <th>Class Avg</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody class="assess-row">
-                <tr>
-                  <td><div style="font-size:.83rem;font-weight:600;">Pre-Assessment Quiz</div><div style="font-size:.7rem;color:var(--text-muted);">Module 1–2 Coverage</div></td>
-                  <td class="d-none d-md-table-cell"><span class="badge bg-light text-dark border" style="font-size:.7rem;">FIRE102</span></td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td>
-                  <td style="font-size:.78rem;">Mar 10, 2026</td>
-                  <td><span class="text-success fw-bold">48/48</span></td>
-                  <td><strong>81%</strong></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">Completed</span></td>
-                </tr>
-                <tr>
-                  <td><div style="font-size:.83rem;font-weight:600;">Mid-Term Practical Exam</div><div style="font-size:.7rem;color:var(--text-muted);">Modules 1–6</div></td>
-                  <td class="d-none d-md-table-cell"><span class="badge bg-light text-dark border" style="font-size:.7rem;">FIRE102</span></td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td>
-                  <td style="font-size:.78rem;">Apr 22, 2026</td>
-                  <td><span class="text-success fw-bold">46/48</span></td>
-                  <td><strong>74%</strong></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">Completed</span></td>
-                </tr>
-                <tr>
-                  <td><div style="font-size:.83rem;font-weight:600;">Module 7–9 Quiz</div><div style="font-size:.7rem;color:var(--text-muted);">Hazmat Identification</div></td>
-                  <td class="d-none d-md-table-cell"><span class="badge bg-light text-dark border" style="font-size:.7rem;">FIRE103</span></td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td>
-                  <td style="font-size:.78rem;">May 8, 2026</td>
-                  <td><span class="text-success fw-bold">48/48</span></td>
-                  <td><strong>78%</strong></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">Completed</span></td>
-                </tr>
-                <tr>
-                  <td><div style="font-size:.83rem;font-weight:600;">Safety Protocols Evaluation</div><div style="font-size:.7rem;color:var(--text-muted);">FIRE104 Modules</div></td>
-                  <td class="d-none d-md-table-cell"><span class="badge bg-light text-dark border" style="font-size:.7rem;">FIRE104</span></td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary" style="font-size:.68rem;">Written</span></td>
-                  <td style="font-size:.78rem;">May 28, 2026</td>
-                  <td><span class="text-success fw-bold">47/48</span></td>
-                  <td><strong>82%</strong></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">Completed</span></td>
-                </tr>
-                <tr class="table-warning">
-                  <td><div style="font-size:.83rem;font-weight:600;">Final Assembly Drill</div><div style="font-size:.7rem;color:var(--text-muted);">Modules 10–12 — Live Drill</div></td>
-                  <td class="d-none d-md-table-cell"><span class="badge bg-light text-dark border" style="font-size:.7rem;">FIRE102</span></td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td>
-                  <td style="font-size:.78rem;">Jun 20, 2026</td>
-                  <td><span class="text-warning fw-bold">31/48</span></td>
-                  <td><strong>—</strong></td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size:.68rem;">In Progress</span></td>
-                </tr>
-                <tr>
-                  <td><div style="font-size:.83rem;font-weight:600;">End-of-Term Written Exam</div><div style="font-size:.7rem;color:var(--text-muted);">Comprehensive — All Modules</div></td>
-                  <td class="d-none d-md-table-cell"><span class="badge bg-light text-dark border" style="font-size:.7rem;">FIRE102</span></td>
-                  <td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary" style="font-size:.68rem;">Written</span></td>
-                  <td style="font-size:.78rem;">Jun 28, 2026</td>
-                  <td><span style="color:var(--text-muted);font-size:.78rem;">Not yet open</span></td>
-                  <td><strong>—</strong></td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border" style="font-size:.68rem;">Upcoming</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
+      <!-- Pagination -->
+      <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+        <div style="font-size:.76rem;color:var(--text-muted);">Showing 1–8 of 48 students</div>
+        <nav>
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
+            <li class="page-item active"><a class="page-link" href="#" style="background:var(--red);border-color:var(--red);">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">›</a></li>
+          </ul>
+        </nav>
       </div>
 
-      <!-- ═══════════════════════════════ TAB 4: SUBJECT PERFORMANCE OVERVIEW ═══════════════════════════════ -->
-      <div class="tab-pane fade" id="subject-pane" role="tabpanel">
-        <div class="panel-body">
+    </div>
+  </div><!-- /panel Student Directory -->
 
-          <div class="section-label mb-3">Class Performance by Subject</div>
-          <div class="row g-3 mb-4">
-            <!-- Subject card 1 -->
-            <div class="col-12 col-md-6 col-xl-4">
-              <div class="subject-card">
-                <div class="d-flex align-items-start justify-content-between mb-1">
-                  <div>
-                    <div class="subject-name">FIRE102 — Assembly</div>
-                    <div class="subject-meta">48 students enrolled · 12 modules</div>
-                  </div>
-                  <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;white-space:nowrap;">Active</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1" style="font-size:.73rem;color:var(--text-muted);">
-                  <span>Class avg completion</span><strong style="color:var(--text-main);">72%</strong>
-                </div>
-                <div class="progress mb-2">
-                  <div class="progress-bar bg-success" style="width:72%;"></div>
-                </div>
-                <div class="row g-2 text-center" style="font-size:.7rem;">
-                  <div class="col-4"><div style="font-weight:700;color:#27ae60;">28</div><div style="color:var(--text-muted);">On Track</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#e67e22;">7</div><div style="color:var(--text-muted);">At Risk</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#2471a3;">13</div><div style="color:var(--text-muted);">Completed</div></div>
-                </div>
-              </div>
-            </div>
-            <!-- Subject card 2 -->
-            <div class="col-12 col-md-6 col-xl-4">
-              <div class="subject-card">
-                <div class="d-flex align-items-start justify-content-between mb-1">
-                  <div>
-                    <div class="subject-name">FIRE103 — Operations</div>
-                    <div class="subject-meta">32 students enrolled · 10 modules</div>
-                  </div>
-                  <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;white-space:nowrap;">Active</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1" style="font-size:.73rem;color:var(--text-muted);">
-                  <span>Class avg completion</span><strong style="color:var(--text-main);">65%</strong>
-                </div>
-                <div class="progress mb-2">
-                  <div class="progress-bar bg-info" style="width:65%;"></div>
-                </div>
-                <div class="row g-2 text-center" style="font-size:.7rem;">
-                  <div class="col-4"><div style="font-weight:700;color:#27ae60;">18</div><div style="color:var(--text-muted);">On Track</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#e67e22;">5</div><div style="color:var(--text-muted);">At Risk</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#2471a3;">9</div><div style="color:var(--text-muted);">Completed</div></div>
-                </div>
-              </div>
-            </div>
-            <!-- Subject card 3 -->
-            <div class="col-12 col-md-6 col-xl-4">
-              <div class="subject-card">
-                <div class="d-flex align-items-start justify-content-between mb-1">
-                  <div>
-                    <div class="subject-name">FIRE104 — Safety Protocols</div>
-                    <div class="subject-meta">28 students enrolled · 8 modules</div>
-                  </div>
-                  <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;white-space:nowrap;">Active</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1" style="font-size:.73rem;color:var(--text-muted);">
-                  <span>Class avg completion</span><strong style="color:var(--text-main);">88%</strong>
-                </div>
-                <div class="progress mb-2">
-                  <div class="progress-bar bg-success" style="width:88%;"></div>
-                </div>
-                <div class="row g-2 text-center" style="font-size:.7rem;">
-                  <div class="col-4"><div style="font-weight:700;color:#27ae60;">22</div><div style="color:var(--text-muted);">On Track</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#e67e22;">1</div><div style="color:var(--text-muted);">At Risk</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#2471a3;">5</div><div style="color:var(--text-muted);">Completed</div></div>
-                </div>
-              </div>
-            </div>
-            <!-- Subject card 4 -->
-            <div class="col-12 col-md-6 col-xl-4">
-              <div class="subject-card">
-                <div class="d-flex align-items-start justify-content-between mb-1">
-                  <div>
-                    <div class="subject-name">FIRE105 — Emergency Response</div>
-                    <div class="subject-meta">20 students enrolled · 9 modules</div>
-                  </div>
-                  <span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size:.68rem;white-space:nowrap;">In Review</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1" style="font-size:.73rem;color:var(--text-muted);">
-                  <span>Class avg completion</span><strong style="color:var(--text-main);">54%</strong>
-                </div>
-                <div class="progress mb-2">
-                  <div class="progress-bar bg-warning" style="width:54%;"></div>
-                </div>
-                <div class="row g-2 text-center" style="font-size:.7rem;">
-                  <div class="col-4"><div style="font-weight:700;color:#27ae60;">10</div><div style="color:var(--text-muted);">On Track</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#e67e22;">6</div><div style="color:var(--text-muted);">At Risk</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#2471a3;">4</div><div style="color:var(--text-muted);">Completed</div></div>
-                </div>
-              </div>
-            </div>
-            <!-- Subject card 5 -->
-            <div class="col-12 col-md-6 col-xl-4">
-              <div class="subject-card">
-                <div class="d-flex align-items-start justify-content-between mb-1">
-                  <div>
-                    <div class="subject-name">FIRE106 — Equipment Use</div>
-                    <div class="subject-meta">24 students enrolled · 11 modules</div>
-                  </div>
-                  <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;white-space:nowrap;">Active</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1" style="font-size:.73rem;color:var(--text-muted);">
-                  <span>Class avg completion</span><strong style="color:var(--text-main);">79%</strong>
-                </div>
-                <div class="progress mb-2">
-                  <div class="progress-bar bg-success" style="width:79%;"></div>
-                </div>
-                <div class="row g-2 text-center" style="font-size:.7rem;">
-                  <div class="col-4"><div style="font-weight:700;color:#27ae60;">17</div><div style="color:var(--text-muted);">On Track</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#e67e22;">3</div><div style="color:var(--text-muted);">At Risk</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#2471a3;">4</div><div style="color:var(--text-muted);">Completed</div></div>
-                </div>
-              </div>
-            </div>
-            <!-- Subject card 6 -->
-            <div class="col-12 col-md-6 col-xl-4">
-              <div class="subject-card">
-                <div class="d-flex align-items-start justify-content-between mb-1">
-                  <div>
-                    <div class="subject-name">FIRE107 — Incident Command</div>
-                    <div class="subject-meta">18 students enrolled · 7 modules</div>
-                  </div>
-                  <span class="badge bg-secondary-subtle text-secondary border" style="font-size:.68rem;white-space:nowrap;">Upcoming</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1" style="font-size:.73rem;color:var(--text-muted);">
-                  <span>Class avg completion</span><strong style="color:var(--text-main);">12%</strong>
-                </div>
-                <div class="progress mb-2">
-                  <div class="progress-bar bg-secondary" style="width:12%;"></div>
-                </div>
-                <div class="row g-2 text-center" style="font-size:.7rem;">
-                  <div class="col-4"><div style="font-weight:700;color:#27ae60;">2</div><div style="color:var(--text-muted);">On Track</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#e67e22;">0</div><div style="color:var(--text-muted);">At Risk</div></div>
-                  <div class="col-4"><div style="font-weight:700;color:#2471a3;">0</div><div style="color:var(--text-muted);">Completed</div></div>
-                </div>
-              </div>
+  <!-- ═══════════════════════════════════════════════════════════
+       STUDENT DETAIL SECTIONS (CSS :target — no JS needed)
+       Each section is hidden by default and revealed when its
+       anchor (#detail-stu-XXXX) is targeted via the View link.
+  ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- ─── DETAIL: STU-2025-0041 ─── -->
+  <section class="student-detail-section" id="detail-stu-0041">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+
+        <!-- Student Info Grid -->
+        <div class="section-label mb-2">Student Information</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Student ID</div>
+              <div class="detail-value">STU-2025-0041</div>
             </div>
           </div>
-
-          <!-- Overall class summary table -->
-          <div class="section-label">Overall Class Summary</div>
-          <div class="table-responsive">
-            <table class="table table-bordered progress-table align-middle mb-0" style="font-size:.8rem;">
-              <thead class="table-light">
-                <tr>
-                  <th>Subject Code</th>
-                  <th>Subject Title</th>
-                  <th class="d-none d-sm-table-cell">Enrolled</th>
-                  <th>Avg Completion</th>
-                  <th class="d-none d-md-table-cell">Avg Score</th>
-                  <th>Pass Rate</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>FIRE102</code></td>
-                  <td>Assembly</td>
-                  <td class="d-none d-sm-table-cell">48</td>
-                  <td>
-                    <div class="progress mb-1"><div class="progress-bar bg-success" style="width:72%;"></div></div>
-                    <span>72%</span>
-                  </td>
-                  <td class="d-none d-md-table-cell">79/100</td>
-                  <td><span class="text-success fw-bold">85%</span></td>
-                  <td><span class="badge bg-success-subtle text-success" style="font-size:.68rem;">Active</span></td>
-                </tr>
-                <tr>
-                  <td><code>FIRE103</code></td>
-                  <td>Operations</td>
-                  <td class="d-none d-sm-table-cell">32</td>
-                  <td>
-                    <div class="progress mb-1"><div class="progress-bar bg-info" style="width:65%;"></div></div>
-                    <span>65%</span>
-                  </td>
-                  <td class="d-none d-md-table-cell">73/100</td>
-                  <td><span class="text-success fw-bold">78%</span></td>
-                  <td><span class="badge bg-success-subtle text-success" style="font-size:.68rem;">Active</span></td>
-                </tr>
-                <tr>
-                  <td><code>FIRE104</code></td>
-                  <td>Safety Protocols</td>
-                  <td class="d-none d-sm-table-cell">28</td>
-                  <td>
-                    <div class="progress mb-1"><div class="progress-bar bg-success" style="width:88%;"></div></div>
-                    <span>88%</span>
-                  </td>
-                  <td class="d-none d-md-table-cell">84/100</td>
-                  <td><span class="text-success fw-bold">93%</span></td>
-                  <td><span class="badge bg-success-subtle text-success" style="font-size:.68rem;">Active</span></td>
-                </tr>
-                <tr>
-                  <td><code>FIRE105</code></td>
-                  <td>Emergency Response</td>
-                  <td class="d-none d-sm-table-cell">20</td>
-                  <td>
-                    <div class="progress mb-1"><div class="progress-bar bg-warning" style="width:54%;"></div></div>
-                    <span>54%</span>
-                  </td>
-                  <td class="d-none d-md-table-cell">67/100</td>
-                  <td><span class="text-warning fw-bold">62%</span></td>
-                  <td><span class="badge bg-warning-subtle text-warning" style="font-size:.68rem;">In Review</span></td>
-                </tr>
-                <tr>
-                  <td><code>FIRE106</code></td>
-                  <td>Equipment Use</td>
-                  <td class="d-none d-sm-table-cell">24</td>
-                  <td>
-                    <div class="progress mb-1"><div class="progress-bar bg-success" style="width:79%;"></div></div>
-                    <span>79%</span>
-                  </td>
-                  <td class="d-none d-md-table-cell">81/100</td>
-                  <td><span class="text-success fw-bold">88%</span></td>
-                  <td><span class="badge bg-success-subtle text-success" style="font-size:.68rem;">Active</span></td>
-                </tr>
-                <tr>
-                  <td><code>FIRE107</code></td>
-                  <td>Incident Command</td>
-                  <td class="d-none d-sm-table-cell">18</td>
-                  <td>
-                    <div class="progress mb-1"><div class="progress-bar bg-secondary" style="width:12%;"></div></div>
-                    <span>12%</span>
-                  </td>
-                  <td class="d-none d-md-table-cell">—</td>
-                  <td><span style="color:var(--text-muted);">—</span></td>
-                  <td><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Upcoming</span></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">First Name</div>
+              <div class="detail-value">Maria</div>
+            </div>
           </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Middle Name</div>
+              <div class="detail-value">Aurora</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Last Name</div>
+              <div class="detail-value">Dela Cruz</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Suffix</div>
+              <div class="detail-value" style="color:var(--text-muted);">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Current Level</div>
+              <div class="detail-value"><span class="level-pill level-5">Level 5</span></div>
+            </div>
+          </div>
+          <div class="col-6 col-md-6">
+            <div class="student-detail-card">
+              <div class="detail-label">Gmail</div>
+              <div class="detail-value">m.adelacruz@gmail.com</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-6">
+            <div class="student-detail-card">
+              <div class="detail-label">Phone Number</div>
+              <div class="detail-value">+63 912 345 6789</div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Progress Summary Mini Stats -->
+        <div class="section-label mb-2">Progress Summary</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val" style="color:var(--red);">18</div>
+              <div class="mini-lbl">Assessments Completed</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val" style="color:#27ae60;">
+                <span class="rating-stars" style="font-size:1rem;">★</span> 4.9
+              </div>
+              <div class="mini-lbl">Average Rating</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val" style="color:#2471a3;">94.2</div>
+              <div class="mini-lbl">Average Score</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val" style="color:#27ae60;">
+                <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.72rem;vertical-align:middle;">On Track</span>
+              </div>
+              <div class="mini-lbl">Progress Status</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assessment Filter -->
+        <div class="section-label mb-2">Completed Assessment History</div>
+        <div class="filter-bar mb-3">
+          <label>Filter:</label>
+          <select name="filter_type_0041" class="form-select" style="width:auto;" aria-label="Filter by Assessment Type">
+            <option value="">All Types</option>
+            <option>Quiz</option>
+            <option>Practical</option>
+            <option>Written</option>
+            <option>Pre-Assessment</option>
+            <option>Final Exam</option>
+          </select>
+        </div>
+
+        <!-- Assessment History Table -->
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Assessment ID</th>
+                <th>Lesson ID</th>
+                <th class="d-none d-sm-table-cell">Type</th>
+                <th>Time Completed</th>
+                <th>Rating</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code style="font-size:.74rem;">ASMT-0041-001</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-01</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td>
+                <td style="font-size:.77rem;">Mar 12, 2026 · 09:45 AM</td>
+                <td><span class="rating-stars">★★★★★</span> <strong style="font-size:.77rem;">5.0</strong></td>
+                <td><strong>98</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr>
+                <td><code style="font-size:.74rem;">ASMT-0041-002</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-02</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td>
+                <td style="font-size:.77rem;">Mar 25, 2026 · 02:00 PM</td>
+                <td><span class="rating-stars">★★★★★</span> <strong style="font-size:.77rem;">5.0</strong></td>
+                <td><strong>96</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr>
+                <td><code style="font-size:.74rem;">ASMT-0041-003</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-03</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary" style="font-size:.68rem;">Written</span></td>
+                <td style="font-size:.77rem;">Apr 08, 2026 · 10:30 AM</td>
+                <td><span class="rating-stars">★★★★★</span> <strong style="font-size:.77rem;">4.8</strong></td>
+                <td><strong>95</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr>
+                <td><code style="font-size:.74rem;">ASMT-0041-004</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-04</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td>
+                <td style="font-size:.77rem;">Apr 22, 2026 · 11:15 AM</td>
+                <td><span class="rating-stars">★★★★★</span> <strong style="font-size:.77rem;">5.0</strong></td>
+                <td><strong>100</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr>
+                <td><code style="font-size:.74rem;">ASMT-0041-005</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-05</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td>
+                <td style="font-size:.77rem;">May 10, 2026 · 03:00 PM</td>
+                <td><span class="rating-stars">★★★★★</span> <strong style="font-size:.77rem;">4.9</strong></td>
+                <td><strong>93</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+          <div style="font-size:.76rem;color:var(--text-muted);">Showing 1–5 of 18 assessments</div>
+          <nav><ul class="pagination pagination-sm mb-0">
+            <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
+            <li class="page-item active"><a class="page-link" href="#detail-stu-0041" style="background:var(--red);border-color:var(--red);">1</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0041">2</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0041">3</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0041">4</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0041">›</a></li>
+          </ul></nav>
+        </div>
+
+      </div>
+    </div>
+  </section><!-- /detail-stu-0041 -->
+
+  <!-- ─── DETAIL: STU-2025-0022 (At Risk Example) ─── -->
+  <section class="student-detail-section" id="detail-stu-0022">
+    <div class="panel" style="border-top: 3px solid #e74c3c;">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details
+          <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-2" style="font-size:.68rem;">⚠ At Risk</span>
+        </h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+
+        <!-- Student Info Grid -->
+        <div class="section-label mb-2">Student Information</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card" style="border-color:#fadbd8;">
+              <div class="detail-label">Student ID</div>
+              <div class="detail-value">STU-2025-0022</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">First Name</div>
+              <div class="detail-value">Ana</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Middle Name</div>
+              <div class="detail-value">Bautista</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Last Name</div>
+              <div class="detail-value">Reyes</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Suffix</div>
+              <div class="detail-value" style="color:var(--text-muted);">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="student-detail-card">
+              <div class="detail-label">Current Level</div>
+              <div class="detail-value"><span class="level-pill level-1">Level 1</span></div>
+            </div>
+          </div>
+          <div class="col-6 col-md-6">
+            <div class="student-detail-card">
+              <div class="detail-label">Gmail</div>
+              <div class="detail-value">ana.breyes@gmail.com</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-6">
+            <div class="student-detail-card">
+              <div class="detail-label">Phone Number</div>
+              <div class="detail-value">+63 918 123 4567</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 mb-4" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+          <div>This student is <strong>at risk</strong>. Average score is below 50. Instructor intervention is recommended.</div>
+        </div>
+
+        <!-- Progress Summary Mini Stats -->
+        <div class="section-label mb-2">Progress Summary</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="mini-stat" style="border-color:#fadbd8;">
+              <div class="mini-val" style="color:#c0392b;">5</div>
+              <div class="mini-lbl">Assessments Completed</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val" style="color:#c0392b;">
+                <span class="rating-stars" style="font-size:1rem;">★</span> 2.4
+              </div>
+              <div class="mini-lbl">Average Rating</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val" style="color:#c0392b;">42.0</div>
+              <div class="mini-lbl">Average Score</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="mini-stat">
+              <div class="mini-val">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.72rem;vertical-align:middle;">At Risk</span>
+              </div>
+              <div class="mini-lbl">Progress Status</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assessment Filter -->
+        <div class="section-label mb-2">Completed Assessment History</div>
+        <div class="filter-bar mb-3">
+          <label>Filter:</label>
+          <select name="filter_type_0022" class="form-select" style="width:auto;" aria-label="Filter by Assessment Type">
+            <option value="">All Types</option>
+            <option>Quiz</option>
+            <option>Practical</option>
+            <option>Written</option>
+            <option>Pre-Assessment</option>
+            <option>Final Exam</option>
+          </select>
+        </div>
+
+        <!-- Assessment History Table -->
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Assessment ID</th>
+                <th>Lesson ID</th>
+                <th class="d-none d-sm-table-cell">Type</th>
+                <th>Time Completed</th>
+                <th>Rating</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-danger">
+                <td><code style="font-size:.74rem;">ASMT-0022-001</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-01</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td>
+                <td style="font-size:.77rem;">Mar 14, 2026 · 10:00 AM</td>
+                <td><span class="rating-stars">★★☆☆☆</span> <strong style="font-size:.77rem;">2.0</strong></td>
+                <td><strong style="color:#c0392b;">38</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr class="table-danger">
+                <td><code style="font-size:.74rem;">ASMT-0022-002</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-02</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td>
+                <td style="font-size:.77rem;">Mar 28, 2026 · 01:30 PM</td>
+                <td><span class="rating-stars">★★☆☆☆</span> <strong style="font-size:.77rem;">2.5</strong></td>
+                <td><strong style="color:#c0392b;">41</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr class="table-warning">
+                <td><code style="font-size:.74rem;">ASMT-0022-003</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-03</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary" style="font-size:.68rem;">Written</span></td>
+                <td style="font-size:.77rem;">Apr 10, 2026 · 09:00 AM</td>
+                <td><span class="rating-stars">★★★☆☆</span> <strong style="font-size:.77rem;">3.0</strong></td>
+                <td><strong>50</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr class="table-danger">
+                <td><code style="font-size:.74rem;">ASMT-0022-004</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-04</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td>
+                <td style="font-size:.77rem;">Apr 24, 2026 · 11:00 AM</td>
+                <td><span class="rating-stars">★★☆☆☆</span> <strong style="font-size:.77rem;">2.0</strong></td>
+                <td><strong style="color:#c0392b;">35</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+              <tr class="table-warning">
+                <td><code style="font-size:.74rem;">ASMT-0022-005</code></td>
+                <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-05</span></td>
+                <td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td>
+                <td style="font-size:.77rem;">May 12, 2026 · 02:30 PM</td>
+                <td><span class="rating-stars">★★★☆☆</span> <strong style="font-size:.77rem;">2.5</strong></td>
+                <td><strong>46</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+          <div style="font-size:.76rem;color:var(--text-muted);">Showing 1–5 of 5 assessments</div>
+        </div>
+
+      </div>
+    </div>
+  </section><!-- /detail-stu-0022 -->
+
+  <!-- ─── DETAIL: STU-2025-0038 ─── -->
+  <section class="student-detail-section" id="detail-stu-0038">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="section-label mb-2">Student Information</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0038</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Juan</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Pepito</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Santos</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">Jr.</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-3">Level 3</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">jp.santos@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 917 234 5678</div></div></div>
+        </div>
+        <div class="section-label mb-2">Progress Summary</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:var(--red);">14</div><div class="mini-lbl">Assessments Completed</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;"><span class="rating-stars" style="font-size:1rem;">★</span> 4.1</div><div class="mini-lbl">Average Rating</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#2471a3;">76.8</div><div class="mini-lbl">Average Score</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val"><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.72rem;vertical-align:middle;">On Track</span></div><div class="mini-lbl">Progress Status</div></div></div>
+        </div>
+        <div class="section-label mb-2">Completed Assessment History</div>
+        <div class="filter-bar mb-3">
+          <label>Filter:</label>
+          <select name="filter_type_0038" class="form-select" style="width:auto;">
+            <option value="">All Types</option>
+            <option>Quiz</option><option>Practical</option><option>Written</option><option>Pre-Assessment</option><option>Final Exam</option>
+          </select>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Assessment ID</th><th>Lesson ID</th><th class="d-none d-sm-table-cell">Type</th><th>Time Completed</th><th>Rating</th><th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code style="font-size:.74rem;">ASMT-0038-001</code></td><td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-01</span></td><td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td><td style="font-size:.77rem;">Mar 13, 2026 · 10:20 AM</td><td><span class="rating-stars">★★★★☆</span> <strong style="font-size:.77rem;">4.0</strong></td><td><strong>78</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td></tr>
+              <tr><td><code style="font-size:.74rem;">ASMT-0038-002</code></td><td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-02</span></td><td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td><td style="font-size:.77rem;">Mar 27, 2026 · 02:15 PM</td><td><span class="rating-stars">★★★★☆</span> <strong style="font-size:.77rem;">4.2</strong></td><td><strong>82</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td></tr>
+              <tr><td><code style="font-size:.74rem;">ASMT-0038-003</code></td><td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-03</span></td><td class="d-none d-sm-table-cell"><span class="badge bg-primary-subtle text-primary" style="font-size:.68rem;">Written</span></td><td style="font-size:.77rem;">Apr 11, 2026 · 09:30 AM</td><td><span class="rating-stars">★★★★☆</span> <strong style="font-size:.77rem;">3.9</strong></td><td><strong>75</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td></tr>
+              <tr><td><code style="font-size:.74rem;">ASMT-0038-004</code></td><td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-04</span></td><td class="d-none d-sm-table-cell"><span class="badge bg-secondary-subtle text-secondary" style="font-size:.68rem;">Quiz</span></td><td style="font-size:.77rem;">Apr 25, 2026 · 11:45 AM</td><td><span class="rating-stars">★★★★☆</span> <strong style="font-size:.77rem;">4.3</strong></td><td><strong>80</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td></tr>
+              <tr><td><code style="font-size:.74rem;">ASMT-0038-005</code></td><td><span class="badge bg-light text-dark border" style="font-size:.7rem;">LES-FIRE102-05</span></td><td class="d-none d-sm-table-cell"><span class="badge bg-danger-subtle text-danger" style="font-size:.68rem;">Practical</span></td><td style="font-size:.77rem;">May 14, 2026 · 03:30 PM</td><td><span class="rating-stars">★★★★★</span> <strong style="font-size:.77rem;">4.5</strong></td><td><strong>85</strong><span style="font-size:.7rem;color:var(--text-muted);">/100</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+          <div style="font-size:.76rem;color:var(--text-muted);">Showing 1–5 of 14 assessments</div>
+          <nav><ul class="pagination pagination-sm mb-0">
+            <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
+            <li class="page-item active"><a class="page-link" href="#detail-stu-0038" style="background:var(--red);border-color:var(--red);">1</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0038">2</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0038">3</a></li>
+            <li class="page-item"><a class="page-link" href="#detail-stu-0038">›</a></li>
+          </ul></nav>
         </div>
       </div>
+    </div>
+  </section><!-- /detail-stu-0038 -->
 
-    </div><!-- /tab-content -->
-  </div><!-- /panel -->
+  <!-- ─── DETAIL STUBS for remaining students ─── -->
+  <!-- STU-2025-0055 -->
+  <section class="student-detail-section" id="detail-stu-0055">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details — Carlo L. Mendoza</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0055</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Carlo</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Luis</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Mendoza</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-3">Level 3</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">carlo.lmendoza@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 920 987 6543</div></div></div>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:var(--red);">12</div><div class="mini-lbl">Assessments Completed</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;"><span class="rating-stars" style="font-size:1rem;">★</span> 3.8</div><div class="mini-lbl">Average Rating</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#2471a3;">72.3</div><div class="mini-lbl">Average Score</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val"><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.72rem;vertical-align:middle;">On Track</span></div><div class="mini-lbl">Progress Status</div></div></div>
+        </div>
+        <div class="alert alert-secondary py-2 px-3" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-info-circle me-1"></i> Backend integration point: assessment history will be fetched from <code>GET /api/students/STU-2025-0055/assessments</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0019 -->
+  <section class="student-detail-section" id="detail-stu-0019">
+    <div class="panel" style="border-top:3px solid #e74c3c;">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details — Liza M. Garcia <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-2" style="font-size:.68rem;">⚠ At Risk</span></h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card" style="border-color:#fadbd8;"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0019</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Liza</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Marquez</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Garcia</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-1">Level 1</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">liza.mgarcia@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 915 654 3210</div></div></div>
+        </div>
+        <div class="alert alert-danger py-2 px-3 mb-4" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i> This student is <strong>at risk</strong>. Average score is critically low at 25.5. Immediate intervention is recommended.
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat" style="border-color:#fadbd8;"><div class="mini-val" style="color:#c0392b;">4</div><div class="mini-lbl">Assessments Completed</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;"><span class="rating-stars" style="font-size:1rem;">★</span> 2.1</div><div class="mini-lbl">Average Rating</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;">25.5</div><div class="mini-lbl">Average Score</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val"><span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.72rem;vertical-align:middle;">At Risk</span></div><div class="mini-lbl">Progress Status</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0063 -->
+  <section class="student-detail-section" id="detail-stu-0063">
+    <div class="panel" style="border-top:3px solid #2471a3;">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details — Miguel R. Torres <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-2" style="font-size:.68rem;">Completed</span></h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0063</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Miguel</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Ramirez</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Torres</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-4">Level 4</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">miguel.rtorres@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 916 321 0987</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:var(--red);">16</div><div class="mini-lbl">Assessments Completed</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;"><span class="rating-stars" style="font-size:1rem;">★</span> 4.7</div><div class="mini-lbl">Average Rating</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#2471a3;">88.4</div><div class="mini-lbl">Average Score</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val"><span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size:.72rem;vertical-align:middle;">Completed</span></div><div class="mini-lbl">Progress Status</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0071 -->
+  <section class="student-detail-section" id="detail-stu-0071">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details — Bianca F. Aquino</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0071</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Bianca</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Flores</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Aquino</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-2">Level 2</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">bianca.faquino@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 919 456 7890</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:var(--red);">9</div><div class="mini-lbl">Assessments Completed</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#b7950b;"><span class="rating-stars" style="font-size:1rem;">★</span> 3.2</div><div class="mini-lbl">Average Rating</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#b7950b;">61.7</div><div class="mini-lbl">Average Score</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val"><span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.72rem;vertical-align:middle;">On Track</span></div><div class="mini-lbl">Progress Status</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0044 -->
+  <section class="student-detail-section" id="detail-stu-0044">
+    <div class="panel" style="border-top:3px solid #e74c3c;">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Student Progress Details — Renz A. Villanueva <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-2" style="font-size:.68rem;">⚠ At Risk</span></h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card" style="border-color:#fadbd8;"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0044</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Renz</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Aguilar</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Villanueva</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-1">Level 1</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">renz.avillanueva@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 913 789 0123</div></div></div>
+        </div>
+        <div class="alert alert-danger py-2 px-3 mb-4" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i> This student is <strong>at risk</strong> with only 3 assessments completed and an average score of 35.1. Immediate intervention required.
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat" style="border-color:#fadbd8;"><div class="mini-val" style="color:#c0392b;">3</div><div class="mini-lbl">Assessments Completed</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;"><span class="rating-stars" style="font-size:1rem;">★</span> 1.9</div><div class="mini-lbl">Average Rating</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;">35.1</div><div class="mini-lbl">Average Score</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val"><span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.72rem;vertical-align:middle;">At Risk</span></div><div class="mini-lbl">Progress Status</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="portal-footer">
     Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
@@ -836,112 +1099,5 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  const MODULE_TOTALS = { FIRE102: 12, FIRE103: 10, FIRE104: 8 };
-
-  const STUDENTS = [
-    { id:'STU-2025-0041', name:'Dela Cruz, Maria',   level:'Advanced',     subject:'FIRE102', progress:91,  status:'On Track',  lastActive:'Jun 16, 2026' },
-    { id:'STU-2025-0038', name:'Santos, Juan P.',     level:'Intermediate', subject:'FIRE102', progress:75,  status:'On Track',  lastActive:'Jun 15, 2026' },
-    { id:'STU-2025-0022', name:'Reyes, Ana B.',       level:'Remedial',     subject:'FIRE102', progress:38,  status:'At Risk',   lastActive:'Jun 10, 2026' },
-    { id:'STU-2025-0055', name:'Mendoza, Carlo L.',   level:'Intermediate', subject:'FIRE103', progress:83,  status:'On Track',  lastActive:'Jun 17, 2026' },
-    { id:'STU-2025-0019', name:'Garcia, Liza M.',     level:'Beginner',     subject:'FIRE102', progress:25,  status:'At Risk',   lastActive:'Jun 8, 2026' },
-    { id:'STU-2025-0063', name:'Torres, Miguel R.',   level:'Advanced',     subject:'FIRE104', progress:100, status:'Completed', lastActive:'Jun 14, 2026' },
-    { id:'STU-2025-0071', name:'Aquino, Bianca F.',   level:'Beginner',     subject:'FIRE102', progress:58,  status:'On Track',  lastActive:'Jun 16, 2026' },
-    { id:'STU-2025-0044', name:'Villanueva, Renz A.', level:'Remedial',     subject:'FIRE103', progress:17,  status:'At Risk',   lastActive:'Jun 5, 2026' },
-    { id:'STU-2025-0012', name:'Cruz, Patricia',      level:'Advanced',     subject:'FIRE103', progress:95,  status:'Completed', lastActive:'Jun 12, 2026' },
-    { id:'STU-2025-0029', name:'Lopez, Daniel',       level:'Intermediate', subject:'FIRE104', progress:68,  status:'On Track',  lastActive:'Jun 11, 2026' },
-    { id:'STU-2025-0084', name:'Ramos, Sofia',        level:'Beginner',     subject:'FIRE104', progress:44,  status:'At Risk',   lastActive:'Jun 9, 2026' },
-    { id:'STU-2025-0091', name:'Bautista, Kevin',     level:'Advanced',     subject:'FIRE102', progress:100, status:'Completed', lastActive:'Jun 13, 2026' },
-    { id:'STU-2025-0033', name:'Flores, Angela',      level:'Intermediate', subject:'FIRE102', progress:80,  status:'On Track',  lastActive:'Jun 16, 2026' },
-    { id:'STU-2025-0067', name:'Navarro, Paolo',      level:'Remedial',     subject:'FIRE104', progress:22,  status:'At Risk',   lastActive:'Jun 7, 2026' },
-  ];
-
-  const PAGE_SIZE = 5;
-  let currentStudentsPage = 1;
-
-  function levelPillClass(level) {
-    return { Advanced:'level-advanced', Intermediate:'level-intermediate', Beginner:'level-beginner', Remedial:'level-remedial' }[level] || '';
-  }
-  function statusBadgeHtml(status) {
-    if (status === 'On Track')  return '<span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.68rem;">On Track</span>';
-    if (status === 'At Risk')   return '<span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.68rem;">At Risk</span>';
-    return '<span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size:.68rem;">Completed</span>';
-  }
-  function progressBarClass(p) {
-    if (p >= 70) return 'bg-success';
-    if (p >= 50) return 'bg-info';
-    if (p >= 30) return 'bg-warning';
-    return 'bg-danger';
-  }
-  function getFilteredStudents() {
-    const subject = document.getElementById('subjectFilterSelect').value;
-    const level   = document.getElementById('levelFilterSelect').value;
-    const status  = document.getElementById('statusFilterSelect').value;
-    const search  = document.getElementById('studentSearchInput').value.trim().toLowerCase();
-    return STUDENTS.filter(s =>
-      (subject === 'all' || s.subject === subject) &&
-      (level   === 'all' || s.level   === level)   &&
-      (status  === 'all' || s.status  === status)  &&
-      (search  === ''    || s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search))
-    );
-  }
-  function renderStudentsTable() {
-    const filtered = getFilteredStudents();
-    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-    if (currentStudentsPage > totalPages) currentStudentsPage = 1;
-    const start = (currentStudentsPage - 1) * PAGE_SIZE;
-    const pageItems = filtered.slice(start, start + PAGE_SIZE);
-    const tbody = document.getElementById('studentsTableBody');
-
-    tbody.innerHTML = pageItems.length === 0
-      ? `<tr><td colspan="7" class="text-center py-4" style="color:var(--text-muted)">No students match your filters.</td></tr>`
-      : pageItems.map(s => {
-          const total = MODULE_TOTALS[s.subject] || 12;
-          const done  = Math.round((s.progress / 100) * total);
-          const rowClass = s.status === 'At Risk' ? ' class="table-warning"' : '';
-          const warnIcon = s.status === 'At Risk' ? ' <i class="bi bi-exclamation-circle text-danger ms-1"></i>' : '';
-          return `<tr${rowClass}>
-            <td><div class="student-name">${s.name}</div><div class="student-id">${s.id}</div></td>
-            <td class="d-none d-md-table-cell"><span class="level-pill ${levelPillClass(s.level)}">${s.level}</span></td>
-            <td><span class="badge bg-light text-dark border" style="font-size:.7rem;">${s.subject}</span></td>
-            <td>
-              <div class="progress mb-1"><div class="progress-bar ${progressBarClass(s.progress)}" style="width:${s.progress}%"></div></div>
-              <div style="font-size:.69rem;color:var(--text-muted);">${done}/${total} modules${warnIcon}</div>
-            </td>
-            <td class="d-none d-sm-table-cell"><strong>${s.progress}%</strong></td>
-            <td>${statusBadgeHtml(s.status)}</td>
-            <td class="d-none d-lg-table-cell" style="font-size:.75rem;color:var(--text-muted);">${s.lastActive}</td>
-          </tr>`;
-        }).join('');
-
-    document.getElementById('studentsSummaryText').textContent = filtered.length === 0
-      ? 'Showing 0 of 0 students'
-      : `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} of ${filtered.length} students`;
-
-    renderStudentsPagination(totalPages);
-  }
-  function renderStudentsPagination(totalPages) {
-    const pag = document.getElementById('studentsPagination');
-    let html = `<li class="page-item ${currentStudentsPage===1?'disabled':''}"><a class="page-link" href="#" onclick="goToStudentsPage(${currentStudentsPage-1});return false;">‹</a></li>`;
-    for (let p = 1; p <= totalPages; p++) {
-      html += `<li class="page-item ${p===currentStudentsPage?'active':''}"><a class="page-link" href="#" style="${p===currentStudentsPage?'background:var(--red);border-color:var(--red)':''}" onclick="goToStudentsPage(${p});return false;">${p}</a></li>`;
-    }
-    html += `<li class="page-item ${currentStudentsPage===totalPages?'disabled':''}"><a class="page-link" href="#" onclick="goToStudentsPage(${currentStudentsPage+1});return false;">›</a></li>`;
-    pag.innerHTML = html;
-  }
-  function goToStudentsPage(p) {
-    const totalPages = Math.max(1, Math.ceil(getFilteredStudents().length / PAGE_SIZE));
-    if (p < 1 || p > totalPages) return;
-    currentStudentsPage = p;
-    renderStudentsTable();
-  }
-
-  ['subjectFilterSelect', 'levelFilterSelect', 'statusFilterSelect'].forEach(id => {
-    document.getElementById(id).addEventListener('change', () => { currentStudentsPage = 1; renderStudentsTable(); });
-  });
-  document.getElementById('studentSearchInput').addEventListener('input', () => { currentStudentsPage = 1; renderStudentsTable(); });
-
-  document.addEventListener('DOMContentLoaded', renderStudentsTable);
-</script>
 </body>
 </html>
