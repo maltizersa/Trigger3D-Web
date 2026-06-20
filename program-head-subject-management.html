@@ -65,7 +65,8 @@
     .action-bar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
 
     /* SUBJECT CARDS */
-    .subject-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .45rem; height: 100%; }
+    .subject-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .45rem; height: 100%; cursor: pointer; transition: box-shadow .15s, transform .15s; }
+    .subject-card:hover { box-shadow: 0 8px 22px rgba(0,0,0,.16); transform: translateY(-2px); }
     .subject-code { display: inline-block; background: var(--red); color: #fff; font-size: .7rem; font-weight: 800; letter-spacing: .07em; padding: .2rem .6rem; border-radius: 6px; }
     .subject-title { font-size: .9rem; font-weight: 700; margin: 0; }
     .subject-meta  { font-size: .76rem; color: var(--text-muted); }
@@ -92,7 +93,7 @@
     .subject-card-add .inner strong { font-size: .84rem; display: block; color: var(--text-main); }
     .subject-card-add .inner span { font-size: .74rem; }
 
-    /* MODAL STEPS */
+    /* STEP MODAL (Assign Instructor) */
     .step-indicator { display: flex; align-items: center; gap: 0; margin-bottom: 1.4rem; }
     .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; flex-shrink: 0; background: #EAECEF; color: var(--text-muted); transition: .2s; }
     .step-dot.active { background: var(--red); color: #fff; }
@@ -101,7 +102,6 @@
     .step-line.done  { background: #27AE60; }
     .step-label { font-size: .7rem; color: var(--text-muted); margin-top: .2rem; text-align: center; }
     .step-wrap { display: flex; flex-direction: column; align-items: center; }
-
     .step-panel { display: none; }
     .step-panel.active { display: block; }
 
@@ -130,6 +130,20 @@
     .status-btn.selected-inactive { background: #FDECEA; border-color: var(--red); color: var(--red); }
 
     .modal-section-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin: 1rem 0 .6rem; }
+
+    /* MODULE LIST MODAL */
+    .vm-summary-pill { background: #F9FAFB; border: 1px solid var(--border); border-radius: 8px; padding: .55rem .8rem; font-size: .8rem; display: flex; justify-content: space-between; margin-bottom: .9rem; }
+    .vm-list { list-style: none; padding: 0; margin: 0; max-height: 340px; overflow-y: auto; }
+    .vm-list li { display: flex; align-items: center; gap: .7rem; padding: .6rem .1rem; border-bottom: 1px solid var(--border); }
+    .vm-list li:last-child { border-bottom: none; }
+    .vm-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; }
+    .vm-icon.pdf { background: #FDECEA; color: #C0392B; }
+    .vm-icon.vid { background: #EBF3FF; color: #2980B9; }
+    .vm-icon.doc { background: #E8F8F2; color: #1A9B59; }
+    .vm-name { font-weight: 600; font-size: .84rem; }
+    .vm-meta { font-size: .71rem; color: var(--text-muted); margin-top: .1rem; }
+    .vm-empty { text-align: center; padding: 2.2rem 1rem; color: var(--text-muted); font-size: .84rem; }
+    .vm-empty i { font-size: 2rem; display: block; margin-bottom: .5rem; color: #D5D8DC; }
 
     .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1200; display: flex; flex-direction: column; gap: .5rem; }
     .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
@@ -201,7 +215,6 @@
       <div class="action-bar">
         <button class="btn-red" data-bs-toggle="modal" data-bs-target="#createSubjectModal"><i class="bi bi-plus-lg"></i> Create Subject</button>
         <button class="btn-dark" data-bs-toggle="modal" data-bs-target="#assignInstructorModal" onclick="resetAssign()"><i class="bi bi-person-badge-fill"></i> Assign Instructor</button>
-
       </div>
 
       <div class="row g-3" id="subjectGrid">
@@ -282,7 +295,6 @@
       </div>
       <div class="modal-body" style="padding:1.3rem;">
 
-        <!-- Step indicator -->
         <div class="step-indicator">
           <div class="step-wrap">
             <div class="step-dot active" id="sd1">1</div>
@@ -300,7 +312,6 @@
           </div>
         </div>
 
-        <!-- Step 1: Select Subject -->
         <div class="step-panel active" id="step1">
           <label class="form-label-sm">Select Subject <span class="text-danger">*</span></label>
           <select id="ai_subject" class="form-control-sm-custom" style="height:36px;">
@@ -313,7 +324,6 @@
           <div id="s1_error" style="display:none;margin-top:.6rem;font-size:.79rem;color:var(--red);"><i class="bi bi-exclamation-circle me-1"></i>Please select a subject.</div>
         </div>
 
-        <!-- Step 2: Select Instructor -->
         <div class="step-panel" id="step2">
           <label class="form-label-sm">Search Instructor</label>
           <div class="search-wrap">
@@ -324,7 +334,6 @@
           <div id="s2_error" style="display:none;margin-top:.6rem;font-size:.79rem;color:var(--red);"><i class="bi bi-exclamation-circle me-1"></i>Please select an instructor.</div>
         </div>
 
-        <!-- Step 3: Confirm -->
         <div class="step-panel" id="step3">
           <div style="background:#F9FAFB;border-radius:10px;padding:.85rem 1rem;border:1px solid var(--border);">
             <div class="confirm-row"><span class="label">Subject Code</span><span class="value" id="c_code">—</span></div>
@@ -343,6 +352,31 @@
           <button type="button" class="btn-outline-red" id="ai_cancel" data-bs-dismiss="modal">Cancel</button>
           <button type="button" class="btn-dark" id="ai_next" onclick="assignStep(1)">Next →</button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: VIEW MODULES ===== -->
+<div class="modal fade" id="viewModulesModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-folder2-open me-2" style="color:#8E44AD"></i><span id="vm_title">Subject Modules</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+        <div class="vm-summary-pill">
+          <span><i class="bi bi-folder2 me-1"></i><span id="vm_count">0</span> Modules</span>
+          <span><i class="bi bi-person-badge me-1"></i><span id="vm_instr">—</span></span>
+        </div>
+        <ul class="vm-list" id="vm_list"></ul>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Close</button>
+        <a href="program-head-module-management.html" class="btn-red"><i class="bi bi-folder2-open"></i> Manage Modules</a>
       </div>
     </div>
   </div>
@@ -368,12 +402,77 @@
     { name:'Antonio Reyes',   id:'AR2',color:'#1ABC9C' },
   ];
 
+  /* MODULES PER SUBJECT (front-end sample data) */
+  const SUBJECT_MODULES = {
+    FIRE101: [
+      { name:'Intro to Firearm Safety.pdf',        type:'pdf', date:'Jun 1, 2026',  size:'2.4 MB' },
+      { name:'Firearm Parts Diagram.pdf',           type:'pdf', date:'Jun 2, 2026',  size:'1.8 MB' },
+      { name:'Basic Handling Procedures.docx',       type:'doc', date:'Jun 3, 2026',  size:'1.1 MB' },
+      { name:'Range Safety Briefing.mp4',            type:'vid', date:'Jun 4, 2026',  size:'98 MB'  },
+      { name:'Fundamentals Quiz Guide.pdf',          type:'pdf', date:'Jun 5, 2026',  size:'0.7 MB' },
+      { name:'Storage & Transport Rules.pdf',        type:'pdf', date:'Jun 6, 2026',  size:'1.3 MB' },
+      { name:'Orientation Slides.pptx',              type:'doc', date:'Jun 7, 2026',  size:'4.2 MB' },
+      { name:'Fundamentals Recap Video.mp4',         type:'vid', date:'Jun 8, 2026',  size:'120 MB' },
+    ],
+    FIRE102: [
+      { name:'Assembly Procedures — Demo.mp4',       type:'vid', date:'Jun 3, 2026',  size:'145 MB' },
+      { name:'Step-by-Step Assembly Guide.docx',     type:'doc', date:'Jun 4, 2026',  size:'1.0 MB' },
+      { name:'Tool Identification Sheet.pdf',        type:'pdf', date:'Jun 5, 2026',  size:'0.9 MB' },
+      { name:'Common Assembly Errors.pdf',           type:'pdf', date:'Jun 6, 2026',  size:'1.4 MB' },
+      { name:'Assembly Checklist.docx',              type:'doc', date:'Jun 7, 2026',  size:'0.6 MB' },
+    ],
+    FIRE103: [
+      { name:'Disassembly Step-by-Step Guide.docx',  type:'doc', date:'Jun 5, 2026',  size:'1.1 MB' },
+      { name:'Disassembly Safety Checklist.pdf',     type:'pdf', date:'Jun 6, 2026',  size:'0.8 MB' },
+      { name:'Disassembly Quiz Module.pdf',          type:'pdf', date:'Jun 7, 2026',  size:'0.5 MB' },
+      { name:'Cleaning & Maintenance Guide.docx',    type:'doc', date:'Jun 8, 2026',  size:'0.9 MB' },
+    ],
+    FIRE104: [
+      { name:'Safety Protocols & Regulations.pdf',   type:'pdf', date:'Jun 7, 2026',  size:'3.8 MB' },
+      { name:'Emergency Procedures.pdf',             type:'pdf', date:'Jun 8, 2026',  size:'1.6 MB' },
+      { name:'Protocol Briefing Video.mp4',          type:'vid', date:'Jun 9, 2026',  size:'130 MB' },
+    ],
+    FIRE105: [
+      { name:'Live Range Practice — Module 1.mp4',   type:'vid', date:'Jun 10, 2026', size:'220 MB' },
+      { name:'Range Commands & Procedures.pdf',      type:'pdf', date:'Jun 11, 2026', size:'1.2 MB' },
+      { name:'Live Fire Safety Brief.docx',          type:'doc', date:'Jun 12, 2026', size:'0.8 MB' },
+    ],
+  };
+
+  function modIcon(t) {
+    if (t==='pdf') return `<div class="vm-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>`;
+    if (t==='vid') return `<div class="vm-icon vid"><i class="bi bi-play-btn-fill"></i></div>`;
+    return `<div class="vm-icon doc"><i class="bi bi-file-earmark-word-fill"></i></div>`;
+  }
+  function modLabel(t) { return t==='pdf'?'PDF Document':t==='vid'?'Video Lecture':'Document'; }
+
+  function openModules(code) {
+    const subj = SUBJECTS.find(s=>s.code===code);
+    if (!subj) return;
+    const mods = SUBJECT_MODULES[code] || [];
+    document.getElementById('vm_title').textContent = `${code} — ${subj.title}`;
+    document.getElementById('vm_count').textContent  = mods.length;
+    document.getElementById('vm_instr').textContent  = subj.instructor;
+    const list = document.getElementById('vm_list');
+    list.innerHTML = mods.length===0
+      ? `<div class="vm-empty"><i class="bi bi-folder2-open"></i>No modules uploaded yet for ${code}.</div>`
+      : mods.map(m=>`
+        <li>
+          ${modIcon(m.type)}
+          <div>
+            <div class="vm-name">${m.name}</div>
+            <div class="vm-meta">${modLabel(m.type)} &nbsp;·&nbsp; ${m.date} &nbsp;·&nbsp; ${m.size}</div>
+          </div>
+        </li>`).join('');
+    new bootstrap.Modal(document.getElementById('viewModulesModal')).show();
+  }
+
   /* ── RENDER CARDS ── */
   function renderCards() {
     const grid = document.getElementById('subjectGrid');
     let html = SUBJECTS.map(s => `
       <div class="col-12 col-sm-6 col-xl-4">
-        <div class="subject-card">
+        <div class="subject-card" onclick="openModules('${s.code}')">
           <div><span class="subject-code">${s.code}</span></div>
           <p class="subject-title">${s.title}</p>
           <div class="subject-meta"><i class="bi bi-person-badge me-1"></i>${s.instructor}</div>
@@ -382,10 +481,10 @@
             <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>${s.completion}%</strong></div>
             <div class="prog-bar-wrap"><div class="prog-bar-fill ${s.bar}" style="width:${s.completion}%"></div></div>
           </div>
-          <div class="subject-actions">
+          <div class="subject-actions" onclick="event.stopPropagation()">
             <button class="btn-icon edit" title="Edit" onclick="showToast('Editing ${s.code} (demo only)','bi-pencil-fill')"><i class="bi bi-pencil-fill"></i></button>
             <button class="btn-icon instr" title="Assign Instructor" data-bs-toggle="modal" data-bs-target="#assignInstructorModal" onclick="resetAssign('${s.code}')"><i class="bi bi-person-badge-fill"></i></button>
-            <button class="btn-icon stud" title="Assign Students" onclick="showToast('Assigning students to ${s.code} (demo only)','bi-people-fill')"><i class="bi bi-people-fill"></i></button>
+            <button class="btn-icon stud" title="View Modules" onclick="openModules('${s.code}')"><i class="bi bi-folder2-open"></i></button>
             <button class="btn-icon del" title="Delete" onclick="deleteSubject('${s.code}')"><i class="bi bi-trash-fill"></i></button>
           </div>
         </div>
@@ -433,8 +532,8 @@
     if (SUBJECTS.find(s=>s.code===code)) { errMsg.textContent=`Subject code "${code}" already exists.`; err.style.display='block'; return; }
 
     err.style.display='none';
-    const pct = 0;
-    SUBJECTS.push({ code, title, instructor:'— Unassigned —', students:0, modules:0, completion:pct, bar:'low' });
+    SUBJECTS.push({ code, title, instructor:'— Unassigned —', students:0, modules:0, completion:0, bar:'low' });
+    SUBJECT_MODULES[code] = [];
     renderCards();
     bootstrap.Modal.getInstance(document.getElementById('createSubjectModal')).hide();
     showToast(`${code} created (demo only)`, 'bi-plus-lg');
@@ -444,7 +543,6 @@
     selectStatus('Active');
   }
 
-  // Clear error on input
   ['cs_code','cs_title'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', () => {
       document.getElementById('cs_error').style.display='none';
@@ -510,7 +608,6 @@
   }
 
   function assignStep(dir) {
-    // Validate current step
     if (dir===1 && aiStep===1) {
       const sub = document.getElementById('ai_subject').value;
       if (!sub) { document.getElementById('s1_error').style.display='block'; return; }
@@ -519,7 +616,6 @@
     if (dir===1 && aiStep===2) {
       if (!selectedInstructor) { document.getElementById('s2_error').style.display='block'; return; }
       document.getElementById('s2_error').style.display='none';
-      // Fill confirm
       const code = document.getElementById('ai_subject').value;
       const subj = SUBJECTS.find(s=>s.code===code);
       document.getElementById('c_code').textContent  = subj.code;
@@ -527,7 +623,6 @@
       document.getElementById('c_instr').textContent = selectedInstructor;
     }
     if (dir===1 && aiStep===3) {
-      // Save
       const code = document.getElementById('ai_subject').value;
       const idx  = SUBJECTS.findIndex(s=>s.code===code);
       if (idx>-1) SUBJECTS[idx].instructor = selectedInstructor;
