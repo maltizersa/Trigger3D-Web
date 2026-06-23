@@ -25,6 +25,9 @@
     /* Hidden checkbox drives the mobile sidebar — pure CSS, zero JavaScript */
     #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
 
+    /* ── TAB SYSTEM (pure CSS via hidden radio inputs) ── */
+    .tab-radio { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+
     /* ── TOP BAR ── */
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
     .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
@@ -64,37 +67,62 @@
     .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
 
     /* ── PANEL ── */
-    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
-    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
-    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
-    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; justify-content: space-between; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner-left h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner-left p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
     .panel-body { padding: 1.4rem; }
 
-    /* ── PAGE HEADER (welcome-banner style) ── */
-    .welcome-banner { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
+    /* ── PAGE HEADER ── */
+    .welcome-banner { background: rgba(0,0,0,.18); border-radius: 12px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
     .welcome-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
     .welcome-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
     .welcome-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
     .welcome-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
 
-    /* ── STAT CARDS ── */
-    .stat-card { border-radius: 10px; padding: 1rem 1.1rem; color: #fff; position: relative; overflow: hidden; height: 100%; }
-    .stat-card .stat-icon { position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); opacity: .3; font-size: 2.4rem; }
-    .stat-card .stat-number { font-size: 1.65rem; font-weight: 700; line-height: 1; }
-    .stat-card .stat-label  { font-size: .72rem; opacity: .85; margin-top: .15rem; }
-    .stat-card .stat-sub    { font-size: .68rem; opacity: .7; margin-top: .4rem; }
-    .stat-red    { background: rgba(0,0,0,.22); }
-    .stat-orange { background: #e67e22; }
-    .stat-purple { background: #8e44ad; }
-    .stat-teal   { background: #1abc9c; }
+    /* ── IMPROVED STAT CARDS ── */
+    .stat-card {
+      border-radius: 12px;
+      padding: 1.1rem 1.2rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      border: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+    .stat-card .stat-icon {
+      position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+      opacity: .22; font-size: 2.8rem;
+    }
+    .stat-card .stat-eyebrow { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; opacity: .75; margin-bottom: .3rem; }
+    .stat-card .stat-number { font-size: 1.85rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+    .stat-card .stat-label  { font-size: .78rem; opacity: .85; margin-top: .18rem; font-weight: 500; }
+    .stat-card .stat-sub    { font-size: .68rem; opacity: .65; margin-top: .45rem; display: flex; align-items: center; gap: .3rem; }
+    .stat-card .stat-trend  { display: inline-flex; align-items: center; gap: .2rem; font-size: .65rem; font-weight: 700; background: rgba(255,255,255,.2); border-radius: 20px; padding: .1rem .4rem; }
+    .stat-red    { background: linear-gradient(135deg, #C0392B 0%, #96281B 100%); }
+    .stat-orange { background: linear-gradient(135deg, #e67e22 0%, #ca6f1e 100%); }
+    .stat-purple { background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%); }
+    .stat-teal   { background: linear-gradient(135deg, #1abc9c 0%, #17a589 100%); }
+    .stat-blue   { background: linear-gradient(135deg, #2980b9 0%, #1f618d 100%); }
+    .stat-dark   { background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); }
 
     /* ── SECTION HEADING ── */
     .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
     .section-heading i { color: var(--red); font-size: .95rem; }
 
-    /* ── FEATURE / QUICK-LINK CARDS ── */
-    .feature-card { border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; display: flex; align-items: flex-start; gap: .9rem; text-decoration: none; color: var(--text-main); transition: box-shadow .15s, border-color .15s; height: 100%; }
-    .feature-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); border-color: var(--red-light); }
+    /* ── FEATURE CARDS ── */
+    .feature-card { border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; display: flex; align-items: flex-start; gap: .9rem; text-decoration: none; color: var(--text-main); transition: box-shadow .15s, border-color .15s, transform .15s; height: 100%; }
+    .feature-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.1); border-color: var(--red-light); transform: translateY(-1px); }
     .feature-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
     .feature-icon.green  { background: #eafaf1; color: #27ae60; }
     .feature-icon.purple { background: #f4eafb; color: #8e44ad; }
@@ -108,94 +136,228 @@
     .feature-chevron { color: #ccc; font-size: .88rem; flex-shrink: 0; margin-top: .15rem; }
 
     /* ── BADGES ── */
-    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; }
+    .access-badge { display: inline-flex; align-items: center; gap: .25rem; font-size: .68rem; font-weight: 600; padding: .2rem .6rem; border-radius: 20px; }
+    .access-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
     .badge-scheduled { background: #eaf3fb; color: #2980b9; }
+    .badge-scheduled::before { background: #2980b9; }
     .badge-active    { background: #eafaf1; color: #27ae60; }
+    .badge-active::before { background: #27ae60; }
     .badge-completed { background: #e8faf5; color: #1abc9c; }
+    .badge-completed::before { background: #1abc9c; }
     .badge-draft     { background: #f3f4f6; color: var(--text-muted); }
+    .badge-draft::before { background: var(--text-muted); }
+    .badge-pending   { background: #fef5e7; color: #e67e22; }
+    .badge-pending::before { background: #e67e22; }
+    .badge-passed    { background: #eafaf1; color: #27ae60; }
+    .badge-passed::before { background: #27ae60; }
+    .badge-failed    { background: #fdf1f0; color: var(--red); }
+    .badge-failed::before { background: var(--red); }
+    .badge-not-taken { background: #f3f4f6; color: var(--text-muted); }
+    .badge-not-taken::before { background: var(--text-muted); }
 
     /* ── FORM ── */
     .form-label { font-size: .8rem; font-weight: 600; color: var(--text-main); }
     .form-control, .form-select { font-size: .85rem; border: 1.5px solid var(--border); border-radius: 8px; }
     .form-control:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 .2rem rgba(192,57,43,.12); }
-    .btn-save { background: var(--red); border: none; color: #fff; font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; }
+    .form-control-sm, .form-select-sm { font-size: .8rem; border-radius: 7px; }
+    .btn-save { background: var(--red); border: none; color: #fff; font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; transition: background .15s; }
     .btn-save:hover { background: var(--red-dark); color: #fff; }
-    .btn-reset { background: #F9FAFB; border: 1.5px solid var(--border); color: var(--text-muted); font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; }
+    .btn-reset { background: #F9FAFB; border: 1.5px solid var(--border); color: var(--text-muted); font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; transition: background .15s; }
     .btn-reset:hover { background: #eee; color: var(--text-main); }
+    .btn-outline-red { border: 1.5px solid var(--red); color: var(--red); background: transparent; font-size: .8rem; font-weight: 600; padding: .4rem 1rem; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; transition: background .15s; }
+    .btn-outline-red:hover { background: #FDECEA; color: var(--red-dark); }
+    .btn-sm-muted { background: #F9FAFB; border: 1.5px solid var(--border); color: var(--text-muted); font-size: .78rem; font-weight: 600; padding: .35rem .8rem; border-radius: 7px; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+    .btn-sm-muted:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
 
     /* ── TABLE ── */
-    .table thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1.5px solid var(--border); font-weight: 700; white-space: nowrap; }
-    .table tbody td { font-size: .82rem; vertical-align: middle; color: var(--text-main); }
-    .table tbody tr:hover { background: #F9FAFB; }
-    .table-action-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 6px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .8rem; text-decoration: none; }
+    .table thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1.5px solid var(--border); font-weight: 700; white-space: nowrap; background: #FAFBFC; }
+    .table tbody td { font-size: .82rem; vertical-align: middle; color: var(--text-main); border-bottom: 1px solid #F1F2F4; }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table tbody tr:hover td { background: #F9FAFB; }
+    .table-action-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 6px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .8rem; text-decoration: none; transition: all .15s; }
     .table-action-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
 
+    /* ── STUDENT AVATAR CHIP ── */
+    .student-chip { display: flex; align-items: center; gap: .55rem; }
+    .student-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .68rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .student-name { font-size: .82rem; font-weight: 600; color: var(--text-main); line-height: 1.2; }
+    .student-id   { font-size: .68rem; color: var(--text-muted); }
+
+    /* ── SCORE DISPLAY ── */
+    .score-pill { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; font-weight: 700; padding: .2rem .6rem; border-radius: 6px; }
+    .score-high   { background: #eafaf1; color: #27ae60; }
+    .score-mid    { background: #fef5e7; color: #e67e22; }
+    .score-low    { background: #fdf1f0; color: var(--red); }
+    .score-none   { background: #f3f4f6; color: var(--text-muted); font-weight: 500; }
+
+    /* ── MINI PROGRESS ── */
+    .mini-progress-wrap { min-width: 80px; }
+    .mini-progress-label { font-size: .68rem; color: var(--text-muted); margin-bottom: .25rem; display: flex; justify-content: space-between; }
+    .mini-progress { height: 6px; border-radius: 6px; background: #F1F2F4; }
+    .mini-progress .mini-bar { height: 6px; border-radius: 6px; }
+
     /* ── CRITERIA ROW ── */
-    .criteria-row { display: flex; align-items: center; gap: .8rem; padding: .55rem 0; border-bottom: 1px solid var(--border); }
+    .criteria-row { display: flex; align-items: center; gap: .8rem; padding: .6rem 0; border-bottom: 1px solid var(--border); }
     .criteria-row:last-child { border-bottom: none; }
     .criteria-name { font-size: .82rem; font-weight: 600; color: var(--text-main); width: 150px; flex-shrink: 0; }
     .criteria-bar-wrap { flex: 1; }
     .criteria-weight { font-size: .8rem; font-weight: 700; color: var(--red); width: 44px; text-align: right; flex-shrink: 0; }
 
-    /* ── LIST GROUP (Upcoming Assessments) ── */
-    .list-group-item { border: 1px solid var(--border); border-radius: 8px !important; margin-bottom: .55rem; padding: .75rem .9rem; display: flex; align-items: flex-start; gap: .75rem; }
+    /* ── UPCOMING LIST ── */
+    .list-group-item { border: 1px solid var(--border) !important; border-radius: 10px !important; margin-bottom: .55rem; padding: .75rem .9rem; display: flex; align-items: flex-start; gap: .75rem; background: #fff; transition: box-shadow .15s; }
     .list-group-item:last-child { margin-bottom: 0; }
-    .update-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .list-group-item:hover { box-shadow: 0 3px 10px rgba(0,0,0,.07); }
+    .update-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
     .update-text { flex: 1; min-width: 0; }
     .update-text .uname { font-size: .82rem; font-weight: 600; color: var(--text-main); }
     .update-text .udesc { font-size: .74rem; color: var(--text-muted); margin-top: .1rem; }
     .update-time { font-size: .68rem; color: var(--text-muted); white-space: nowrap; margin-left: auto; text-align: right; }
 
-    /* ── STATISTICS / PROGRESS CARDS ── */
-    .progress-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; height: 100%; }
+    /* ── PROGRESS CARDS ── */
+    .progress-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; height: 100%; transition: box-shadow .15s; }
+    .progress-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.08); }
     .progress-card .pc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .55rem; }
     .progress-card .pc-title { font-size: .8rem; font-weight: 600; color: var(--text-main); }
-    .progress-card .pc-value { font-size: .95rem; font-weight: 700; }
+    .progress-card .pc-value { font-size: .95rem; font-weight: 800; }
     .progress { height: 8px; border-radius: 6px; background: #F1F2F4; }
     .progress-bar { border-radius: 6px; }
     .pbar-red    { background: var(--red); }
     .pbar-orange { background: #e67e22; }
     .pbar-purple { background: #8e44ad; }
     .pbar-teal   { background: #1abc9c; }
+    .pbar-blue   { background: #2980b9; }
+
+    /* ── STUDENT PROFILE CARD ── */
+    .student-profile-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; background: #FAFBFC; }
+    .profile-avatar-lg { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .profile-name { font-size: .95rem; font-weight: 700; color: var(--text-main); }
+    .profile-meta { font-size: .75rem; color: var(--text-muted); margin-top: .1rem; }
+    .profile-detail-row { display: flex; gap: 1.5rem; margin-top: .9rem; flex-wrap: wrap; }
+    .profile-detail-item { display: flex; flex-direction: column; gap: .1rem; }
+    .profile-detail-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); font-weight: 600; }
+    .profile-detail-value { font-size: .82rem; font-weight: 600; color: var(--text-main); }
+
+    /* ── TAB NAV (pure CSS) ── */
+    .tab-nav { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 1.1rem; overflow-x: auto; }
+    .tab-nav-link { padding: .6rem 1.1rem; font-size: .82rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; text-decoration: none; transition: color .15s; user-select: none; }
+    .tab-nav-link:hover { color: var(--red); }
+
+    /* Pure CSS tab switching via hidden radio inputs */
+    #tab-overview:checked ~ .panel-body .tab-content-overview,
+    #tab-students:checked ~ .panel-body .tab-content-students,
+    #tab-results:checked ~ .panel-body .tab-content-results,
+    #tab-modules:checked ~ .panel-body .tab-content-modules,
+    #tab-remarks:checked ~ .panel-body .tab-content-remarks { display: block; }
+
+    #tab-overview:checked ~ .panel-body .tab-content-students,
+    #tab-overview:checked ~ .panel-body .tab-content-results,
+    #tab-overview:checked ~ .panel-body .tab-content-modules,
+    #tab-overview:checked ~ .panel-body .tab-content-remarks { display: none; }
+
+    #tab-students:checked ~ .panel-body .tab-content-overview,
+    #tab-students:checked ~ .panel-body .tab-content-results,
+    #tab-students:checked ~ .panel-body .tab-content-modules,
+    #tab-students:checked ~ .panel-body .tab-content-remarks { display: none; }
+
+    #tab-results:checked ~ .panel-body .tab-content-overview,
+    #tab-results:checked ~ .panel-body .tab-content-students,
+    #tab-results:checked ~ .panel-body .tab-content-modules,
+    #tab-results:checked ~ .panel-body .tab-content-remarks { display: none; }
+
+    #tab-modules:checked ~ .panel-body .tab-content-overview,
+    #tab-modules:checked ~ .panel-body .tab-content-students,
+    #tab-modules:checked ~ .panel-body .tab-content-results,
+    #tab-modules:checked ~ .panel-body .tab-content-remarks { display: none; }
+
+    #tab-remarks:checked ~ .panel-body .tab-content-overview,
+    #tab-remarks:checked ~ .panel-body .tab-content-students,
+    #tab-remarks:checked ~ .panel-body .tab-content-results,
+    #tab-remarks:checked ~ .panel-body .tab-content-modules { display: none; }
+
+    /* Active tab label highlight via adjacent sibling */
+    #tab-overview:checked ~ .panel-body .tab-nav [for="tab-overview"],
+    #tab-students:checked ~ .panel-body .tab-nav [for="tab-students"],
+    #tab-results:checked ~ .panel-body .tab-nav [for="tab-results"],
+    #tab-modules:checked ~ .panel-body .tab-nav [for="tab-modules"],
+    #tab-remarks:checked ~ .panel-body .tab-nav [for="tab-remarks"] { color: var(--red); border-bottom-color: var(--red); }
+
+    .tab-content { display: none; }
+    .tab-content.tab-default-active { display: block; }
+
+    /* ── MODULE PROGRESS ITEM ── */
+    .module-item { border: 1px solid var(--border); border-radius: 10px; padding: .8rem 1rem; margin-bottom: .6rem; background: #fff; }
+    .module-item:last-child { margin-bottom: 0; }
+    .module-item-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .5rem; }
+    .module-item-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .module-item-title { font-size: .82rem; font-weight: 600; color: var(--text-main); flex: 1; }
+    .module-item-progress-text { font-size: .75rem; font-weight: 700; color: var(--text-muted); }
+
+    /* ── REMARKS CARD ── */
+    .remark-card { border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; background: #FAFBFC; margin-bottom: .6rem; }
+    .remark-card:last-child { margin-bottom: 0; }
+    .remark-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; }
+    .remark-badge { font-size: .65rem; font-weight: 700; text-transform: uppercase; padding: .15rem .45rem; border-radius: 4px; }
+    .remark-badge.strength   { background: #eafaf1; color: #27ae60; }
+    .remark-badge.improvement { background: #fef5e7; color: #e67e22; }
+    .remark-text { font-size: .8rem; color: var(--text-muted); line-height: 1.55; }
+    .remark-footer { display: flex; align-items: center; gap: .5rem; margin-top: .55rem; }
+    .remark-instructor { font-size: .7rem; font-weight: 600; color: var(--text-main); }
+    .remark-date { font-size: .68rem; color: var(--text-muted); margin-left: auto; }
+
+    /* ── REPORT ACTION ── */
+    .report-action-bar { display: flex; align-items: center; gap: .6rem; padding: .85rem 1rem; background: #F9FAFB; border-radius: 10px; border: 1px solid var(--border); margin-top: 1rem; }
+    .report-action-bar i { color: var(--red); font-size: 1rem; }
+    .report-action-bar span { font-size: .8rem; color: var(--text-main); flex: 1; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .filter-bar .form-select, .filter-bar .form-control { font-size: .8rem; border-radius: 7px; height: 34px; border: 1.5px solid var(--border); }
+    .filter-bar .form-select:focus, .filter-bar .form-control:focus { border-color: var(--red); box-shadow: none; }
 
     /* ── NOTICE BAR ── */
     .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; margin-top: 1.1rem; }
     .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
     .notice-label { font-weight: 700; color: #e67e22; }
 
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 2.5rem 1rem; }
+    .empty-state i { font-size: 2.2rem; color: var(--border); display: block; margin-bottom: .65rem; }
+    .empty-state p { font-size: .82rem; color: var(--text-muted); margin: 0; }
+
     /* ── FOOTER ── */
     .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
 
-    /* ── MOBILE SIDEBAR TOGGLE (pure CSS via checkbox sibling selectors) ── */
+    /* ── MOBILE ── */
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
       .main-content { margin-left: 0; }
       .sidebar-toggle-label { display: flex; }
-
-      #sidebar-toggle-checkbox:checked ~ .sidebar {
-        transform: translateX(0);
-      }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
       #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
-        display: block;
-        position: fixed;
-        top: var(--topbar-h);
-        left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,.35);
-        z-index: 1025;
+        display: block; position: fixed; top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.35); z-index: 1025;
       }
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
       .criteria-name { width: 110px; }
+      .filter-bar { gap: .4rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Hidden checkbox driving the mobile sidebar — pure CSS, no JavaScript -->
+<!-- Hidden radio inputs for tab system — pure CSS, no JavaScript -->
+<input type="radio" class="tab-radio" name="student-tab" id="tab-overview" checked>
+<input type="radio" class="tab-radio" name="student-tab" id="tab-students">
+<input type="radio" class="tab-radio" name="student-tab" id="tab-results">
+<input type="radio" class="tab-radio" name="student-tab" id="tab-modules">
+<input type="radio" class="tab-radio" name="student-tab" id="tab-remarks">
+
+<!-- Hidden checkbox driving the mobile sidebar -->
 <input type="checkbox" id="sidebar-toggle-checkbox">
 
-<!-- TOP BAR -->
+<!-- ═══════════════════════════ TOP BAR ═══════════════════════════ -->
 <header class="topbar">
   <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
     <i class="bi bi-list"></i>
@@ -204,14 +366,13 @@
     <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
     <div>Trigger3D <small>Instructor Portal</small></div>
   </a>
-
   <div class="topbar-search ms-3">
     <div class="topbar-search-wrap">
       <i class="bi bi-search"></i>
-      <input type="text" placeholder="Search…" />
+      <!-- Backend: search query param = ?q= -->
+      <input type="text" name="q" placeholder="Search assessments or students…" />
     </div>
   </div>
-
   <div class="topbar-right">
     <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
     <div class="icon-btn"><i class="bi bi-gear"></i></div>
@@ -224,10 +385,9 @@
   </div>
 </header>
 
-<!-- Backdrop: tapping it (it's a label) closes the sidebar on mobile -->
 <label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
 
-<!-- SIDEBAR -->
+<!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
 <aside class="sidebar" id="sidebar">
   <span class="sidebar-label">Main</span>
   <ul class="sidebar-nav">
@@ -265,7 +425,7 @@
   </div>
 </aside>
 
-<!-- MAIN CONTENT -->
+<!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
 <main class="main-content">
 
   <!-- Page Header -->
@@ -273,32 +433,39 @@
     <div class="welcome-avatar"><i class="bi bi-check2-square"></i></div>
     <div class="welcome-text">
       <div class="title">Manage Assessments</div>
-      <div class="sub">Set up schedules, create assessments, and manage evaluation criteria across subjects.</div>
+      <div class="sub">Set up schedules, create assessments, manage criteria, and monitor student assessment results.</div>
     </div>
     <div class="welcome-badge d-none d-sm-block">FIRE102 — Assembly</div>
   </div>
 
-  <!-- Summary Cards -->
+  <!-- ── SUMMARY STAT CARDS ── -->
+  <!-- Backend: Populate values dynamically from DB queries -->
   <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
       <div class="stat-card stat-red">
         <i class="bi bi-clipboard-data stat-icon"></i>
+        <div class="stat-eyebrow">Total</div>
+        <!-- DB: SELECT COUNT(*) FROM assessments -->
         <div class="stat-number">26</div>
-        <div class="stat-label">Total Assessments</div>
-        <div class="stat-sub">Across 6 active subjects</div>
+        <div class="stat-label">Assessments</div>
+        <div class="stat-sub"><span class="stat-trend"><i class="bi bi-arrow-up"></i>3</span> this week</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="stat-card stat-orange">
         <i class="bi bi-calendar2-week stat-icon"></i>
+        <div class="stat-eyebrow">Scheduled</div>
+        <!-- DB: SELECT COUNT(*) FROM assessments WHERE status='scheduled' -->
         <div class="stat-number">9</div>
-        <div class="stat-label">Scheduled Exams</div>
-        <div class="stat-sub">Upcoming this month</div>
+        <div class="stat-label">Upcoming Exams</div>
+        <div class="stat-sub">This month</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
       <div class="stat-card stat-purple">
         <i class="bi bi-patch-question stat-icon"></i>
+        <div class="stat-eyebrow">Active</div>
+        <!-- DB: SELECT COUNT(*) FROM assessments WHERE status='active' -->
         <div class="stat-number">5</div>
         <div class="stat-label">Active Quizzes</div>
         <div class="stat-sub">Currently open</div>
@@ -307,14 +474,16 @@
     <div class="col-6 col-lg-3">
       <div class="stat-card stat-teal">
         <i class="bi bi-list-check stat-icon"></i>
+        <div class="stat-eyebrow">Criteria Sets</div>
+        <!-- DB: SELECT COUNT(*) FROM evaluation_criteria GROUP BY subject_id -->
         <div class="stat-number">12</div>
-        <div class="stat-label">Evaluation Criteria Sets</div>
+        <div class="stat-label">Evaluation Criteria</div>
         <div class="stat-sub">Defined for grading</div>
       </div>
     </div>
   </div>
 
-  <!-- Quick Navigation -->
+  <!-- ── QUICK NAVIGATION ── -->
   <div class="row g-3 mb-3">
     <div class="col-12 col-md-3 col-6">
       <a href="check-student-progress.html" class="feature-card">
@@ -323,6 +492,7 @@
           <div class="ftitle">Student Progress</div>
           <div class="fdesc">View progress monitoring.</div>
         </div>
+        <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
     </div>
     <div class="col-12 col-md-3 col-6">
@@ -332,6 +502,7 @@
           <div class="ftitle">Student Levels</div>
           <div class="fdesc">Manage classifications.</div>
         </div>
+        <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
     </div>
     <div class="col-12 col-md-3 col-6">
@@ -341,6 +512,7 @@
           <div class="ftitle">Upload Modules</div>
           <div class="fdesc">Add lesson materials.</div>
         </div>
+        <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
     </div>
     <div class="col-12 col-md-3 col-6">
@@ -350,64 +522,1116 @@
           <div class="ftitle">Dashboard</div>
           <div class="fdesc">Back to overview.</div>
         </div>
+        <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
     </div>
   </div>
 
+  <!-- ════════════════════════════════════════════════════════════
+       CHECK STUDENT ASSESSMENT — NEW FEATURE SECTION
+       ════════════════════════════════════════════════════════════ -->
+
+  <!-- Summary cards for student assessment monitoring -->
+  <!-- Backend: Populate from student_assessments, module_completions tables -->
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg">
+      <div class="stat-card stat-blue h-100">
+        <i class="bi bi-people stat-icon"></i>
+        <div class="stat-eyebrow">Enrolled</div>
+        <!-- DB: SELECT COUNT(*) FROM enrollments WHERE subject_id = :subject_id -->
+        <div class="stat-number">48</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-sub">Across 4 subjects</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="stat-card stat-teal h-100">
+        <i class="bi bi-check-circle stat-icon"></i>
+        <div class="stat-eyebrow">Done</div>
+        <!-- DB: SELECT COUNT(*) FROM student_assessments WHERE completion_status='completed' -->
+        <div class="stat-number">134</div>
+        <div class="stat-label">Assessments Completed</div>
+        <div class="stat-sub"><span class="stat-trend"><i class="bi bi-arrow-up"></i>8</span> today</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="stat-card stat-orange h-100">
+        <i class="bi bi-hourglass-split stat-icon"></i>
+        <div class="stat-eyebrow">Pending</div>
+        <!-- DB: SELECT COUNT(*) FROM student_assessments WHERE completion_status='pending' -->
+        <div class="stat-number">29</div>
+        <div class="stat-label">Assessments Pending</div>
+        <div class="stat-sub">Needs attention</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="stat-card stat-purple h-100">
+        <i class="bi bi-graph-up-arrow stat-icon"></i>
+        <div class="stat-eyebrow">Avg. Score</div>
+        <!-- DB: SELECT AVG(score) FROM student_assessments WHERE completion_status='completed' -->
+        <div class="stat-number">86%</div>
+        <div class="stat-label">Average Assessment Score</div>
+        <div class="stat-sub"><span class="stat-trend"><i class="bi bi-arrow-up"></i>2%</span> vs last period</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="stat-card stat-dark h-100">
+        <i class="bi bi-journal-check stat-icon"></i>
+        <div class="stat-eyebrow">Completion</div>
+        <!-- DB: SELECT AVG(completion_pct) FROM module_completions -->
+        <div class="stat-number">74%</div>
+        <div class="stat-label">Module Completion Rate</div>
+        <div class="stat-sub">All active subjects</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check Student Assessment Panel -->
+  <div class="panel mb-3">
+
+    <!-- Tab radio inputs must be siblings of panel-body for CSS sibling selectors to work -->
+    <!--
+      NOTE FOR BACKEND INTEGRATION:
+      These radio inputs power tab switching with pure CSS.
+      In a Laravel/PHP app, the active tab can be pre-selected via server-rendered checked state.
+      e.g.: <input ... <?= old('tab') === 'students' ? 'checked' : '' ?>>
+    -->
+
+    <div class="panel-banner">
+      <div class="panel-banner-left">
+        <h2><i class="bi bi-person-lines-fill me-1" style="color:var(--red);"></i> Check Student Assessment</h2>
+        <p>Monitor enrolled students' learning progress, assessment results, module completion, and instructor remarks.</p>
+      </div>
+      <!-- Backend: action="route('assessments.report.generate')" method="POST" -->
+      <form method="POST" action="/assessments/report/generate" id="form-report-generate">
+        <!-- CSRF token for Laravel -->
+        <!-- {{ csrf_field() }} -->
+        <input type="hidden" name="report_type" value="student_assessment">
+        <button type="submit" class="btn-outline-red">
+          <i class="bi bi-file-earmark-arrow-down"></i> Export Report
+        </button>
+      </form>
+    </div>
+
+    <div class="panel-body">
+
+      <!-- Tab Navigation (pure CSS via label[for] targeting radio inputs) -->
+      <div class="tab-nav">
+        <label class="tab-nav-link" for="tab-overview"><i class="bi bi-grid me-1"></i>Overview</label>
+        <label class="tab-nav-link" for="tab-students"><i class="bi bi-people me-1"></i>Student List</label>
+        <label class="tab-nav-link" for="tab-results"><i class="bi bi-clipboard-data me-1"></i>Assessment Results</label>
+        <label class="tab-nav-link" for="tab-modules"><i class="bi bi-journal-bookmark me-1"></i>Module Completion</label>
+        <label class="tab-nav-link" for="tab-remarks"><i class="bi bi-chat-left-text me-1"></i>Remarks &amp; Feedback</label>
+      </div>
+
+      <!-- ── TAB: OVERVIEW ── -->
+      <div class="tab-content tab-default-active tab-content-overview">
+
+        <!-- Filter bar -->
+        <!--
+          Backend: GET /assessments/check?subject_id=&assessment_type=&status=
+          Fields map to: subject_id, assessment_type, completion_status columns
+        -->
+        <form method="GET" action="/assessments/check" id="form-filter-overview" class="filter-bar mb-3">
+          <select class="form-select" name="subject_id" id="subject_id" style="max-width:200px;">
+            <option value="">All Subjects</option>
+            <!-- DB: foreach $subjects as $subject -->
+            <option value="FIRE102">FIRE102 — Assembly</option>
+            <option value="FIRE110">FIRE110 — Hazard Response</option>
+            <option value="FIRE115">FIRE115 — Equipment Handling</option>
+            <option value="FIRE120">FIRE120 — Rescue Operations</option>
+          </select>
+          <select class="form-select" name="assessment_type" id="overview_assessment_type" style="max-width:170px;">
+            <option value="">All Types</option>
+            <option value="quiz">Quiz</option>
+            <option value="practical">Practical Exam</option>
+            <option value="written">Written Exam</option>
+            <option value="skills">Skills Assessment</option>
+          </select>
+          <select class="form-select" name="completion_status" id="overview_completion_status" style="max-width:160px;">
+            <option value="">All Statuses</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="not_taken">Not Taken</option>
+          </select>
+          <button type="submit" class="btn-save" style="padding:.4rem .9rem; font-size:.8rem;">
+            <i class="bi bi-funnel me-1"></i>Filter
+          </button>
+          <a href="/assessments/check" class="btn-reset" style="padding:.4rem .9rem; font-size:.8rem; display:inline-flex; align-items:center; gap:.3rem; text-decoration:none;">
+            <i class="bi bi-x-circle"></i>Clear
+          </a>
+        </form>
+
+        <!-- Assessment Statistics -->
+        <div class="section-heading"><i class="bi bi-graph-up"></i> Assessment Statistics</div>
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Quiz Completion</span>
+                <!-- DB: computed from student_assessments WHERE assessment_type='quiz' -->
+                <span class="pc-value" style="color:#e67e22;">82%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-orange" style="width:82%"></div></div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Practical Exam Completion</span>
+                <!-- DB: WHERE assessment_type='practical' -->
+                <span class="pc-value" style="color:var(--red);">68%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-red" style="width:68%"></div></div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Overall Completion</span>
+                <span class="pc-value" style="color:#8e44ad;">74%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-purple" style="width:74%"></div></div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Average Student Score</span>
+                <!-- DB: SELECT AVG(score) FROM student_assessments -->
+                <span class="pc-value" style="color:#1abc9c;">86%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-teal" style="width:86%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pre-test vs Post-test Summary -->
+        <div class="section-heading"><i class="bi bi-arrow-left-right"></i> Pre-test vs Post-test Performance — FIRE102</div>
+        <div class="row g-3 mb-1">
+          <div class="col-12 col-md-6">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title"><i class="bi bi-arrow-bar-left me-1" style="color:#2980b9;"></i>Pre-test Average</span>
+                <!-- DB: SELECT AVG(score) FROM student_assessments WHERE test_type='pre_test' -->
+                <span class="pc-value" style="color:#2980b9;">61%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-blue" style="width:61%"></div></div>
+              <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">Based on 48 students · Conducted June 3, 2026</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title"><i class="bi bi-arrow-bar-right me-1" style="color:#27ae60;"></i>Post-test Average</span>
+                <!-- DB: SELECT AVG(score) FROM student_assessments WHERE test_type='post_test' -->
+                <span class="pc-value" style="color:#27ae60;">86%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-teal" style="width:86%"></div></div>
+              <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">Based on 44 students · Conducted June 20, 2026 — <strong style="color:#27ae60;">+25% gain</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notice-bar mt-3">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          <div>
+            <span class="notice-label">Assessment Notice —</span>
+            Evaluation criteria weights for a subject should always total 100%. Review the distribution before publishing a new assessment.
+          </div>
+        </div>
+
+        <!-- Generate Report -->
+        <div class="report-action-bar">
+          <i class="bi bi-file-earmark-bar-graph-fill"></i>
+          <span>Generate a full performance and assessment report for all students in the selected subject.</span>
+          <!-- Backend: action="route('assessments.report.download')" -->
+          <form method="POST" action="/assessments/report/download" id="form-report-download" class="d-flex gap-2">
+            <!-- {{ csrf_field() }} -->
+            <input type="hidden" name="report_scope" value="all_students">
+            <input type="hidden" name="subject_id" value="FIRE102">
+            <button type="submit" name="format" value="pdf" class="btn-save" style="padding:.38rem .85rem; font-size:.78rem;">
+              <i class="bi bi-file-pdf me-1"></i>PDF
+            </button>
+            <button type="submit" name="format" value="excel" class="btn-reset" style="padding:.38rem .85rem; font-size:.78rem;">
+              <i class="bi bi-file-excel me-1"></i>Excel
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- end tab-overview -->
+
+      <!-- ── TAB: STUDENT LIST ── -->
+      <div class="tab-content tab-content-students">
+
+        <!--
+          Backend: GET /assessments/students?subject_id=&search=&level=
+          Table: enrollments JOIN students JOIN student_levels
+          CRUD: Create (enroll), Read (list), Update (edit profile), Delete (unenroll)
+        -->
+        <form method="GET" action="/assessments/students" id="form-filter-students" class="filter-bar">
+          <div class="topbar-search-wrap" style="max-width:220px;">
+            <i class="bi bi-search"></i>
+            <input type="text" name="search" id="student_search" placeholder="Search by name or ID…" style="padding-left:2rem; font-size:.8rem; border-radius:7px; border:1.5px solid var(--border); background:#F9FAFB; width:100%; height:34px; outline:none;" />
+          </div>
+          <select class="form-select" name="subject_id" id="students_subject_id" style="max-width:190px;">
+            <option value="">All Subjects</option>
+            <option value="FIRE102" selected>FIRE102 — Assembly</option>
+            <option value="FIRE110">FIRE110 — Hazard Response</option>
+            <option value="FIRE115">FIRE115 — Equipment Handling</option>
+            <option value="FIRE120">FIRE120 — Rescue Operations</option>
+          </select>
+          <select class="form-select" name="level" id="students_level" style="max-width:150px;">
+            <option value="">All Levels</option>
+            <!-- DB: SELECT DISTINCT level FROM student_levels -->
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+          <button type="submit" class="btn-save" style="padding:.4rem .9rem; font-size:.8rem;">
+            <i class="bi bi-search me-1"></i>Search
+          </button>
+        </form>
+
+        <div class="table-responsive">
+          <table class="table" id="students-table">
+            <thead>
+              <tr>
+                <!-- DB field names in data- attributes for backend sorting -->
+                <th data-column="student_id">Student ID</th>
+                <th data-column="full_name">Student Name</th>
+                <th data-column="subject">Subject</th>
+                <th data-column="level">Level</th>
+                <th data-column="module_completion">Module Completion</th>
+                <th data-column="assessments_taken">Assessments Taken</th>
+                <th data-column="avg_score">Avg. Score</th>
+                <th data-column="completion_status">Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--
+                Backend: foreach ($students as $student) — rows populated from DB
+                Table join: students s
+                  JOIN enrollments e ON s.id = e.student_id
+                  JOIN student_levels sl ON s.id = sl.student_id
+                  LEFT JOIN student_assessment_summary sa ON s.id = sa.student_id
+                  LEFT JOIN module_completion_summary mc ON s.id = mc.student_id
+              -->
+              <!-- Sample row 1 -->
+              <tr data-student-id="STU-2401">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">STU-2401</code></td>
+                <td>
+                  <div class="student-chip">
+                    <div class="student-avatar" style="background:#C0392B;">JR</div>
+                    <div>
+                      <div class="student-name">Juan Reyes</div>
+                      <div class="student-id">juan.reyes@student.edu</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+                <td><span class="access-badge badge-active">Intermediate</span></td>
+                <td>
+                  <div class="mini-progress-wrap">
+                    <!-- DB: module_completions.completion_pct WHERE student_id=STU-2401 -->
+                    <div class="mini-progress-label"><span>Modules</span><span>80%</span></div>
+                    <div class="mini-progress"><div class="mini-bar pbar-teal" style="width:80%;background:#1abc9c;"></div></div>
+                  </div>
+                </td>
+                <!-- DB: COUNT(*) FROM student_assessments WHERE student_id=STU-2401 AND completion_status='completed' -->
+                <td style="font-size:.82rem; font-weight:600;">4 / 5</td>
+                <!-- DB: AVG(score) FROM student_assessments WHERE student_id=STU-2401 -->
+                <td><span class="score-pill score-high">92%</span></td>
+                <td><span class="access-badge badge-active">On Track</span></td>
+                <td>
+                  <!-- Backend: href="/assessments/students/{student_id}/view" -->
+                  <a href="#" class="table-action-btn" title="View Profile"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Assessment Records"><i class="bi bi-clipboard-data"></i></a>
+                  <!-- Backend: href="/assessments/students/{student_id}/report" -->
+                  <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+                </td>
+              </tr>
+              <!-- Sample row 2 -->
+              <tr data-student-id="STU-2402">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">STU-2402</code></td>
+                <td>
+                  <div class="student-chip">
+                    <div class="student-avatar" style="background:#8e44ad;">MC</div>
+                    <div>
+                      <div class="student-name">Maria Cruz</div>
+                      <div class="student-id">maria.cruz@student.edu</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+                <td><span class="access-badge badge-active">Advanced</span></td>
+                <td>
+                  <div class="mini-progress-wrap">
+                    <div class="mini-progress-label"><span>Modules</span><span>100%</span></div>
+                    <div class="mini-progress"><div class="mini-bar pbar-teal" style="width:100%;background:#1abc9c;"></div></div>
+                  </div>
+                </td>
+                <td style="font-size:.82rem; font-weight:600;">5 / 5</td>
+                <td><span class="score-pill score-high">97%</span></td>
+                <td><span class="access-badge badge-completed">Completed</span></td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Profile"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Assessment Records"><i class="bi bi-clipboard-data"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+                </td>
+              </tr>
+              <!-- Sample row 3 -->
+              <tr data-student-id="STU-2403">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">STU-2403</code></td>
+                <td>
+                  <div class="student-chip">
+                    <div class="student-avatar" style="background:#e67e22;">AL</div>
+                    <div>
+                      <div class="student-name">Angelo Lim</div>
+                      <div class="student-id">angelo.lim@student.edu</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:.78rem;">FIRE110 — Hazard Response</td>
+                <td><span class="access-badge badge-pending">Beginner</span></td>
+                <td>
+                  <div class="mini-progress-wrap">
+                    <div class="mini-progress-label"><span>Modules</span><span>45%</span></div>
+                    <div class="mini-progress"><div class="mini-bar" style="width:45%;background:#e67e22;"></div></div>
+                  </div>
+                </td>
+                <td style="font-size:.82rem; font-weight:600;">2 / 5</td>
+                <td><span class="score-pill score-mid">71%</span></td>
+                <td><span class="access-badge badge-pending">Behind</span></td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Profile"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Assessment Records"><i class="bi bi-clipboard-data"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+                </td>
+              </tr>
+              <!-- Sample row 4 -->
+              <tr data-student-id="STU-2404">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">STU-2404</code></td>
+                <td>
+                  <div class="student-chip">
+                    <div class="student-avatar" style="background:#2980b9;">SE</div>
+                    <div>
+                      <div class="student-name">Sofia Espiritu</div>
+                      <div class="student-id">sofia.espiritu@student.edu</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:.78rem;">FIRE115 — Equipment Handling</td>
+                <td><span class="access-badge badge-active">Intermediate</span></td>
+                <td>
+                  <div class="mini-progress-wrap">
+                    <div class="mini-progress-label"><span>Modules</span><span>60%</span></div>
+                    <div class="mini-progress"><div class="mini-bar pbar-blue" style="width:60%;background:#2980b9;"></div></div>
+                  </div>
+                </td>
+                <td style="font-size:.82rem; font-weight:600;">3 / 5</td>
+                <td><span class="score-pill score-mid">78%</span></td>
+                <td><span class="access-badge badge-active">On Track</span></td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Profile"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Assessment Records"><i class="bi bi-clipboard-data"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+                </td>
+              </tr>
+              <!-- Sample row 5 -->
+              <tr data-student-id="STU-2405">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">STU-2405</code></td>
+                <td>
+                  <div class="student-chip">
+                    <div class="student-avatar" style="background:#1abc9c;">BT</div>
+                    <div>
+                      <div class="student-name">Ben Torres</div>
+                      <div class="student-id">ben.torres@student.edu</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:.78rem;">FIRE120 — Rescue Operations</td>
+                <td><span class="access-badge badge-draft">Beginner</span></td>
+                <td>
+                  <div class="mini-progress-wrap">
+                    <div class="mini-progress-label"><span>Modules</span><span>20%</span></div>
+                    <div class="mini-progress"><div class="mini-bar" style="width:20%;background:#C0392B;"></div></div>
+                  </div>
+                </td>
+                <td style="font-size:.82rem; font-weight:600;">1 / 5</td>
+                <td><span class="score-pill score-low">58%</span></td>
+                <td><span class="access-badge badge-failed">At Risk</span></td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Profile"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Assessment Records"><i class="bi bi-clipboard-data"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+                </td>
+              </tr>
+              <!-- DB: endforeach — additional rows generated from backend -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination placeholder — backend renders actual page links -->
+        <div class="d-flex align-items-center justify-content-between mt-3" style="font-size:.78rem; color:var(--text-muted);">
+          <!-- DB: "Showing X–Y of Z students" -->
+          <span>Showing 1–5 of 48 students</span>
+          <nav aria-label="Students pagination">
+            <ul class="pagination pagination-sm mb-0" style="gap:.25rem;">
+              <li class="page-item disabled"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&laquo;</a></li>
+              <li class="page-item active"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem; background:var(--red); border-color:var(--red);">1</a></li>
+              <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">2</a></li>
+              <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">3</a></li>
+              <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&raquo;</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- end tab-students -->
+
+      <!-- ── TAB: ASSESSMENT RESULTS ── -->
+      <div class="tab-content tab-content-results">
+
+        <!--
+          Backend: GET /assessments/results?student_id=&assessment_id=&subject_id=&test_type=
+          Table: student_assessments sa
+            JOIN assessments a ON sa.assessment_id = a.id
+            JOIN students s ON sa.student_id = s.id
+          Key fields: student_id, assessment_id, score, completion_status, assessment_date, test_type
+        -->
+
+        <!-- Student profile quick-view -->
+        <div class="student-profile-card mb-3">
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+            <!-- DB: $student->initials, $student->color_tag -->
+            <div class="profile-avatar-lg" style="background:#C0392B;">JR</div>
+            <div class="flex-grow-1">
+              <div class="profile-name">Juan Reyes</div>
+              <!-- DB: $student->student_id, $enrollment->subject->name, $level->level_name -->
+              <div class="profile-meta">STU-2401 · FIRE102 — Assembly · Intermediate Level</div>
+            </div>
+            <!-- Backend: href="/assessments/students/{student_id}/profile" -->
+            <a href="#" class="btn-outline-red" style="font-size:.76rem; padding:.3rem .75rem;">
+              <i class="bi bi-person"></i> Full Profile
+            </a>
+          </div>
+          <div class="profile-detail-row">
+            <div class="profile-detail-item">
+              <span class="profile-detail-label">Assessments Taken</span>
+              <!-- DB: COUNT(*) FROM student_assessments WHERE student_id=STU-2401 AND completion_status='completed' -->
+              <span class="profile-detail-value">4 / 5</span>
+            </div>
+            <div class="profile-detail-item">
+              <span class="profile-detail-label">Average Score</span>
+              <!-- DB: AVG(score) FROM student_assessments WHERE student_id=STU-2401 -->
+              <span class="profile-detail-value" style="color:#27ae60;">92%</span>
+            </div>
+            <div class="profile-detail-item">
+              <span class="profile-detail-label">Pre-test Score</span>
+              <!-- DB: score WHERE student_id=STU-2401 AND test_type='pre_test' -->
+              <span class="profile-detail-value" style="color:#2980b9;">65%</span>
+            </div>
+            <div class="profile-detail-item">
+              <span class="profile-detail-label">Post-test Score</span>
+              <!-- DB: score WHERE student_id=STU-2401 AND test_type='post_test' -->
+              <span class="profile-detail-value" style="color:#27ae60;">92%</span>
+            </div>
+            <div class="profile-detail-item">
+              <span class="profile-detail-label">Module Completion</span>
+              <span class="profile-detail-value">80%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter bar for results -->
+        <form method="GET" action="/assessments/results" id="form-filter-results" class="filter-bar">
+          <input type="hidden" name="student_id" value="STU-2401">
+          <select class="form-select" name="assessment_type" id="result_assessment_type" style="max-width:170px;">
+            <option value="">All Types</option>
+            <option value="quiz">Quiz</option>
+            <option value="practical">Practical Exam</option>
+            <option value="written">Written Exam</option>
+            <option value="skills">Skills Assessment</option>
+          </select>
+          <select class="form-select" name="test_type" id="result_test_type" style="max-width:150px;">
+            <option value="">Pre &amp; Post</option>
+            <option value="pre_test">Pre-test</option>
+            <option value="post_test">Post-test</option>
+          </select>
+          <select class="form-select" name="completion_status" id="result_completion_status" style="max-width:155px;">
+            <option value="">All Statuses</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="not_taken">Not Taken</option>
+          </select>
+          <button type="submit" class="btn-save" style="padding:.4rem .9rem; font-size:.8rem;">
+            <i class="bi bi-funnel me-1"></i>Filter
+          </button>
+        </form>
+
+        <div class="table-responsive">
+          <table class="table" id="results-table">
+            <thead>
+              <tr>
+                <th data-column="assessment_id">Assessment ID</th>
+                <th data-column="assessment_title">Assessment Title</th>
+                <th data-column="assessment_type">Type</th>
+                <th data-column="test_type">Test Type</th>
+                <th data-column="assessment_date">Date Taken</th>
+                <th data-column="score">Score</th>
+                <th data-column="passing_score">Passing Score</th>
+                <th data-column="completion_status">Result</th>
+                <th data-column="remarks">Remarks</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--
+                Backend: foreach ($results as $result) — populated from student_assessments
+                DB fields: assessment_id, score, completion_status, assessment_date, test_type, remarks
+              -->
+              <tr data-assessment-id="ASM-1038" data-student-id="STU-2401">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1038</code></td>
+                <td style="font-size:.82rem; font-weight:500;">Hazard Identification Drill</td>
+                <td style="font-size:.78rem;">Practical Exam</td>
+                <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+                <!-- DB: assessment_date -->
+                <td style="font-size:.78rem; white-space:nowrap;">June 18, 2026</td>
+                <!-- DB: score -->
+                <td><span class="score-pill score-high">95 / 100</span></td>
+                <!-- DB: passing_score from evaluation_criteria -->
+                <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+                <td><span class="access-badge badge-passed">Passed</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted); max-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Excellent hazard identification skills</td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Full Result"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Add/Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                </td>
+              </tr>
+              <tr data-assessment-id="ASM-1042" data-student-id="STU-2401">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1042</code></td>
+                <td style="font-size:.82rem; font-weight:500;">Rifle Assembly Quiz — Unit 3</td>
+                <td style="font-size:.78rem;">Quiz</td>
+                <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+                <td style="font-size:.78rem; white-space:nowrap;">June 20, 2026</td>
+                <td><span class="score-pill score-high">88 / 100</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+                <td><span class="access-badge badge-passed">Passed</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted); max-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Good accuracy on assembly sequence</td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Full Result"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Add/Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                </td>
+              </tr>
+              <tr data-assessment-id="ASM-1029" data-student-id="STU-2401">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1029</code></td>
+                <td style="font-size:.82rem; font-weight:500;">Equipment Handling Written Exam</td>
+                <td style="font-size:.78rem;">Written Exam</td>
+                <td><span class="access-badge badge-scheduled" style="font-size:.65rem;">Pre-test</span></td>
+                <td style="font-size:.78rem; white-space:nowrap;">June 3, 2026</td>
+                <td><span class="score-pill score-mid">65 / 100</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+                <td><span class="access-badge badge-failed">Failed</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted); max-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Needs review on equipment protocols</td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Full Result"><i class="bi bi-eye"></i></a>
+                  <a href="#" class="table-action-btn ms-1" title="Add/Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                </td>
+              </tr>
+              <tr data-assessment-id="ASM-1051" data-student-id="STU-2401">
+                <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1051</code></td>
+                <td style="font-size:.82rem; font-weight:500;">Rescue Operations Skills Test</td>
+                <td style="font-size:.78rem;">Skills Assessment</td>
+                <td><span class="access-badge badge-draft" style="font-size:.65rem;">Post-test</span></td>
+                <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">—</td>
+                <td><span class="score-pill score-none">Not Taken</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+                <td><span class="access-badge badge-not-taken">Pending</span></td>
+                <td style="font-size:.78rem; color:var(--text-muted);">—</td>
+                <td>
+                  <a href="#" class="table-action-btn" title="View Details"><i class="bi bi-eye"></i></a>
+                </td>
+              </tr>
+              <!-- DB: endforeach -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add Assessment Record Form -->
+        <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+          <div class="section-heading"><i class="bi bi-plus-circle"></i> Record Assessment Score</div>
+          <!--
+            Backend: POST /assessments/results/store
+            Fields map to student_assessments table columns
+          -->
+          <form method="POST" action="/assessments/results/store" id="form-record-score">
+            <!-- {{ csrf_field() }} -->
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="record_student_id">Student ID</label>
+                <input type="text" class="form-control" id="record_student_id" name="student_id" placeholder="e.g. STU-2401" required>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="record_assessment_id">Assessment</label>
+                <select class="form-select" id="record_assessment_id" name="assessment_id" required>
+                  <option selected disabled value="">Select assessment</option>
+                  <!-- DB: foreach assessments -->
+                  <option value="ASM-1042">ASM-1042 — Rifle Assembly Quiz — Unit 3</option>
+                  <option value="ASM-1038">ASM-1038 — Hazard Identification Drill</option>
+                  <option value="ASM-1029">ASM-1029 — Equipment Handling Written Exam</option>
+                  <option value="ASM-1051">ASM-1051 — Rescue Operations Skills Test</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label" for="record_score">Score</label>
+                <input type="number" class="form-control" id="record_score" name="score" min="0" max="100" placeholder="e.g. 88" required>
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label" for="record_test_type">Test Type</label>
+                <select class="form-select" id="record_test_type" name="test_type" required>
+                  <option value="">Select</option>
+                  <option value="pre_test">Pre-test</option>
+                  <option value="post_test">Post-test</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="record_assessment_date">Date Taken</label>
+                <input type="date" class="form-control" id="record_assessment_date" name="assessment_date" required>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="record_completion_status">Completion Status</label>
+                <select class="form-select" id="record_completion_status" name="completion_status" required>
+                  <option value="">Select status</option>
+                  <option value="completed">Completed</option>
+                  <option value="pending">Pending</option>
+                  <option value="not_taken">Not Taken</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="record_remarks">Quick Remarks</label>
+                <input type="text" class="form-control" id="record_remarks" name="remarks" placeholder="Optional brief remark">
+              </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn-save"><i class="bi bi-check-circle me-1"></i> Save Score</button>
+              <button type="reset" class="btn-reset"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- end tab-results -->
+
+      <!-- ── TAB: MODULE COMPLETION ── -->
+      <div class="tab-content tab-content-modules">
+
+        <!--
+          Backend: GET /assessments/modules?student_id=&subject_id=&module_id=
+          Table: module_completions mc
+            JOIN modules m ON mc.module_id = m.id
+            JOIN students s ON mc.student_id = s.id
+          Key fields: student_id, module_id, completion_status, completion_pct, completed_at
+        -->
+
+        <!-- Student selector for module view -->
+        <form method="GET" action="/assessments/modules" id="form-filter-modules" class="filter-bar">
+          <select class="form-select" name="student_id" id="module_student_id" style="max-width:200px;">
+            <option value="">Select Student</option>
+            <!-- DB: foreach $students -->
+            <option value="STU-2401" selected>STU-2401 — Juan Reyes</option>
+            <option value="STU-2402">STU-2402 — Maria Cruz</option>
+            <option value="STU-2403">STU-2403 — Angelo Lim</option>
+            <option value="STU-2404">STU-2404 — Sofia Espiritu</option>
+            <option value="STU-2405">STU-2405 — Ben Torres</option>
+          </select>
+          <select class="form-select" name="subject_id" id="module_subject_id" style="max-width:190px;">
+            <option value="">All Subjects</option>
+            <option value="FIRE102" selected>FIRE102 — Assembly</option>
+            <option value="FIRE110">FIRE110 — Hazard Response</option>
+            <option value="FIRE115">FIRE115 — Equipment Handling</option>
+            <option value="FIRE120">FIRE120 — Rescue Operations</option>
+          </select>
+          <button type="submit" class="btn-save" style="padding:.4rem .9rem; font-size:.8rem;">
+            <i class="bi bi-funnel me-1"></i>Filter
+          </button>
+        </form>
+
+        <!-- Overall module completion summary for this student -->
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-md-4">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Overall Module Progress</span>
+                <!-- DB: AVG(completion_pct) WHERE student_id=STU-2401 -->
+                <span class="pc-value" style="color:#1abc9c;">80%</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-teal" style="width:80%"></div></div>
+              <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">4 of 5 modules completed</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Completed Modules</span>
+                <!-- DB: COUNT(*) WHERE completion_status='completed' AND student_id=STU-2401 -->
+                <span class="pc-value" style="color:#27ae60;">4</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-teal" style="width:80%"></div></div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="progress-card">
+              <div class="pc-top">
+                <span class="pc-title">Pending Modules</span>
+                <!-- DB: COUNT(*) WHERE completion_status='pending' AND student_id=STU-2401 -->
+                <span class="pc-value" style="color:#e67e22;">1</span>
+              </div>
+              <div class="progress"><div class="progress-bar pbar-orange" style="width:20%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-heading"><i class="bi bi-journal-bookmark"></i> Module Completion — Juan Reyes · FIRE102</div>
+
+        <!--
+          Backend: foreach ($modules as $module) — populated from module_completions JOIN modules
+          DB fields: module_id, module_title, completion_status, completion_pct, completed_at
+        -->
+
+        <!-- Module 1 -->
+        <div class="module-item">
+          <div class="module-item-header">
+            <div class="module-item-icon" style="background:#eafaf1; color:#27ae60;"><i class="bi bi-check-circle-fill"></i></div>
+            <span class="module-item-title">Module 1 — Introduction to Firearm Safety</span>
+            <span class="access-badge badge-completed" style="font-size:.65rem;">Completed</span>
+            <!-- DB: completed_at WHERE module_id=MOD-001 AND student_id=STU-2401 -->
+            <span style="font-size:.68rem; color:var(--text-muted); margin-left:auto;">June 5, 2026</span>
+          </div>
+          <!-- DB: completion_pct -->
+          <div class="mini-progress-label" style="font-size:.7rem;"><span>Progress</span><span style="font-weight:700; color:#27ae60;">100%</span></div>
+          <div class="mini-progress"><div class="mini-bar" style="width:100%; background:#1abc9c;"></div></div>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="module-item">
+          <div class="module-item-header">
+            <div class="module-item-icon" style="background:#eafaf1; color:#27ae60;"><i class="bi bi-check-circle-fill"></i></div>
+            <span class="module-item-title">Module 2 — Rifle Component Identification</span>
+            <span class="access-badge badge-completed" style="font-size:.65rem;">Completed</span>
+            <span style="font-size:.68rem; color:var(--text-muted); margin-left:auto;">June 8, 2026</span>
+          </div>
+          <div class="mini-progress-label" style="font-size:.7rem;"><span>Progress</span><span style="font-weight:700; color:#27ae60;">100%</span></div>
+          <div class="mini-progress"><div class="mini-bar" style="width:100%; background:#1abc9c;"></div></div>
+        </div>
+
+        <!-- Module 3 -->
+        <div class="module-item">
+          <div class="module-item-header">
+            <div class="module-item-icon" style="background:#eafaf1; color:#27ae60;"><i class="bi bi-check-circle-fill"></i></div>
+            <span class="module-item-title">Module 3 — Assembly and Disassembly Procedures</span>
+            <span class="access-badge badge-completed" style="font-size:.65rem;">Completed</span>
+            <span style="font-size:.68rem; color:var(--text-muted); margin-left:auto;">June 13, 2026</span>
+          </div>
+          <div class="mini-progress-label" style="font-size:.7rem;"><span>Progress</span><span style="font-weight:700; color:#27ae60;">100%</span></div>
+          <div class="mini-progress"><div class="mini-bar" style="width:100%; background:#1abc9c;"></div></div>
+        </div>
+
+        <!-- Module 4 -->
+        <div class="module-item">
+          <div class="module-item-header">
+            <div class="module-item-icon" style="background:#eafaf1; color:#27ae60;"><i class="bi bi-check-circle-fill"></i></div>
+            <span class="module-item-title">Module 4 — Maintenance and Cleaning Protocols</span>
+            <span class="access-badge badge-completed" style="font-size:.65rem;">Completed</span>
+            <span style="font-size:.68rem; color:var(--text-muted); margin-left:auto;">June 17, 2026</span>
+          </div>
+          <div class="mini-progress-label" style="font-size:.7rem;"><span>Progress</span><span style="font-weight:700; color:#27ae60;">100%</span></div>
+          <div class="mini-progress"><div class="mini-bar" style="width:100%; background:#1abc9c;"></div></div>
+        </div>
+
+        <!-- Module 5 — Pending -->
+        <div class="module-item" style="border-color:#fde8d8;">
+          <div class="module-item-header">
+            <div class="module-item-icon" style="background:#fef5e7; color:#e67e22;"><i class="bi bi-hourglass-split"></i></div>
+            <span class="module-item-title">Module 5 — Live Fire Range Safety and Procedures</span>
+            <span class="access-badge badge-pending" style="font-size:.65rem;">In Progress</span>
+            <span style="font-size:.68rem; color:var(--text-muted); margin-left:auto;">Deadline: June 27, 2026</span>
+          </div>
+          <!-- DB: completion_pct = 40 WHERE module_id=MOD-005 AND student_id=STU-2401 -->
+          <div class="mini-progress-label" style="font-size:.7rem;"><span>Progress</span><span style="font-weight:700; color:#e67e22;">40%</span></div>
+          <div class="mini-progress"><div class="mini-bar" style="width:40%; background:#e67e22;"></div></div>
+        </div>
+        <!-- DB: endforeach -->
+
+        <!-- Update module status form -->
+        <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+          <div class="section-heading"><i class="bi bi-pencil-square"></i> Update Module Completion</div>
+          <!--
+            Backend: POST /assessments/modules/update
+            Fields map to module_completions table: student_id, module_id, completion_status, completion_pct
+          -->
+          <form method="POST" action="/assessments/modules/update" id="form-module-update">
+            <!-- {{ csrf_field() }} -->
+            <!-- method spoofing for PATCH: <input type="hidden" name="_method" value="PATCH"> -->
+            <input type="hidden" name="_method" value="PATCH">
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="module_update_student_id">Student</label>
+                <select class="form-select" id="module_update_student_id" name="student_id" required>
+                  <option value="">Select student</option>
+                  <option value="STU-2401">STU-2401 — Juan Reyes</option>
+                  <option value="STU-2402">STU-2402 — Maria Cruz</option>
+                  <option value="STU-2403">STU-2403 — Angelo Lim</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="module_update_module_id">Module</label>
+                <select class="form-select" id="module_update_module_id" name="module_id" required>
+                  <option value="">Select module</option>
+                  <!-- DB: foreach modules -->
+                  <option value="MOD-001">Module 1 — Firearm Safety</option>
+                  <option value="MOD-002">Module 2 — Component ID</option>
+                  <option value="MOD-003">Module 3 — Assembly Procedures</option>
+                  <option value="MOD-004">Module 4 — Maintenance</option>
+                  <option value="MOD-005">Module 5 — Live Fire Range</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label" for="update_completion_pct">Completion %</label>
+                <input type="number" class="form-control" id="update_completion_pct" name="completion_pct" min="0" max="100" placeholder="0–100">
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label" for="update_completion_status">Status</label>
+                <select class="form-select" id="update_completion_status" name="completion_status">
+                  <option value="">Select</option>
+                  <option value="not_started">Not Started</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn-save"><i class="bi bi-save me-1"></i> Update Status</button>
+              <button type="reset" class="btn-reset"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- end tab-modules -->
+
+      <!-- ── TAB: REMARKS & FEEDBACK ── -->
+      <div class="tab-content tab-content-remarks">
+
+        <!--
+          Backend: GET /assessments/remarks?student_id=&assessment_id=
+          Table: assessment_remarks r
+            JOIN student_assessments sa ON r.student_assessment_id = sa.id
+            JOIN instructors i ON r.instructor_id = i.id
+          Key fields: student_id, assessment_id, remark_type (strength/improvement), remarks, instructor_id, created_at
+        -->
+
+        <!-- Filter bar for remarks -->
+        <form method="GET" action="/assessments/remarks" id="form-filter-remarks" class="filter-bar">
+          <select class="form-select" name="student_id" id="remarks_student_id" style="max-width:200px;">
+            <option value="">Select Student</option>
+            <option value="STU-2401" selected>STU-2401 — Juan Reyes</option>
+            <option value="STU-2402">STU-2402 — Maria Cruz</option>
+            <option value="STU-2403">STU-2403 — Angelo Lim</option>
+          </select>
+          <select class="form-select" name="assessment_id" id="remarks_assessment_id" style="max-width:220px;">
+            <option value="">All Assessments</option>
+            <option value="ASM-1038">ASM-1038 — Hazard Drill</option>
+            <option value="ASM-1042">ASM-1042 — Assembly Quiz</option>
+            <option value="ASM-1029">ASM-1029 — Written Exam</option>
+          </select>
+          <button type="submit" class="btn-save" style="padding:.4rem .9rem; font-size:.8rem;">
+            <i class="bi bi-funnel me-1"></i>Filter
+          </button>
+        </form>
+
+        <div class="section-heading"><i class="bi bi-chat-quote"></i> Instructor Remarks — Juan Reyes</div>
+
+        <!--
+          Backend: foreach ($remarks as $remark) — populated from assessment_remarks
+          DB fields: remark_type, remarks, instructor_id, created_at, assessment_id
+        -->
+
+        <!-- Remark 1 -->
+        <div class="remark-card">
+          <div class="remark-header">
+            <span class="remark-badge strength">Strength</span>
+            <!-- DB: assessment title -->
+            <span style="font-size:.78rem; font-weight:600; color:var(--text-main);">Hazard Identification Drill</span>
+            <code style="font-size:.7rem; color:var(--text-muted); margin-left:.4rem;">ASM-1038</code>
+          </div>
+          <!-- DB: remarks text -->
+          <div class="remark-text">Juan demonstrates excellent situational awareness during hazard identification. His response times are consistently within safe operational parameters, and he follows protocol sequencing with minimal errors.</div>
+          <div class="remark-footer">
+            <i class="bi bi-person-badge" style="color:var(--red); font-size:.8rem;"></i>
+            <!-- DB: instructor full name, instructor_id -->
+            <span class="remark-instructor">Instr. R. Bautista</span>
+            <!-- DB: created_at -->
+            <span class="remark-date">June 19, 2026</span>
+          </div>
+        </div>
+
+        <!-- Remark 2 -->
+        <div class="remark-card">
+          <div class="remark-header">
+            <span class="remark-badge improvement">Area for Improvement</span>
+            <span style="font-size:.78rem; font-weight:600; color:var(--text-main);">Equipment Handling Written Exam</span>
+            <code style="font-size:.7rem; color:var(--text-muted); margin-left:.4rem;">ASM-1029</code>
+          </div>
+          <div class="remark-text">Pre-test results indicate gaps in knowledge regarding equipment maintenance intervals and cleaning protocols. Student is advised to revisit Module 4 materials prior to the post-test. Focus areas: lubrication schedules and inspection checklists.</div>
+          <div class="remark-footer">
+            <i class="bi bi-person-badge" style="color:var(--red); font-size:.8rem;"></i>
+            <span class="remark-instructor">Instr. R. Bautista</span>
+            <span class="remark-date">June 4, 2026</span>
+          </div>
+        </div>
+
+        <!-- Remark 3 -->
+        <div class="remark-card">
+          <div class="remark-header">
+            <span class="remark-badge strength">Strength</span>
+            <span style="font-size:.78rem; font-weight:600; color:var(--text-main);">Rifle Assembly Quiz — Unit 3</span>
+            <code style="font-size:.7rem; color:var(--text-muted); margin-left:.4rem;">ASM-1042</code>
+          </div>
+          <div class="remark-text">Consistent high performance on assembly sequencing. Student correctly identified all critical safety checkpoints in the post-test. Recommended for advancement to Module 5 practical live-fire orientation.</div>
+          <div class="remark-footer">
+            <i class="bi bi-person-badge" style="color:var(--red); font-size:.8rem;"></i>
+            <span class="remark-instructor">Instr. R. Bautista</span>
+            <span class="remark-date">June 21, 2026</span>
+          </div>
+        </div>
+        <!-- DB: endforeach -->
+
+        <!-- Add New Remark Form -->
+        <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+          <div class="section-heading"><i class="bi bi-plus-circle"></i> Add Instructor Remark</div>
+          <!--
+            Backend: POST /assessments/remarks/store
+            Fields map to assessment_remarks table
+            DB columns: student_id, assessment_id, remark_type, remarks, instructor_id (from session)
+          -->
+          <form method="POST" action="/assessments/remarks/store" id="form-add-remark">
+            <!-- {{ csrf_field() }} -->
+            <!-- instructor_id auto-filled from authenticated session on backend -->
+            <input type="hidden" name="instructor_id" value="{{ auth()->id() }}">
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="remark_student_id">Student</label>
+                <select class="form-select" id="remark_student_id" name="student_id" required>
+                  <option value="" selected disabled>Select student</option>
+                  <!-- DB: foreach $students -->
+                  <option value="STU-2401">STU-2401 — Juan Reyes</option>
+                  <option value="STU-2402">STU-2402 — Maria Cruz</option>
+                  <option value="STU-2403">STU-2403 — Angelo Lim</option>
+                  <option value="STU-2404">STU-2404 — Sofia Espiritu</option>
+                  <option value="STU-2405">STU-2405 — Ben Torres</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="remark_assessment_id">Assessment</label>
+                <select class="form-select" id="remark_assessment_id" name="assessment_id" required>
+                  <option value="" selected disabled>Select assessment</option>
+                  <!-- DB: foreach $assessments -->
+                  <option value="ASM-1042">ASM-1042 — Rifle Assembly Quiz</option>
+                  <option value="ASM-1038">ASM-1038 — Hazard Identification Drill</option>
+                  <option value="ASM-1029">ASM-1029 — Equipment Handling Written Exam</option>
+                  <option value="ASM-1051">ASM-1051 — Rescue Operations Skills Test</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="remark_type">Remark Type</label>
+                <select class="form-select" id="remark_type" name="remark_type" required>
+                  <option value="" selected disabled>Select type</option>
+                  <option value="strength">Strength</option>
+                  <option value="improvement">Area for Improvement</option>
+                  <option value="general">General Feedback</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="remark_text">Remarks / Feedback</label>
+                <textarea class="form-control" id="remark_text" name="remarks" rows="3" placeholder="Describe student's performance, strengths, or areas needing improvement…" required></textarea>
+              </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn-save"><i class="bi bi-chat-left-text me-1"></i> Submit Remark</button>
+              <button type="reset" class="btn-reset"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- end tab-remarks -->
+
+    </div><!-- end panel-body -->
+  </div><!-- end Check Student Assessment Panel -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       EXISTING SECTIONS BELOW — Preserved from original
+       ════════════════════════════════════════════════════════════ -->
+
   <!-- Assessment Setup -->
   <div class="panel mb-3">
     <div class="panel-banner">
-      <div>
+      <div class="panel-banner-left">
         <h2>Assessment Setup</h2>
         <p>Create a new quiz, practical exam, or written assessment.</p>
       </div>
     </div>
     <div class="panel-body">
-      <form>
+      <!--
+        Backend: POST /assessments/store
+        Table: assessments
+        DB columns: title, subject_id, assessment_type, schedule_date, start_time, end_time, duration, description, status (default: draft)
+      -->
+      <form method="POST" action="/assessments/store" id="form-create-assessment">
+        <!-- {{ csrf_field() }} -->
         <div class="row g-3">
           <div class="col-12 col-md-6">
-            <label class="form-label">Assessment Title</label>
-            <input type="text" class="form-control" placeholder="e.g. Rifle Assembly Quiz — Unit 3">
+            <label class="form-label" for="assessment_title">Assessment Title</label>
+            <input type="text" class="form-control" id="assessment_title" name="title" placeholder="e.g. Rifle Assembly Quiz — Unit 3" required>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Subject</label>
-            <select class="form-select">
-              <option selected disabled>Select subject</option>
-              <option>FIRE102 — Assembly</option>
-              <option>FIRE110 — Hazard Response</option>
-              <option>FIRE115 — Equipment Handling</option>
-              <option>FIRE120 — Rescue Operations</option>
+            <label class="form-label" for="setup_subject_id">Subject</label>
+            <select class="form-select" id="setup_subject_id" name="subject_id" required>
+              <option selected disabled value="">Select subject</option>
+              <!-- DB: foreach $subjects -->
+              <option value="FIRE102">FIRE102 — Assembly</option>
+              <option value="FIRE110">FIRE110 — Hazard Response</option>
+              <option value="FIRE115">FIRE115 — Equipment Handling</option>
+              <option value="FIRE120">FIRE120 — Rescue Operations</option>
             </select>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Assessment Type</label>
-            <select class="form-select">
-              <option selected disabled>Select type</option>
-              <option>Quiz</option>
-              <option>Practical Exam</option>
-              <option>Written Examination</option>
-              <option>Skills Assessment</option>
+            <label class="form-label" for="setup_assessment_type">Assessment Type</label>
+            <select class="form-select" id="setup_assessment_type" name="assessment_type" required>
+              <option selected disabled value="">Select type</option>
+              <option value="quiz">Quiz</option>
+              <option value="practical">Practical Exam</option>
+              <option value="written">Written Examination</option>
+              <option value="skills">Skills Assessment</option>
             </select>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Schedule Date</label>
-            <input type="date" class="form-control">
+            <label class="form-label" for="schedule_date">Schedule Date</label>
+            <input type="date" class="form-control" id="schedule_date" name="schedule_date">
           </div>
           <div class="col-6 col-md-3">
-            <label class="form-label">Start Time</label>
-            <input type="time" class="form-control">
+            <label class="form-label" for="start_time">Start Time</label>
+            <input type="time" class="form-control" id="start_time" name="start_time">
           </div>
           <div class="col-6 col-md-3">
-            <label class="form-label">End Time</label>
-            <input type="time" class="form-control">
+            <label class="form-label" for="end_time">End Time</label>
+            <input type="time" class="form-control" id="end_time" name="end_time">
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Duration</label>
-            <input type="text" class="form-control" placeholder="e.g. 45 minutes">
+            <label class="form-label" for="duration">Duration</label>
+            <input type="text" class="form-control" id="duration" name="duration" placeholder="e.g. 45 minutes">
           </div>
           <div class="col-12">
-            <label class="form-label">Assessment Description</label>
-            <textarea class="form-control" rows="3" placeholder="Outline coverage, materials needed, and instructions…"></textarea>
+            <label class="form-label" for="assessment_description">Assessment Description</label>
+            <textarea class="form-control" id="assessment_description" name="description" rows="3" placeholder="Outline coverage, materials needed, and instructions…"></textarea>
           </div>
         </div>
         <div class="d-flex gap-2 mt-3">
@@ -421,43 +1645,55 @@
   <!-- Evaluation Criteria -->
   <div class="panel mb-3">
     <div class="panel-banner">
-      <div>
+      <div class="panel-banner-left">
         <h2>Evaluation Criteria</h2>
         <p>Define grading criteria and weight distribution per assessment category.</p>
       </div>
     </div>
     <div class="panel-body">
-      <div class="row g-3 mb-4">
-        <div class="col-12 col-md-3">
-          <label class="form-label">Criteria Name</label>
-          <input type="text" class="form-control" placeholder="e.g. Knowledge Test">
+      <!--
+        Backend: POST /assessments/criteria/store
+        Table: evaluation_criteria
+        DB columns: criteria_name, weight_pct, assessment_category, passing_score, subject_id
+      -->
+      <form method="POST" action="/assessments/criteria/store" id="form-add-criteria">
+        <!-- {{ csrf_field() }} -->
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="criteria_name">Criteria Name</label>
+            <input type="text" class="form-control" id="criteria_name" name="criteria_name" placeholder="e.g. Knowledge Test" required>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="weight_pct">Percentage Weight</label>
+            <input type="number" class="form-control" id="weight_pct" name="weight_pct" placeholder="e.g. 30" min="0" max="100" required>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="criteria_category">Assessment Category</label>
+            <select class="form-select" id="criteria_category" name="assessment_category" required>
+              <option selected disabled value="">Select category</option>
+              <option value="quiz">Quiz</option>
+              <option value="practical">Practical Exam</option>
+              <option value="written">Written Examination</option>
+              <option value="skills">Skills Assessment</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="passing_score">Passing Score</label>
+            <input type="text" class="form-control" id="passing_score" name="passing_score" placeholder="e.g. 75%">
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn-save mt-1"><i class="bi bi-plus-circle me-1"></i> Add Criteria</button>
+          </div>
         </div>
-        <div class="col-12 col-md-3">
-          <label class="form-label">Percentage Weight</label>
-          <input type="number" class="form-control" placeholder="e.g. 30" min="0" max="100">
-        </div>
-        <div class="col-12 col-md-3">
-          <label class="form-label">Assessment Category</label>
-          <select class="form-select">
-            <option selected disabled>Select category</option>
-            <option>Quiz</option>
-            <option>Practical Exam</option>
-            <option>Written Examination</option>
-            <option>Skills Assessment</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-3">
-          <label class="form-label">Passing Score</label>
-          <input type="text" class="form-control" placeholder="e.g. 75%">
-        </div>
-        <div class="col-12">
-          <button type="submit" class="btn-save mt-1"><i class="bi bi-plus-circle me-1"></i> Add Criteria</button>
-        </div>
-      </div>
+      </form>
 
       <div class="section-heading">
         <i class="bi bi-pie-chart-fill"></i> Current Weight Distribution — FIRE102
       </div>
+      <!--
+        Backend: foreach ($criteria as $c) — populated from evaluation_criteria WHERE subject_id=FIRE102
+        DB fields: criteria_name, weight_pct, assessment_category
+      -->
       <div class="criteria-row">
         <div class="criteria-name">Knowledge Test</div>
         <div class="criteria-bar-wrap">
@@ -492,79 +1728,89 @@
   <!-- Assessment Schedule Table -->
   <div class="panel mb-3">
     <div class="panel-banner">
-      <div>
+      <div class="panel-banner-left">
         <h2>Assessment Schedule</h2>
         <p>All quizzes, exams, and practical assessments across your subjects.</p>
       </div>
     </div>
     <div class="panel-body">
+      <!--
+        Backend: GET /assessments?subject_id=&status=&sort=
+        Table: assessments
+        DB columns: assessment_id, title, subject_id, assessment_type, schedule_date, start_time, duration, status
+      -->
       <div class="table-responsive">
-        <table class="table">
+        <table class="table" id="schedule-table">
           <thead>
             <tr>
-              <th>Assessment ID</th>
-              <th>Title</th>
-              <th>Subject</th>
-              <th>Type</th>
-              <th>Schedule</th>
-              <th>Duration</th>
-              <th>Status</th>
+              <th data-column="assessment_id">Assessment ID</th>
+              <th data-column="title">Title</th>
+              <th data-column="subject_id">Subject</th>
+              <th data-column="assessment_type">Type</th>
+              <th data-column="schedule_date">Schedule</th>
+              <th data-column="duration">Duration</th>
+              <th data-column="status">Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>ASM-1042</td>
-              <td>Rifle Assembly Quiz — Unit 3</td>
-              <td>FIRE102 — Assembly</td>
-              <td>Quiz</td>
-              <td>June 20, 2026 · 9:00 AM</td>
-              <td>30 mins</td>
+            <!--
+              Backend: foreach ($assessments as $assessment) rows from DB
+            -->
+            <tr data-assessment-id="ASM-1042">
+              <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1042</code></td>
+              <td style="font-weight:500;">Rifle Assembly Quiz — Unit 3</td>
+              <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+              <td style="font-size:.78rem;">Quiz</td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 20, 2026 · 9:00 AM</td>
+              <td style="font-size:.78rem;">30 mins</td>
               <td><span class="access-badge badge-scheduled">Scheduled</span></td>
               <td>
+                <!-- Backend: href="/assessments/{assessment_id}/edit" -->
                 <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
                 <a href="#" class="table-action-btn ms-1" title="View"><i class="bi bi-eye"></i></a>
               </td>
             </tr>
-            <tr>
-              <td>ASM-1038</td>
-              <td>Hazard Identification Drill</td>
-              <td>FIRE110 — Hazard Response</td>
-              <td>Practical Exam</td>
-              <td>June 18, 2026 · 1:00 PM</td>
-              <td>60 mins</td>
+            <tr data-assessment-id="ASM-1038">
+              <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1038</code></td>
+              <td style="font-weight:500;">Hazard Identification Drill</td>
+              <td style="font-size:.78rem;">FIRE110 — Hazard Response</td>
+              <td style="font-size:.78rem;">Practical Exam</td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 18, 2026 · 1:00 PM</td>
+              <td style="font-size:.78rem;">60 mins</td>
               <td><span class="access-badge badge-active">Active</span></td>
               <td>
                 <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
                 <a href="#" class="table-action-btn ms-1" title="View"><i class="bi bi-eye"></i></a>
               </td>
             </tr>
-            <tr>
-              <td>ASM-1029</td>
-              <td>Equipment Handling Written Exam</td>
-              <td>FIRE115 — Equipment Handling</td>
-              <td>Written Examination</td>
-              <td>June 10, 2026 · 10:00 AM</td>
-              <td>90 mins</td>
+            <tr data-assessment-id="ASM-1029">
+              <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1029</code></td>
+              <td style="font-weight:500;">Equipment Handling Written Exam</td>
+              <td style="font-size:.78rem;">FIRE115 — Equipment Handling</td>
+              <td style="font-size:.78rem;">Written Examination</td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 10, 2026 · 10:00 AM</td>
+              <td style="font-size:.78rem;">90 mins</td>
               <td><span class="access-badge badge-completed">Completed</span></td>
               <td>
                 <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
                 <a href="#" class="table-action-btn ms-1" title="View"><i class="bi bi-eye"></i></a>
               </td>
             </tr>
-            <tr>
-              <td>ASM-1051</td>
-              <td>Rescue Operations Skills Test</td>
-              <td>FIRE120 — Rescue Operations</td>
-              <td>Skills Assessment</td>
-              <td>Not yet scheduled</td>
-              <td>—</td>
+            <tr data-assessment-id="ASM-1051">
+              <td><code style="font-size:.78rem; color:var(--text-muted);">ASM-1051</code></td>
+              <td style="font-weight:500;">Rescue Operations Skills Test</td>
+              <td style="font-size:.78rem;">FIRE120 — Rescue Operations</td>
+              <td style="font-size:.78rem;">Skills Assessment</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">Not yet scheduled</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">—</td>
               <td><span class="access-badge badge-draft">Draft</span></td>
               <td>
                 <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
                 <a href="#" class="table-action-btn ms-1" title="View"><i class="bi bi-eye"></i></a>
               </td>
             </tr>
+            <!-- DB: endforeach -->
           </tbody>
         </table>
       </div>
@@ -574,13 +1820,16 @@
   <!-- Upcoming Assessments -->
   <div class="panel mb-3">
     <div class="panel-banner">
-      <div>
+      <div class="panel-banner-left">
         <h2>Upcoming Assessments</h2>
         <p>Quizzes and examinations scheduled in the days ahead.</p>
       </div>
     </div>
     <div class="panel-body">
       <div class="list-group list-group-flush">
+        <!--
+          Backend: foreach ($upcoming as $item) — assessments WHERE schedule_date >= TODAY ORDER BY schedule_date ASC LIMIT 5
+        -->
         <div class="list-group-item">
           <div class="update-icon" style="background:#eaf3fb;color:#2980b9;"><i class="bi bi-patch-question"></i></div>
           <div class="update-text">
@@ -605,62 +1854,7 @@
           </div>
           <div class="update-time">Draft</div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Assessment Statistics -->
-  <div class="panel mb-3">
-    <div class="panel-body">
-      <div class="section-heading">
-        <i class="bi bi-graph-up"></i> Assessment Statistics
-      </div>
-      <div class="row g-3">
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="progress-card">
-            <div class="pc-top">
-              <span class="pc-title">Quiz Completion</span>
-              <span class="pc-value" style="color:#e67e22;">82%</span>
-            </div>
-            <div class="progress"><div class="progress-bar pbar-orange" style="width:82%"></div></div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="progress-card">
-            <div class="pc-top">
-              <span class="pc-title">Practical Exam Completion</span>
-              <span class="pc-value" style="color:var(--red);">68%</span>
-            </div>
-            <div class="progress"><div class="progress-bar pbar-red" style="width:68%"></div></div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="progress-card">
-            <div class="pc-top">
-              <span class="pc-title">Overall Completion</span>
-              <span class="pc-value" style="color:#8e44ad;">74%</span>
-            </div>
-            <div class="progress"><div class="progress-bar pbar-purple" style="width:74%"></div></div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="progress-card">
-            <div class="pc-top">
-              <span class="pc-title">Average Student Score</span>
-              <span class="pc-value" style="color:#1abc9c;">86%</span>
-            </div>
-            <div class="progress"><div class="progress-bar pbar-teal" style="width:86%"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Notice Bar -->
-      <div class="notice-bar">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        <div>
-          <span class="notice-label">Assessment Notice —</span>
-          Evaluation criteria weights for a subject should always total 100%. Review the distribution before publishing a new assessment.
-        </div>
+        <!-- DB: endforeach -->
       </div>
     </div>
   </div>
