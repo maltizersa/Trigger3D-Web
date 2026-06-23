@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enroll Students — FTA System</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    /* TOP BAR */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-badge { margin-left: auto; background: var(--red); color: #fff; font-size: .62rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* MAIN */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; background: transparent; }
+
+    /* PANEL */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+
+    /* HEADER ROW: back + title */
+    .panel-banner { background: #fff; padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: .9rem; }
+    .back-btn { width: 36px; height: 36px; border-radius: 9px; border: 1.5px solid var(--border); background: #F9FAFB; color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; flex-shrink: 0; text-decoration: none; transition: .15s; }
+    .back-btn:hover { background: #FDECEA; border-color: var(--red-light); color: var(--red); }
+    .panel-banner h2 { font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .76rem; margin: .15rem 0 0; color: var(--text-muted); }
+    .subj-pill { display: inline-block; background: var(--red); color: #fff; font-size: .68rem; font-weight: 800; letter-spacing: .06em; padding: .18rem .55rem; border-radius: 6px; margin-left: .5rem; vertical-align: middle; }
+
+    /* TABS (Archive-style) */
+    .tabs-row { display: flex; align-items: center; gap: 1.6rem; padding: 0 1.4rem; border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab-item { display: flex; align-items: center; gap: .4rem; padding: .85rem 0; font-size: .84rem; font-weight: 600; color: var(--text-muted); border-bottom: 2.5px solid transparent; cursor: pointer; white-space: nowrap; user-select: none; }
+    .tab-item:hover { color: var(--red); }
+    .tab-item.active { color: var(--red); border-bottom-color: var(--red); }
+    .tab-count { background: #EAECEF; color: var(--text-muted); font-size: .68rem; font-weight: 700; padding: .05rem .45rem; border-radius: 20px; }
+    .tab-item.active .tab-count { background: var(--red); color: #fff; }
+
+    .panel-body { padding: 1.2rem 1.4rem 1.4rem; }
+
+    /* TOOLBAR: filter + search + actions */
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+    .toolbar .role-filter { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 36px; padding: 0 .7rem; color: var(--text-main); }
+    .toolbar .role-filter:focus { outline: none; border-color: var(--red); background: #fff; }
+    .toolbar .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+    .toolbar .search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .toolbar .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 36px; }
+    .toolbar .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
+    .toolbar-actions { margin-left: auto; display: flex; gap: .5rem; flex-wrap: wrap; }
+
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-red:hover { background: var(--red-dark); color: #fff; }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-red:hover { background: var(--red); color: #fff; }
+    .btn-green { background: #27AE60; color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-green:hover { background: #1E8449; color: #fff; }
+
+    /* TABLE */
+    .mgmt-table { width: 100%; font-size: .82rem; border-collapse: collapse; }
+    .mgmt-table thead th { background: #fff; color: var(--text-muted); padding: .6rem .9rem; font-weight: 700; font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; border-bottom: 1px solid var(--border); text-align: left; }
+    .mgmt-table tbody tr { border-bottom: 1px solid var(--border); }
+    .mgmt-table tbody tr:hover { background: #FEF9F9; }
+    .mgmt-table tbody td { padding: .65rem .9rem; vertical-align: middle; }
+    .tbl-wrap { overflow-x: auto; }
+
+    .avatar-sm { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .7rem; flex-shrink: 0; }
+
+    .badge-active   { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-inactive { background: #FDECEA; color: #C0392B; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+
+    .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
+    .btn-icon.del { background: #FDECEA; color: #C0392B; }
+    .btn-icon.archive { background: #FEF9E7; color: #B7770D; }
+    .btn-icon:hover { filter: brightness(.88); }
+
+    /* MODULE TYPE ICONS */
+    .vm-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .vm-icon.pdf { background: #FDECEA; color: #C0392B; }
+    .vm-icon.vid { background: #EBF3FF; color: #2980B9; }
+    .vm-icon.doc { background: #E8F8F2; color: #1A9B59; }
+
+    /* FORM */
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-sm-custom { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); padding: .42rem .7rem; width: 100%; background: #F9FAFB; transition: border-color .15s, background .15s; }
+    .form-control-sm-custom:focus { outline: none; border-color: var(--red); background: #fff; }
+
+    /* STEP WIZARD */
+    .step-wizard { display: flex; align-items: flex-start; justify-content: center; margin-bottom: 1.5rem; }
+    .step-item { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .step-item:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 60%; width: 80%; height: 2px; background: #E8EAED; z-index: 0; }
+    .step-item.done::after  { background: #27AE60; }
+    .step-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .74rem; font-weight: 700; border: 2px solid #E8EAED; background: #fff; color: #7F8C8D; position: relative; z-index: 1; }
+    .step-item.done   .step-circle { background: #27AE60; border-color: #27AE60; color: #fff; }
+    .step-item.active .step-circle { border-color: var(--red); color: var(--red); }
+    .step-label { font-size: .63rem; color: #7F8C8D; margin-top: .3rem; text-align: center; line-height: 1.3; }
+    .step-item.active .step-label { color: var(--red); font-weight: 600; }
+    .step-item.done   .step-label  { color: #27AE60; font-weight: 600; }
+
+    .drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 2rem 1rem; text-align: center; cursor: pointer; transition: .2s; }
+    .drop-zone:hover { border-color: var(--red); background: #FEF2F0; }
+    .drop-zone i { font-size: 2.2rem; color: var(--text-muted); display: block; margin-bottom: .5rem; }
+
+    .preview-table { width: 100%; font-size: .76rem; border-collapse: collapse; }
+    .preview-table thead th { background: #F9FAFB; padding: .42rem .7rem; font-weight: 600; font-size: .69rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    .preview-table tbody td { padding: .42rem .7rem; border-bottom: 1px solid var(--border); }
+    .preview-table tbody tr:hover td { background: #FEF9F9; }
+
+    .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1200; display: flex; flex-direction: column; gap: .5rem; }
+    .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
+    .fta-toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </button>
+  <a href="manage-program-head.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Admin</small></div>
+  </a>
+  <div class="topbar-right">
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+    <div class="avatar">PH</div>
+    <div class="topbar-user d-none d-sm-block">Maj. R. Santos <small>Program Head</small></div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+  <span class="sidebar-label">Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="program-head-staff-management.html"><i class="bi bi-person-badge-fill"></i> Staff Management <span class="sidebar-badge">8</span></a></li>
+    <li><a href="program-head-student-management.html"><i class="bi bi-people-fill"></i> Student Management <span class="sidebar-badge">10</span></a></li>
+    <li><a href="program-head-subject-management.html" class="active"><i class="bi bi-journal-text"></i> Subject Management</a></li>
+    <li><a href="program-head-module-management.html"><i class="bi bi-folder2-open"></i> Module Management</a></li>
+    <li><a href="program-head-system-logs.html"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <div class="panel">
+
+    <!-- HEADER -->
+    <div class="panel-banner">
+      <a href="program-head-subject-management.html" class="back-btn" title="Back to Subject Management">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <div>
+        <h2>Enroll Students <span class="subj-pill">FIRE101</span></h2>
+        <p>Firearm Fundamentals &nbsp;·&nbsp; View and manage students enrolled in this subject</p>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-row">
+      <div class="tab-item active" id="tabEnrolled" onclick="switchTab('enrolled')">
+        <i class="bi bi-people-fill"></i> Enrolled Students <span class="tab-count">6</span>
+      </div>
+      <div class="tab-item" id="tabModules" onclick="switchTab('modules')">
+        <i class="bi bi-folder2-open"></i> Modules <span class="tab-count">8</span>
+      </div>
+    </div>
+
+    <div class="panel-body" id="panelEnrolled">
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <select class="role-filter">
+          <option>All Status</option>
+          <option>Active</option>
+          <option>Inactive</option>
+        </select>
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="search" placeholder="Search students…" />
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn-red" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <i class="bi bi-person-plus-fill"></i> Add Student
+          </button>
+          <button class="btn-green" data-bs-toggle="modal" data-bs-target="#importStep1Modal">
+            <i class="bi bi-upload"></i> Import Student
+          </button>
+        </div>
+      </div>
+
+      <!-- STATIC TABLE -->
+      <div class="tbl-wrap">
+        <table class="mgmt-table">
+          <thead>
+            <tr>
+              <th>Student Number</th>
+              <th>Student</th>
+              <th>Gmail</th>
+              <th>Phone Number</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2024-00101</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-sm" style="background:#C0392B">JC</div>
+                  <div style="font-weight:600;">John Cruz</div>
+                </div>
+              </td>
+              <td>jcruz@gmail.com</td>
+              <td>09171234561</td>
+              <td><span class="badge-active">Active</span></td>
+              <td>
+                <button class="btn-icon archive" title="Archive student"><i class="bi bi-archive-fill"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-00102</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-sm" style="background:#2980B9">MS</div>
+                  <div style="font-weight:600;">Maria Santos</div>
+                </div>
+              </td>
+              <td>msantos@gmail.com</td>
+              <td>09171234562</td>
+              <td><span class="badge-active">Active</span></td>
+              <td>
+                <button class="btn-icon archive" title="Archive student"><i class="bi bi-archive-fill"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-00103</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-sm" style="background:#E67E22">PG</div>
+                  <div style="font-weight:600;">Pedro Gonzales</div>
+                </div>
+              </td>
+              <td>pgonzales@gmail.com</td>
+              <td>09171234563</td>
+              <td><span class="badge-active">Active</span></td>
+              <td>
+                <button class="btn-icon archive" title="Archive student"><i class="bi bi-archive-fill"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-00104</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-sm" style="background:#16A085">LM</div>
+                  <div style="font-weight:600;">Luisa Mendoza</div>
+                </div>
+              </td>
+              <td>lmendoza@gmail.com</td>
+              <td>09171234564</td>
+              <td><span class="badge-inactive">Inactive</span></td>
+              <td>
+                <button class="btn-icon archive" title="Archive student"><i class="bi bi-archive-fill"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-00105</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-sm" style="background:#2C3E50">CV</div>
+                  <div style="font-weight:600;">Carlo Vega</div>
+                </div>
+              </td>
+              <td>cvega@gmail.com</td>
+              <td>09171234565</td>
+              <td><span class="badge-active">Active</span></td>
+              <td>
+                <button class="btn-icon archive" title="Archive student"><i class="bi bi-archive-fill"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-00106</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar-sm" style="background:#8E44AD">BT</div>
+                  <div style="font-weight:600;">Bianca Torres</div>
+                </div>
+              </td>
+              <td>btorres@gmail.com</td>
+              <td>09171234566</td>
+              <td><span class="badge-active">Active</span></td>
+              <td>
+                <button class="btn-icon archive" title="Archive student"><i class="bi bi-archive-fill"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+        <span style="font-size:.77rem;color:var(--text-muted)">Showing 1–6 of 6 enrolled students</span>
+        <nav>
+          <ul class="pagination pagination-sm mb-0" style="gap:.2rem">
+            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+            <li class="page-item active"><a class="page-link" href="#" style="background:var(--red);border-color:var(--red)">1</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">»</a></li>
+          </ul>
+        </nav>
+      </div>
+
+    </div>
+
+    <!-- MODULES PANEL -->
+    <div class="panel-body" id="panelModules" style="display:none;">
+
+      <div class="toolbar">
+        <select class="role-filter">
+          <option>All Types</option>
+          <option>PDF Document</option>
+          <option>Video Lecture</option>
+          <option>Word Document</option>
+        </select>
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="search" placeholder="Search modules…" />
+        </div>
+        <div class="toolbar-actions">
+          <a href="program-head-module-management.html" class="btn-outline-red">
+            <i class="bi bi-folder2-open"></i> Manage Modules
+          </a>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="mgmt-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Module Name</th>
+              <th>Type</th>
+              <th>Date Uploaded</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                  <div style="font-weight:600;">Intro to Firearm Safety.pdf</div>
+                </div>
+              </td>
+              <td>PDF Document</td>
+              <td>Jun 1, 2026</td>
+              <td>2.4 MB</td>
+            </tr>
+            <tr>
+              <td>02</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                  <div style="font-weight:600;">Firearm Parts Diagram.pdf</div>
+                </div>
+              </td>
+              <td>PDF Document</td>
+              <td>Jun 2, 2026</td>
+              <td>1.8 MB</td>
+            </tr>
+            <tr>
+              <td>03</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon doc"><i class="bi bi-file-earmark-word-fill"></i></div>
+                  <div style="font-weight:600;">Basic Handling Procedures.docx</div>
+                </div>
+              </td>
+              <td>Word Document</td>
+              <td>Jun 3, 2026</td>
+              <td>1.1 MB</td>
+            </tr>
+            <tr>
+              <td>04</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon vid"><i class="bi bi-play-btn-fill"></i></div>
+                  <div style="font-weight:600;">Range Safety Briefing.mp4</div>
+                </div>
+              </td>
+              <td>Video Lecture</td>
+              <td>Jun 4, 2026</td>
+              <td>98 MB</td>
+            </tr>
+            <tr>
+              <td>05</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                  <div style="font-weight:600;">Fundamentals Quiz Guide.pdf</div>
+                </div>
+              </td>
+              <td>PDF Document</td>
+              <td>Jun 5, 2026</td>
+              <td>0.7 MB</td>
+            </tr>
+            <tr>
+              <td>06</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                  <div style="font-weight:600;">Storage &amp; Transport Rules.pdf</div>
+                </div>
+              </td>
+              <td>PDF Document</td>
+              <td>Jun 6, 2026</td>
+              <td>1.3 MB</td>
+            </tr>
+            <tr>
+              <td>07</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon doc"><i class="bi bi-file-earmark-ppt-fill"></i></div>
+                  <div style="font-weight:600;">Orientation Slides.pptx</div>
+                </div>
+              </td>
+              <td>Word Document</td>
+              <td>Jun 7, 2026</td>
+              <td>4.2 MB</td>
+            </tr>
+            <tr>
+              <td>08</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="vm-icon vid"><i class="bi bi-play-btn-fill"></i></div>
+                  <div style="font-weight:600;">Fundamentals Recap Video.mp4</div>
+                </div>
+              </td>
+              <td>Video Lecture</td>
+              <td>Jun 8, 2026</td>
+              <td>120 MB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+        <span style="font-size:.77rem;color:var(--text-muted)">Showing 1–8 of 8 modules</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
+    Trigger3D Subject Management &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+  </div>
+</main>
+
+<div class="fta-toast-stack" id="toastStack"></div>
+
+<!-- ===== MODAL: ADD STUDENT (manual) ===== -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-person-plus-fill me-2" style="color:var(--red)"></i>Add Student to Subject
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+        <div class="alert d-flex align-items-start gap-2 py-2 px-3 mb-3" style="font-size:.79rem;border-radius:8px;background:#EBF3FF;border:1px solid #B5D4F4;color:#1A5276">
+          <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+          <div>Use this form to manually enroll one student into <strong>FIRE101</strong>.</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-sm">Student ID <span class="text-danger">*</span></label>
+          <input type="text" class="form-control-sm-custom" value="2024-00107" />
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label-sm">First Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-sm-custom" placeholder="e.g. Juan" />
+          </div>
+          <div class="col-6">
+            <label class="form-label-sm">Middle Name</label>
+            <input type="text" class="form-control-sm-custom" placeholder="e.g. dela" />
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-8">
+            <label class="form-label-sm">Last Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control-sm-custom" placeholder="e.g. Cruz" />
+          </div>
+          <div class="col-4">
+            <label class="form-label-sm">Suffix</label>
+            <input type="text" class="form-control-sm-custom" placeholder="Jr., III" />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-sm">Gmail <span class="text-danger">*</span></label>
+          <input type="email" class="form-control-sm-custom" placeholder="e.g. juandelacruz@gmail.com" />
+        </div>
+
+        <div class="mb-1">
+          <label class="form-label-sm">Phone Number <span class="text-danger">*</span></label>
+          <input type="tel" class="form-control-sm-custom" placeholder="e.g. 09171234567" />
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" data-bs-dismiss="modal" onclick="showToast('Student enrolled (demo only)', 'bi-person-plus-fill')">
+          <i class="bi bi-check-lg"></i> Enroll Student
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== IMPORT FLOW — STEP 1: Upload Excel / CSV ===== -->
+<div class="modal fade" id="importStep1Modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-upload me-2" style="color:#27AE60"></i>Import Students — FIRE101
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+
+        <div class="step-wizard">
+          <div class="step-item active"><div class="step-circle">1</div><div class="step-label">Upload<br>Excel / CSV</div></div>
+          <div class="step-item"><div class="step-circle">2</div><div class="step-label">Preview<br>Records</div></div>
+          <div class="step-item"><div class="step-circle">3</div><div class="step-label">Confirm<br>Import</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Students<br>Enrolled</div></div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mb-3 p-3 rounded-3" style="background:#F9FAFB;border:1px solid var(--border)">
+          <div>
+            <div style="font-size:.82rem;font-weight:600">Need a template?</div>
+            <div style="font-size:.76rem;color:var(--text-muted)">Download the template, fill in student data, then upload it below.</div>
+          </div>
+          <a href="#" class="btn-green flex-shrink-0"><i class="bi bi-download"></i> Download Template</a>
+        </div>
+
+        <div class="drop-zone">
+          <i class="bi bi-cloud-upload"></i>
+          <p style="font-size:.88rem;font-weight:600;color:var(--text-main);margin-bottom:.25rem">Click to upload or drag &amp; drop</p>
+          <p style="font-size:.78rem;color:var(--text-muted);margin:0">Supports .xlsx and .csv files</p>
+        </div>
+
+        <div class="mt-2 px-3 py-2 rounded-3 d-flex align-items-center gap-2" style="background:#E8F8F2;font-size:.8rem;color:#1A9B59">
+          <i class="bi bi-file-earmark-check-fill"></i>
+          <span style="font-weight:600">fire101_students.xlsx</span>
+          <span class="ms-auto" style="color:var(--text-muted);font-size:.75rem">38.1 KB</span>
+          <i class="bi bi-x-circle-fill" style="color:#C0392B;cursor:pointer"></i>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-green" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep2Modal">
+          <i class="bi bi-eye-fill"></i> Preview Records
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== IMPORT FLOW — STEP 2: Preview Records ===== -->
+<div class="modal fade" id="importStep2Modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-table me-2" style="color:#2980B9"></i>Preview Records — FIRE101
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+
+        <div class="step-wizard">
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Upload<br>Excel / CSV</div></div>
+          <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Preview<br>Records</div></div>
+          <div class="step-item"><div class="step-circle">3</div><div class="step-label">Confirm<br>Import</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Students<br>Enrolled</div></div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <span style="font-size:.82rem;color:var(--text-muted)">Found <strong style="color:var(--text-main)">4 records</strong> ready to enroll into <strong style="color:var(--text-main)">FIRE101</strong></span>
+          <span class="badge-active"><i class="bi bi-check-circle-fill me-1"></i>No errors detected</span>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Student ID</th><th>First Name</th><th>Middle Name</th>
+                <th>Last Name</th><th>Suffix</th><th>Gmail</th><th>Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>2024-00210</td><td>Miguel</td><td>A.</td><td>Tan</td><td>—</td><td>mtan@gmail.com</td><td>09171120001</td></tr>
+              <tr><td>2</td><td>2024-00211</td><td>Sofia</td><td>R.</td><td>Ramirez</td><td>—</td><td>sramirez@gmail.com</td><td>09171120002</td></tr>
+              <tr><td>3</td><td>2024-00212</td><td>Diego</td><td>L.</td><td>Fernandez</td><td>—</td><td>dfernandez@gmail.com</td><td>09171120003</td></tr>
+              <tr><td>4</td><td>2024-00213</td><td>Carmela</td><td>P.</td><td>Lopez</td><td>—</td><td>clopez@gmail.com</td><td>09171120004</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep1Modal">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn-green" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep3Modal">
+          <i class="bi bi-check2-all"></i> Confirm Import
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== IMPORT FLOW — STEP 3: Confirm Import ===== -->
+<div class="modal fade" id="importStep3Modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-check2-circle me-2" style="color:#27AE60"></i>Confirm Import
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center" style="padding:1.75rem 1.3rem;">
+
+        <div class="step-wizard mb-4">
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Upload</div></div>
+          <div class="step-item done"><div class="step-circle"><i class="bi bi-check-lg"></i></div><div class="step-label">Preview</div></div>
+          <div class="step-item active"><div class="step-circle">3</div><div class="step-label">Confirm</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Done</div></div>
+        </div>
+
+        <div style="width:68px;height:68px;background:#E8F8F2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.9rem;color:#1A9B59">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <p style="font-size:.92rem;font-weight:700;margin-bottom:.4rem">Enroll 4 students into FIRE101?</p>
+        <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:0">
+          This will add <strong>4 students</strong> to this subject. Existing student accounts will be linked, and new accounts will receive credentials via Gmail.
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep2Modal">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn-green" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#importStep4Modal">
+          <i class="bi bi-cloud-upload"></i> Import Now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== IMPORT FLOW — STEP 4: Success ===== -->
+<div class="modal fade" id="importStep4Modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-body text-center" style="padding:2.2rem 1.5rem;">
+        <div style="width:72px;height:72px;background:#E8F8F2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2.2rem;color:#1A9B59">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h5 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Students Enrolled!</h5>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1.4rem">
+          <strong>4 students</strong> have been successfully enrolled into <strong>FIRE101</strong>.
+        </p>
+        <button type="button" class="btn-red" data-bs-dismiss="modal" style="margin:0 auto" onclick="showToast('4 students enrolled into FIRE101 (demo only)', 'bi-check-circle-fill')">
+          <i class="bi bi-check-lg"></i> Done
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  function switchTab(tab) {
+    const enrolledTab   = document.getElementById('tabEnrolled');
+    const modulesTab     = document.getElementById('tabModules');
+    const enrolledPanel = document.getElementById('panelEnrolled');
+    const modulesPanel  = document.getElementById('panelModules');
+
+    if (tab === 'modules') {
+      modulesTab.classList.add('active');
+      enrolledTab.classList.remove('active');
+      modulesPanel.style.display = '';
+      enrolledPanel.style.display = 'none';
+    } else {
+      enrolledTab.classList.add('active');
+      modulesTab.classList.remove('active');
+      enrolledPanel.style.display = '';
+      modulesPanel.style.display = 'none';
+    }
+  }
+
+  function showToast(msg, icon) {
+    const stack = document.getElementById('toastStack');
+    const el = document.createElement('div');
+    el.className = 'fta-toast';
+    el.innerHTML = `<i class="bi ${icon||'bi-info-circle-fill'}"></i><span>${msg}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(()=>el.classList.add('show'));
+    setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),250); },2400);
+  }
+</script>
+</body>
+</html>
