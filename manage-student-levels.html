@@ -7,6 +7,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
+    /* ═══════════════════════════════════════════════════════
+       DESIGN TOKENS — sourced from check-student-progress
+    ═══════════════════════════════════════════════════════ */
     :root {
       --red:        #C0392B;
       --red-dark:   #922B21;
@@ -20,82 +23,308 @@
       --topbar-h:   60px;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
 
-    /* Hidden checkbox drives the mobile sidebar — pure CSS, zero JavaScript */
-    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+    /* ── HIDDEN CHECKBOX (CSS-only mobile sidebar) ── */
+    #sidebar-toggle-checkbox {
+      position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+    }
 
-    /* ── TOP BAR ── */
-    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
-    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
-    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
-    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
-    .topbar-search { flex: 1; max-width: 280px; }
-    .topbar-search-wrap { position: relative; }
-    .topbar-search-wrap i { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
-    .topbar-search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 34px; outline: none; }
-    .topbar-search-wrap input:focus { border-color: var(--red); background: #fff; }
+    /* ═══════════════════════════════════════════════════════
+       TOP BAR — matches check-student-progress exactly
+    ═══════════════════════════════════════════════════════ */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1040;
+      height: var(--topbar-h); background: #fff;
+      display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: .55rem;
+      color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none;
+    }
+    .topbar-brand .icon-box {
+      width: 32px; height: 32px; background: #FDECEA; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--red);
+    }
+    .topbar-brand small {
+      display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted);
+    }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
-    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
-    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
-    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
+    .notif-btn {
+      background: #FDECEA; border: none; border-radius: 50%;
+      width: 34px; height: 34px; display: flex; align-items: center;
+      justify-content: center; color: var(--red); font-size: 1rem;
+      position: relative; cursor: pointer;
+    }
+    .notif-dot {
+      position: absolute; top: 5px; right: 6px; width: 7px; height: 7px;
+      background: #F9CA24; border-radius: 50%; border: 1px solid #fff;
+    }
+    .icon-btn {
+      background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%;
+      width: 34px; height: 34px; display: flex; align-items: center;
+      justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer;
+    }
     .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
-    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--red);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A;
+    }
     .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
     .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
-    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+    .sidebar-toggle-label {
+      display: none; background: none; border: none;
+      color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center;
+    }
 
-    /* ── SIDEBAR ── */
-    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
-    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    /* ═══════════════════════════════════════════════════════
+       SIDEBAR — white sidebar style from check-student-progress
+    ═══════════════════════════════════════════════════════ */
+    .sidebar {
+      position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030;
+      width: var(--sidebar-w); background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow-y: auto; overflow-x: hidden; transition: transform .25s ease;
+    }
+    .sidebar-label {
+      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-muted); padding: 1.1rem 1.1rem .3rem;
+    }
     .sidebar-nav { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; cursor: pointer; }
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: .65rem;
+      padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none;
+      font-size: .85rem; font-weight: 500; border-left: 3px solid transparent;
+      transition: all .15s; cursor: pointer;
+    }
     .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
     .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
     .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
     .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
-    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: .55rem;
+      color: var(--text-muted); font-size: .82rem; text-decoration: none;
+    }
     .sidebar-footer a:hover { color: var(--red); }
-
-    /* ── BACKDROP (mobile only) ── */
     .sidebar-backdrop { display: none; }
 
-    /* ── MAIN ── */
-    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+    /* ═══════════════════════════════════════════════════════
+       MAIN CONTENT
+    ═══════════════════════════════════════════════════════ */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem;
+    }
 
-    /* ── PANEL ── */
-    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
-    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
-    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
-    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
-    .panel-body { padding: 1.4rem; }
+    /* ═══════════════════════════════════════════════════════
+       PAGE HEADER — matches check-student-progress style
+    ═══════════════════════════════════════════════════════ */
+    .page-header {
+      background: rgba(0,0,0,.18); border-radius: 10px;
+      padding: 1.1rem 1.2rem; display: flex; align-items: center;
+      gap: .85rem; margin-bottom: 1.25rem;
+    }
+    .page-header-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border: 2px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.25rem; flex-shrink: 0;
+    }
+    .page-header-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .1rem; }
+    .page-header-badge {
+      margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px;
+      padding: .4rem .9rem; color: #fff; font-size: .78rem;
+      font-weight: 600; white-space: nowrap;
+    }
 
-    /* ── PAGE HEADER (welcome-banner style) ── */
-    .welcome-banner { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
-    .welcome-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
-    .welcome-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
-    .welcome-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
-    .welcome-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+    /* ═══════════════════════════════════════════════════════
+       STAT CARDS — from check-student-progress (gradient style)
+    ═══════════════════════════════════════════════════════ */
+    .stat-card {
+      border-radius: 14px; padding: 1.2rem 1.3rem;
+      color: #fff; position: relative; overflow: hidden;
+      height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,.12);
+    }
+    .stat-card::before {
+      content: ''; position: absolute; right: -20px; top: -20px;
+      width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.12);
+    }
+    .stat-card::after {
+      content: ''; position: absolute; right: 20px; top: 30px;
+      width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.08);
+    }
+    .stat-card .card-icon { position: absolute; top: 1rem; right: 1rem; font-size: 1.4rem; opacity: .7; }
+    .stat-card .stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .stat-card .stat-label { font-size: .75rem; opacity: .85; margin-top: .3rem; }
+    .stat-card .stat-delta { font-size: .7rem; opacity: .8; margin-top: .25rem; }
+    .stat-card.red    { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+    .stat-card.orange { background: linear-gradient(135deg, #E67E22, #D35400); }
+    .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
+    .stat-card.purple { background: linear-gradient(135deg, #8E44AD, #6C3483); }
+    .stat-card.blue   { background: linear-gradient(135deg, #2980B9, #1A5276); }
+    .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
 
-    /* ── STAT CARDS ── */
-    .stat-card { border-radius: 10px; padding: 1rem 1.1rem; color: #fff; position: relative; overflow: hidden; height: 100%; }
-    .stat-card .stat-icon { position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); opacity: .3; font-size: 2.4rem; }
-    .stat-card .stat-number { font-size: 1.65rem; font-weight: 700; line-height: 1; }
-    .stat-card .stat-label  { font-size: .72rem; opacity: .85; margin-top: .15rem; }
-    .stat-card .stat-sub    { font-size: .68rem; opacity: .7; margin-top: .4rem; }
-    .stat-red    { background: rgba(0,0,0,.22); }
-    .stat-orange { background: #e67e22; }
-    .stat-purple { background: #8e44ad; }
-    .stat-teal   { background: #1abc9c; }
+    /* ═══════════════════════════════════════════════════════
+       PANEL — white card container from check-student-progress
+    ═══════════════════════════════════════════════════════ */
+    .panel {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      overflow: hidden; margin-bottom: 1.25rem;
+    }
+    .panel-header {
+      padding: .85rem 1.2rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: .75rem; flex-wrap: wrap;
+    }
+    .panel-header h5 {
+      font-size: .92rem; font-weight: 700; margin: 0;
+      color: var(--text-main); display: flex; align-items: center; gap: .45rem;
+    }
+    .panel-header h5 i { color: var(--red); }
+    .panel-body { padding: 1.2rem; }
 
-    /* ── SECTION HEADING ── */
-    .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
-    .section-heading i { color: var(--red); font-size: .95rem; }
+    /* ═══════════════════════════════════════════════════════
+       SECTION LABEL
+    ═══════════════════════════════════════════════════════ */
+    .section-label {
+      font-size: .68rem; letter-spacing: .09em; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted); margin-bottom: .6rem;
+    }
 
-    /* ── FEATURE / QUICK-LINK CARDS ── */
-    .feature-card { border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; display: flex; align-items: flex-start; gap: .9rem; text-decoration: none; color: var(--text-main); transition: box-shadow .15s, border-color .15s; height: 100%; }
+    /* ═══════════════════════════════════════════════════════
+       FILTER / SEARCH BAR — from check-student-progress
+    ═══════════════════════════════════════════════════════ */
+    .filter-bar { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+    .filter-bar .form-select,
+    .filter-bar .form-control {
+      font-size: .8rem; height: 32px; padding: .2rem .55rem;
+      border-radius: 7px; border: 1.5px solid var(--border);
+    }
+    .filter-bar .form-select:focus,
+    .filter-bar .form-control:focus { border-color: var(--red); box-shadow: none; }
+    .filter-bar label { font-size: .78rem; color: var(--text-muted); white-space: nowrap; }
+
+    /* ═══════════════════════════════════════════════════════
+       TABLES — from check-student-progress
+    ═══════════════════════════════════════════════════════ */
+    .progress-table th {
+      font-size: .73rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--text-muted);
+      border-bottom-width: 1px; white-space: nowrap;
+    }
+    .progress-table td { font-size: .8rem; vertical-align: middle; color: var(--text-main); }
+    .student-name { font-weight: 600; font-size: .82rem; color: var(--text-main); }
+    .student-id   { font-size: .7rem; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════════════════
+       LEVEL BADGE PILLS — extended from check-student-progress
+    ═══════════════════════════════════════════════════════ */
+    .level-pill {
+      font-size: .68rem; font-weight: 700; padding: .2rem .65rem;
+      border-radius: 20px; display: inline-block;
+    }
+    .level-1  { background: #eaf3fb; color: #2471a3; }
+    .level-2  { background: #fef9e7; color: #b7950b; }
+    .level-3  { background: #fdf2f8; color: #884ea0; }
+    .level-4  { background: #eafaf1; color: #1a7a43; }
+    .level-5  { background: #fdedec; color: #c0392b; }
+
+    /* ═══════════════════════════════════════════════════════
+       STATUS BADGES
+    ═══════════════════════════════════════════════════════ */
+    .status-pill {
+      font-size: .68rem; font-weight: 700; padding: .2rem .65rem;
+      border-radius: 20px; display: inline-block;
+    }
+    .status-active  { background: #eafaf1; color: #1a7a43; border: 1px solid #a9dfbf; }
+    .status-pending { background: #fef5e7; color: #b7770d; border: 1px solid #f9ca7a; }
+    .status-review  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+
+    /* ═══════════════════════════════════════════════════════
+       ACTION BUTTONS — from check-student-progress
+    ═══════════════════════════════════════════════════════ */
+    .btn-view {
+      font-size: .73rem; padding: .22rem .65rem; border-radius: 6px;
+      border: 1.5px solid var(--red); color: var(--red);
+      background: transparent; text-decoration: none; white-space: nowrap;
+    }
+    .btn-view:hover { background: #FDECEA; color: var(--red); }
+    .btn-back {
+      font-size: .78rem; padding: .3rem .85rem; border-radius: 7px;
+      border: 1.5px solid var(--border); color: var(--text-muted);
+      background: #F9FAFB; text-decoration: none;
+    }
+    .btn-back:hover { color: var(--red); border-color: var(--red-light); }
+    .table-action-btn {
+      background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 6px;
+      width: 30px; height: 30px; display: inline-flex; align-items: center;
+      justify-content: center; color: var(--text-muted); font-size: .8rem; text-decoration: none;
+      cursor: pointer;
+    }
+    .table-action-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .table-action-btn.danger:hover { background: #fdf1f0; color: var(--red); }
+    .inline-action-form { display: inline-block; margin: 0; }
+
+    /* ═══════════════════════════════════════════════════════
+       FORMS
+    ═══════════════════════════════════════════════════════ */
+    .form-label { font-size: .8rem; font-weight: 600; color: var(--text-main); }
+    .form-control, .form-select {
+      font-size: .85rem; border: 1.5px solid var(--border); border-radius: 8px;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--red); box-shadow: 0 0 0 .2rem rgba(192,57,43,.12);
+    }
+    .btn-save {
+      background: var(--red); border: none; color: #fff;
+      font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px;
+    }
+    .btn-save:hover { background: var(--red-dark); color: #fff; }
+    .btn-reset {
+      background: #F9FAFB; border: 1.5px solid var(--border);
+      color: var(--text-muted); font-size: .85rem; font-weight: 600;
+      padding: .55rem 1.3rem; border-radius: 8px;
+    }
+    .btn-reset:hover { background: #eee; color: var(--text-main); }
+
+    /* ═══════════════════════════════════════════════════════
+       DISTRIBUTION CARDS — reusable mini-stat style
+    ═══════════════════════════════════════════════════════ */
+    .mini-stat { border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1rem; text-align: center; }
+    .mini-stat .mini-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); line-height: 1; }
+    .mini-stat .mini-lbl { font-size: .68rem; color: var(--text-muted); margin-top: .25rem; text-transform: uppercase; letter-spacing: .05em; }
+    .mini-stat .mini-icon {
+      width: 40px; height: 40px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto .55rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       QUICK-LINK FEATURE CARDS
+    ═══════════════════════════════════════════════════════ */
+    .feature-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem;
+      display: flex; align-items: flex-start; gap: .9rem;
+      text-decoration: none; color: var(--text-main);
+      transition: box-shadow .15s, border-color .15s; height: 100%;
+    }
     .feature-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); border-color: var(--red-light); }
-    .feature-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .feature-icon {
+      width: 38px; height: 38px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
     .feature-icon.green  { background: #eafaf1; color: #27ae60; }
     .feature-icon.purple { background: #f4eafb; color: #8e44ad; }
     .feature-icon.orange { background: #fef5e7; color: #e67e22; }
@@ -107,120 +336,144 @@
     .feature-body .fdesc  { font-size: .74rem; color: var(--text-muted); margin-top: .2rem; line-height: 1.4; }
     .feature-chevron { color: #ccc; font-size: .88rem; flex-shrink: 0; margin-top: .15rem; }
 
-    /* ── ACCESS / LEVEL / STATUS BADGES ── */
-    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; }
-    .badge-view-only    { background: #eaf3fb; color: #2980b9; }
-    .badge-full         { background: #eafaf1; color: #27ae60; }
-    .badge-beginner     { background: #eaf3fb; color: #2980b9; }
-    .badge-intermediate { background: #fef5e7; color: #e67e22; }
-    .badge-advanced     { background: #f4eafb; color: #8e44ad; }
-    .badge-completed    { background: #eafaf1; color: #27ae60; }
-    .badge-status-active  { background: #eafaf1; color: #27ae60; }
-    .badge-status-pending { background: #fef5e7; color: #e67e22; }
-    .badge-status-review  { background: #fdf1f0; color: var(--red); }
+    /* ═══════════════════════════════════════════════════════
+       INSTRUCTOR LEVEL MANAGEMENT — new section cards
+    ═══════════════════════════════════════════════════════ */
+    /* Instructor profile card */
+    .instructor-card {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.1rem; height: 100%;
+    }
+    .instructor-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--red); display: flex; align-items: center;
+      justify-content: center; color: #fff; font-weight: 700;
+      font-size: .9rem; flex-shrink: 0;
+    }
+    .instructor-name { font-size: .9rem; font-weight: 700; color: var(--text-main); }
+    .instructor-role { font-size: .72rem; color: var(--text-muted); margin-top: .1rem; }
+    .instructor-meta { font-size: .74rem; color: var(--text-muted); margin-top: .5rem; }
+    .instructor-meta i { color: var(--red); margin-right: .3rem; }
 
-    /* ── DISTRIBUTION CARDS ── */
-    .dist-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1rem; text-align: center; background: #fff; height: 100%; }
-    .dist-icon { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto .65rem; }
-    .dist-number { font-size: 1.55rem; font-weight: 700; color: var(--text-main); line-height: 1; }
-    .dist-label  { font-size: .76rem; color: var(--text-muted); margin-top: .3rem; }
+    /* Level assignment card */
+    .level-assignment-card {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.1rem; height: 100%;
+      transition: box-shadow .15s, border-color .15s;
+    }
+    .level-assignment-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.08); border-color: var(--red-light); }
+    .level-card-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .75rem; }
+    .level-card-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .level-card-title { font-size: .88rem; font-weight: 700; color: var(--text-main); }
+    .level-card-subtitle { font-size: .7rem; color: var(--text-muted); margin-top: .1rem; }
+    .level-card-stat { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .level-card-desc { font-size: .72rem; color: var(--text-muted); margin-top: .25rem; }
+    .level-progress { height: 6px; border-radius: 99px; background: var(--border); margin-top: .65rem; }
+    .level-progress-fill { height: 100%; border-radius: 99px; }
 
-    /* ── FORM ── */
-    .form-label { font-size: .8rem; font-weight: 600; color: var(--text-main); }
-    .form-control, .form-select { font-size: .85rem; border: 1.5px solid var(--border); border-radius: 8px; }
-    .form-control:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 .2rem rgba(192,57,43,.12); }
-    .btn-save { background: var(--red); border: none; color: #fff; font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; }
-    .btn-save:hover { background: var(--red-dark); color: #fff; }
-    .btn-reset { background: #F9FAFB; border: 1.5px solid var(--border); color: var(--text-muted); font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; }
-    .btn-reset:hover { background: #eee; color: var(--text-main); }
-
-    /* ── TABLE ── */
-    .table thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1.5px solid var(--border); font-weight: 700; white-space: nowrap; }
-    .table tbody td { font-size: .82rem; vertical-align: middle; color: var(--text-main); }
-    .table tbody tr:hover { background: #F9FAFB; }
-    .table-action-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 6px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .8rem; text-decoration: none; }
-    .table-action-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
-    .table-action-btn.danger:hover { background: #fdf1f0; color: var(--red); }
-
-    /* ── LIST GROUP (Recent Updates) ── */
-    .list-group-item { border: 1px solid var(--border); border-radius: 8px !important; margin-bottom: .55rem; padding: .75rem .9rem; display: flex; align-items: flex-start; gap: .75rem; }
-    .list-group-item:last-child { margin-bottom: 0; }
-    .update-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
-    .update-text { flex: 1; min-width: 0; }
+    /* Recent updates list */
+    .update-item {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: .75rem .9rem; display: flex; align-items: flex-start;
+      gap: .75rem; margin-bottom: .5rem;
+    }
+    .update-item:last-child { margin-bottom: 0; }
+    .update-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; flex-shrink: 0;
+    }
     .update-text .uname { font-size: .82rem; font-weight: 600; color: var(--text-main); }
     .update-text .udesc { font-size: .74rem; color: var(--text-muted); margin-top: .1rem; }
     .update-time { font-size: .68rem; color: var(--text-muted); white-space: nowrap; margin-left: auto; }
 
-    /* ── NOTICE BAR ── */
-    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; margin-top: 1.1rem; }
+    /* Notice bar */
+    .notice-bar {
+      border: 1px solid #fde8d8; border-radius: 8px;
+      background: #fff8f5; padding: .65rem .9rem;
+      font-size: .76rem; color: var(--text-muted);
+      display: flex; align-items: flex-start; gap: .65rem; margin-top: 1.1rem;
+    }
     .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
     .notice-label { font-weight: 700; color: #e67e22; }
 
-    /* ── FOOTER ── */
-    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
+    /* Student detail card (for detail view reuse) */
+    .student-detail-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; }
+    .student-detail-card .detail-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); font-weight: 700; }
+    .student-detail-card .detail-value { font-size: .85rem; font-weight: 600; color: var(--text-main); margin-top: .1rem; }
 
-    /* ── MOBILE SIDEBAR TOGGLE (pure CSS via checkbox sibling selectors) ── */
+    /* ═══════════════════════════════════════════════════════
+       ANCHOR-TARGET DETAIL SECTIONS (CSS :target, no JS)
+    ═══════════════════════════════════════════════════════ */
+    .student-level-detail { display: none; }
+    .student-level-detail:target { display: block; }
+
+    /* ═══════════════════════════════════════════════════════
+       PORTAL FOOTER
+    ═══════════════════════════════════════════════════════ */
+    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; }
+
+    /* ═══════════════════════════════════════════════════════
+       RESPONSIVE — mobile sidebar
+    ═══════════════════════════════════════════════════════ */
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
       .main-content { margin-left: 0; }
       .sidebar-toggle-label { display: flex; }
-
-      #sidebar-toggle-checkbox:checked ~ .sidebar {
-        transform: translateX(0);
-      }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
       #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
-        display: block;
-        position: fixed;
-        top: var(--topbar-h);
+        display: block; position: fixed; top: var(--topbar-h);
         left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,.35);
-        z-index: 1025;
+        background: rgba(0,0,0,.35); z-index: 1025;
       }
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .filter-bar { gap: .4rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Hidden checkbox driving the mobile sidebar — pure CSS, no JavaScript -->
+<!-- Hidden checkbox for CSS-only mobile sidebar -->
 <input type="checkbox" id="sidebar-toggle-checkbox">
 
-<!-- TOP BAR -->
+<!-- ═══════════════════════════════════════════════════════
+     TOP BAR
+═══════════════════════════════════════════════════════ -->
 <header class="topbar">
-  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle sidebar menu">
     <i class="bi bi-list"></i>
   </label>
   <a href="manage-ins.html" class="topbar-brand">
     <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
     <div>Trigger3D <small>Instructor Portal</small></div>
   </a>
-
-  <div class="topbar-search ms-3">
-    <div class="topbar-search-wrap">
-      <i class="bi bi-search"></i>
-      <input type="text" placeholder="Search…" />
-    </div>
-  </div>
-
   <div class="topbar-right">
     <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
     <div class="icon-btn"><i class="bi bi-gear"></i></div>
-    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
-    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+    <div class="notif-btn" role="button" aria-label="Notifications">
+      <i class="bi bi-bell"></i>
+      <span class="notif-dot"></span>
+    </div>
     <div class="topbar-user d-none d-sm-block">
       Instr. R. Bautista <small>Instructor</small>
     </div>
-    <div class="avatar">RB</div>
+    <div class="avatar" aria-label="User avatar: R. Bautista">RB</div>
   </div>
 </header>
 
-<!-- Backdrop: tapping it (it's a label) closes the sidebar on mobile -->
-<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+<!-- Backdrop (mobile) -->
+<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close sidebar menu"></label>
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
+<!-- ═══════════════════════════════════════════════════════
+     SIDEBAR NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
   <span class="sidebar-label">Main</span>
   <ul class="sidebar-nav">
     <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
@@ -257,63 +510,70 @@
   </div>
 </aside>
 
-<!-- MAIN CONTENT -->
+<!-- ═══════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════ -->
 <main class="main-content">
 
-  <!-- Page Header -->
-  <div class="welcome-banner">
-    <div class="welcome-avatar"><i class="bi bi-layers"></i></div>
-    <div class="welcome-text">
+  <!-- ── PAGE HEADER ── -->
+  <div class="page-header">
+    <div class="page-header-icon"><i class="bi bi-layers"></i></div>
+    <div class="page-header-text">
       <div class="title">Manage Student Levels</div>
-      <div class="sub">Create, update, and organize student classifications and academic levels.</div>
+      <div class="sub">Create, update, organize, and monitor student classifications and academic levels · Academic Year 2025–2026</div>
     </div>
-    <div class="welcome-badge d-none d-sm-block">FIRE102 — Assembly</div>
+    <div class="page-header-badge d-none d-sm-block">FIRE102 — Assembly</div>
   </div>
 
-  <!-- Dashboard Summary Cards -->
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 1 — SUMMARY STAT CARDS
+  ══════════════════════════════════════════════════════════ -->
+  <!-- backend: GET /api/instructor/levels/summary -->
   <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-red">
-        <i class="bi bi-people stat-icon"></i>
-        <div class="stat-number">48</div>
+      <div class="stat-card red">
+        <i class="bi bi-people card-icon"></i>
+        <div class="stat-value">48</div>
         <div class="stat-label">Total Students</div>
-        <div class="stat-sub">Across 6 active subjects</div>
+        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+3 enrolled this term</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-orange">
-        <i class="bi bi-layers stat-icon"></i>
-        <div class="stat-number">4</div>
+      <div class="stat-card orange">
+        <i class="bi bi-layers card-icon"></i>
+        <div class="stat-value">4</div>
         <div class="stat-label">Active Levels</div>
-        <div class="stat-sub">Beginner to Completed</div>
+        <div class="stat-delta">Level 1 to Level 4</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-purple">
-        <i class="bi bi-hourglass-split stat-icon"></i>
-        <div class="stat-number">7</div>
+      <div class="stat-card purple">
+        <i class="bi bi-hourglass-split card-icon"></i>
+        <div class="stat-value">7</div>
         <div class="stat-label">Pending Classification</div>
-        <div class="stat-sub">Awaiting review</div>
+        <div class="stat-delta">Awaiting instructor review</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card stat-teal">
-        <i class="bi bi-clock-history stat-icon"></i>
-        <div class="stat-number">12</div>
+      <div class="stat-card teal">
+        <i class="bi bi-clock-history card-icon"></i>
+        <div class="stat-value">12</div>
         <div class="stat-label">Recently Updated</div>
-        <div class="stat-sub">In the last 7 days</div>
+        <div class="stat-delta">In the last 7 days</div>
       </div>
     </div>
   </div>
 
-  <!-- Quick Navigation -->
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 2 — QUICK NAVIGATION CARDS
+  ══════════════════════════════════════════════════════════ -->
   <div class="row g-3 mb-3">
     <div class="col-12 col-md-4">
       <a href="check-student-progress.html" class="feature-card">
         <div class="feature-icon green"><i class="bi bi-bar-chart-line"></i></div>
         <div class="feature-body">
           <div class="ftitle">Check Student Progress</div>
-          <div class="fdesc">Go to progress monitoring for individual and class-level views.</div>
+          <div class="fdesc">Monitor individual and class-level progress, scores, and assessment history.</div>
         </div>
         <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
@@ -323,7 +583,7 @@
         <div class="feature-icon blue"><i class="bi bi-upload"></i></div>
         <div class="feature-body">
           <div class="ftitle">Upload Modules</div>
-          <div class="fdesc">Add new training modules and materials to lessons.</div>
+          <div class="fdesc">Add new training modules and materials assigned by student level.</div>
         </div>
         <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
@@ -333,254 +593,732 @@
         <div class="feature-icon red"><i class="bi bi-grid-1x2-fill"></i></div>
         <div class="feature-body">
           <div class="ftitle">Back to Dashboard</div>
-          <div class="fdesc">Return to the main instructor dashboard overview.</div>
+          <div class="fdesc">Return to the main instructor dashboard overview and announcements.</div>
         </div>
         <i class="bi bi-chevron-right feature-chevron"></i>
       </a>
     </div>
   </div>
 
-  <!-- Student Classification Management -->
-  <div class="panel mb-3">
-    <div class="panel-banner">
-      <div>
-        <h2>Student Classification Management</h2>
-        <p>Create or update a student's level and classification status.</p>
-      </div>
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 3 — LEVEL DISTRIBUTION OVERVIEW
+       backend: GET /api/instructor/levels/distribution
+  ══════════════════════════════════════════════════════════ -->
+  <div class="panel">
+    <div class="panel-header">
+      <h5><i class="bi bi-pie-chart-fill"></i> Level Distribution Overview</h5>
+      <span style="font-size:.74rem;color:var(--text-muted);">48 students enrolled · Academic Year 2025–2026</span>
     </div>
     <div class="panel-body">
-      <form>
+      <div class="row g-3">
+        <!-- Level 1 -->
+        <div class="col-6 col-md-3">
+          <div class="mini-stat">
+            <div class="mini-icon" style="background:#eaf3fb;color:#2980b9;">
+              <i class="bi bi-seedling"></i>
+            </div>
+            <div class="mini-val" style="color:#2980b9;">18</div>
+            <div class="mini-lbl">Level 1</div>
+            <!-- backend: data-level="1" data-count="{{ level_1_count }}" -->
+            <div class="level-progress mt-2">
+              <div class="level-progress-fill" style="width:37.5%;background:#2980b9;"></div>
+            </div>
+            <div style="font-size:.66rem;color:var(--text-muted);margin-top:.35rem;">37.5% of students</div>
+          </div>
+        </div>
+        <!-- Level 2 -->
+        <div class="col-6 col-md-3">
+          <div class="mini-stat">
+            <div class="mini-icon" style="background:#fef5e7;color:#e67e22;">
+              <i class="bi bi-bar-chart-steps"></i>
+            </div>
+            <div class="mini-val" style="color:#e67e22;">14</div>
+            <div class="mini-lbl">Level 2</div>
+            <!-- backend: data-level="2" data-count="{{ level_2_count }}" -->
+            <div class="level-progress mt-2">
+              <div class="level-progress-fill" style="width:29.2%;background:#e67e22;"></div>
+            </div>
+            <div style="font-size:.66rem;color:var(--text-muted);margin-top:.35rem;">29.2% of students</div>
+          </div>
+        </div>
+        <!-- Level 3 -->
+        <div class="col-6 col-md-3">
+          <div class="mini-stat">
+            <div class="mini-icon" style="background:#f4eafb;color:#8e44ad;">
+              <i class="bi bi-award"></i>
+            </div>
+            <div class="mini-val" style="color:#8e44ad;">9</div>
+            <div class="mini-lbl">Level 3</div>
+            <!-- backend: data-level="3" data-count="{{ level_3_count }}" -->
+            <div class="level-progress mt-2">
+              <div class="level-progress-fill" style="width:18.8%;background:#8e44ad;"></div>
+            </div>
+            <div style="font-size:.66rem;color:var(--text-muted);margin-top:.35rem;">18.8% of students</div>
+          </div>
+        </div>
+        <!-- Level 4 -->
+        <div class="col-6 col-md-3">
+          <div class="mini-stat">
+            <div class="mini-icon" style="background:#eafaf1;color:#27ae60;">
+              <i class="bi bi-patch-check"></i>
+            </div>
+            <div class="mini-val" style="color:#27ae60;">7</div>
+            <div class="mini-lbl">Level 4</div>
+            <!-- backend: data-level="4" data-count="{{ level_4_count }}" -->
+            <div class="level-progress mt-2">
+              <div class="level-progress-fill" style="width:14.6%;background:#27ae60;"></div>
+            </div>
+            <div style="font-size:.66rem;color:var(--text-muted);margin-top:.35rem;">14.6% of students</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 4 — INSTRUCTOR MANAGEMENT PANEL
+       New section: instructor-level views with student cards
+       backend: GET /api/instructor/levels/assigned
+  ══════════════════════════════════════════════════════════ -->
+  <div class="panel">
+    <div class="panel-header">
+      <h5><i class="bi bi-person-video3"></i> Instructor Level Management</h5>
+      <span style="font-size:.74rem;color:var(--text-muted);">Monitor and manage students by assigned level and classification</span>
+    </div>
+    <div class="panel-body">
+
+      <!-- Instructor Profile Row -->
+      <div class="section-label mb-2">Assigned Instructor</div>
+      <!-- backend: data-instructor-id="{{ instructor_id }}" -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="instructor-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="instructor-avatar">RB</div>
+              <div>
+                <div class="instructor-name">Instr. R. Bautista</div>
+                <div class="instructor-role">Lead Instructor · FIRE102</div>
+              </div>
+            </div>
+            <div class="instructor-meta">
+              <div class="mb-1"><i class="bi bi-envelope"></i> r.bautista@trigger3d.edu.ph</div>
+              <div class="mb-1"><i class="bi bi-people"></i> 48 Students Assigned</div>
+              <div><i class="bi bi-calendar3"></i> A.Y. 2025–2026</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="instructor-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="instructor-avatar" style="background:#2980b9;">AR</div>
+              <div>
+                <div class="instructor-name">Instr. A. Reyes</div>
+                <div class="instructor-role">Co-Instructor · FIRE110</div>
+              </div>
+            </div>
+            <div class="instructor-meta">
+              <div class="mb-1"><i class="bi bi-envelope"></i> a.reyes@trigger3d.edu.ph</div>
+              <div class="mb-1"><i class="bi bi-people"></i> 36 Students Assigned</div>
+              <div><i class="bi bi-calendar3"></i> A.Y. 2025–2026</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="instructor-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="instructor-avatar" style="background:#1abc9c;">MD</div>
+              <div>
+                <div class="instructor-name">Instr. M. Dela Rosa</div>
+                <div class="instructor-role">Co-Instructor · FIRE115</div>
+              </div>
+            </div>
+            <div class="instructor-meta">
+              <div class="mb-1"><i class="bi bi-envelope"></i> m.delarosa@trigger3d.edu.ph</div>
+              <div class="mb-1"><i class="bi bi-people"></i> 29 Students Assigned</div>
+              <div><i class="bi bi-calendar3"></i> A.Y. 2025–2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Assignment Overview Cards -->
+      <div class="section-label mb-2">Level Assignment Overview by Instructor</div>
+      <div class="row g-3 mb-4">
+        <!-- Level 1 Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="level-assignment-card">
+            <div class="level-card-header">
+              <div class="level-card-icon" style="background:#eaf3fb;color:#2980b9;">
+                <i class="bi bi-seedling"></i>
+              </div>
+              <div>
+                <div class="level-card-title">Level 1</div>
+                <div class="level-card-subtitle">Foundation Skills</div>
+              </div>
+            </div>
+            <div class="level-card-stat" style="color:#2980b9;">18 <span style="font-size:.9rem;font-weight:400;color:var(--text-muted);">students</span></div>
+            <div class="level-card-desc">Newly enrolled or reassigned students starting fundamental modules.</div>
+            <div class="level-progress">
+              <div class="level-progress-fill" style="width:37%;background:#2980b9;"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span style="font-size:.68rem;color:var(--text-muted);">37% of class</span>
+              <a href="#level-1-detail" class="btn-view">View all</a>
+            </div>
+          </div>
+        </div>
+        <!-- Level 2 Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="level-assignment-card">
+            <div class="level-card-header">
+              <div class="level-card-icon" style="background:#fef5e7;color:#e67e22;">
+                <i class="bi bi-bar-chart-steps"></i>
+              </div>
+              <div>
+                <div class="level-card-title">Level 2</div>
+                <div class="level-card-subtitle">Applied Skills</div>
+              </div>
+            </div>
+            <div class="level-card-stat" style="color:#e67e22;">14 <span style="font-size:.9rem;font-weight:400;color:var(--text-muted);">students</span></div>
+            <div class="level-card-desc">Students progressing through applied and practical training modules.</div>
+            <div class="level-progress">
+              <div class="level-progress-fill" style="width:29%;background:#e67e22;"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span style="font-size:.68rem;color:var(--text-muted);">29% of class</span>
+              <a href="#level-2-detail" class="btn-view">View all</a>
+            </div>
+          </div>
+        </div>
+        <!-- Level 3 Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="level-assignment-card">
+            <div class="level-card-header">
+              <div class="level-card-icon" style="background:#f4eafb;color:#8e44ad;">
+                <i class="bi bi-award"></i>
+              </div>
+              <div>
+                <div class="level-card-title">Level 3</div>
+                <div class="level-card-subtitle">Expert Proficiency</div>
+              </div>
+            </div>
+            <div class="level-card-stat" style="color:#8e44ad;">9 <span style="font-size:.9rem;font-weight:400;color:var(--text-muted);">students</span></div>
+            <div class="level-card-desc">Students completing advanced assessments and complex scenarios.</div>
+            <div class="level-progress">
+              <div class="level-progress-fill" style="width:19%;background:#8e44ad;"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span style="font-size:.68rem;color:var(--text-muted);">19% of class</span>
+              <a href="#level-3-detail" class="btn-view">View all</a>
+            </div>
+          </div>
+        </div>
+        <!-- Level 4 Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="level-assignment-card">
+            <div class="level-card-header">
+              <div class="level-card-icon" style="background:#eafaf1;color:#27ae60;">
+                <i class="bi bi-patch-check-fill"></i>
+              </div>
+              <div>
+                <div class="level-card-title">Level 4</div>
+                <div class="level-card-subtitle">Certified Students</div>
+              </div>
+            </div>
+            <div class="level-card-stat" style="color:#27ae60;">7 <span style="font-size:.9rem;font-weight:400;color:var(--text-muted);">students</span></div>
+            <div class="level-card-desc">Students who have successfully passed all assessments and earned certification.</div>
+            <div class="level-progress">
+              <div class="level-progress-fill" style="width:15%;background:#27ae60;"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span style="font-size:.68rem;color:var(--text-muted);">15% of class</span>
+              <a href="#level-4-detail" class="btn-view">View all</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 5 — STUDENT CLASSIFICATION FORM
+       backend: POST /api/instructor/levels/classify
+  ══════════════════════════════════════════════════════════ -->
+  <div class="panel">
+    <div class="panel-header">
+      <h5><i class="bi bi-person-plus-fill"></i> Student Classification Management</h5>
+      <span style="font-size:.74rem;color:var(--text-muted);">Create or update a student's level and classification status</span>
+    </div>
+    <div class="panel-body">
+      <!--
+        Backend integration:
+          action="/instructor/levels/classify"
+          method="POST"
+          Laravel route example: Route::post('/instructor/levels/classify', [StudentLevelController::class, 'store'])->name('instructor.levels.classify');
+          All inputs include name attributes matching the student_levels table columns for form-data binding.
+      -->
+      <form id="classificationForm" name="classificationForm" action="/instructor/levels/classify" method="POST" autocomplete="off">
+        <!-- backend: CSRF token placeholder -->
+        <!-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
+        <input type="hidden" name="record_id" id="recordId" value="">
         <div class="row g-3">
           <div class="col-12 col-md-6">
-            <label class="form-label">Student Name</label>
-            <input type="text" class="form-control" placeholder="e.g. Juan Dela Cruz">
+            <label class="form-label" for="studentName">Student Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="studentName"
+              name="student_name"
+              class="form-control"
+              placeholder="e.g. Juan Dela Cruz"
+              aria-describedby="studentNameHelp"
+              required
+              maxlength="120"
+            />
+            <div id="studentNameHelp" class="form-text" style="font-size:.7rem;">Enter full legal name as registered.</div>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Student ID</label>
-            <input type="text" class="form-control" placeholder="e.g. 2026-0145">
+            <label class="form-label" for="studentId">Student ID <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="studentId"
+              name="student_id"
+              class="form-control"
+              placeholder="e.g. STU-2025-0145"
+              aria-describedby="studentIdHelp"
+              required
+              pattern="^STU-\d{4}-\d{4}$"
+              maxlength="20"
+            />
+            <div id="studentIdHelp" class="form-text" style="font-size:.7rem;">Use the STU-YYYY-XXXX format.</div>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Subject</label>
-            <select class="form-select">
-              <option selected disabled>Select subject</option>
-              <option>FIRE102 — Assembly</option>
-              <option>FIRE110 — Hazard Response</option>
-              <option>FIRE115 — Equipment Handling</option>
-              <option>FIRE120 — Rescue Operations</option>
+            <label class="form-label" for="subjectSelect">Subject <span class="text-danger">*</span></label>
+            <select id="subjectSelect" name="subject_code" class="form-select" required>
+              <option value="" disabled selected>Select subject</option>
+              <option value="FIRE102">FIRE102 — Assembly</option>
+              <option value="FIRE110">FIRE110 — Hazard Response</option>
+              <option value="FIRE115">FIRE115 — Equipment Handling</option>
+              <option value="FIRE120">FIRE120 — Rescue Operations</option>
             </select>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Current Level</label>
-            <select class="form-select">
-              <option selected disabled>Select level</option>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-              <option>Completed</option>
+            <label class="form-label" for="levelSelect">Current Level <span class="text-danger">*</span></label>
+            <select id="levelSelect" name="level" class="form-select" required>
+              <option value="" disabled selected>Select level</option>
+              <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+              <option value="4">Level 4</option>
+              <option value="5">Level 5</option>
             </select>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Classification Status</label>
-            <select class="form-select">
-              <option selected disabled>Select status</option>
-              <option>Active</option>
-              <option>Pending Review</option>
-              <option>Needs Reassessment</option>
+            <label class="form-label" for="classificationStatus">Classification Status <span class="text-danger">*</span></label>
+            <select id="classificationStatus" name="classification_status" class="form-select" required>
+              <option value="" disabled selected>Select status</option>
+              <option value="active">Active</option>
+              <option value="pending_review">Pending Review</option>
+              <option value="needs_reassessment">Needs Reassessment</option>
             </select>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label">Remarks</label>
-            <input type="text" class="form-control" placeholder="Optional short note">
+            <label class="form-label" for="assignedInstructor">Assigned Instructor <span class="text-danger">*</span></label>
+            <select id="assignedInstructor" name="instructor_id" class="form-select" required>
+              <option value="" disabled selected>Select instructor</option>
+              <option value="INS-001">Instr. R. Bautista — FIRE102</option>
+              <option value="INS-002">Instr. A. Reyes — FIRE110</option>
+              <option value="INS-003">Instr. M. Dela Rosa — FIRE115</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="shortRemarks">Remarks</label>
+            <input
+              type="text"
+              id="shortRemarks"
+              name="remarks_short"
+              class="form-control"
+              placeholder="Optional short note"
+              maxlength="150"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="effectiveDate">Effective Date <span class="text-danger">*</span></label>
+            <input
+              type="date"
+              id="effectiveDate"
+              name="effective_date"
+              class="form-control"
+              required
+            />
           </div>
           <div class="col-12">
-            <label class="form-label">Detailed Remarks</label>
-            <textarea class="form-control" rows="3" placeholder="Additional notes about this classification…"></textarea>
+            <label class="form-label" for="detailedRemarks">Detailed Remarks</label>
+            <textarea
+              id="detailedRemarks"
+              name="remarks_detail"
+              class="form-control"
+              rows="3"
+              maxlength="1000"
+              placeholder="Additional notes about this classification, rationale for level change, or instructor observations…"
+            ></textarea>
           </div>
         </div>
         <div class="d-flex gap-2 mt-3">
-          <button type="submit" class="btn-save"><i class="bi bi-check-circle me-1"></i> Save Level</button>
-          <button type="reset" class="btn-reset"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</button>
+          <button type="submit" name="action" value="save_level" class="btn-save">
+            <i class="bi bi-check-circle me-1"></i> Save Level
+          </button>
+          <button type="reset" class="btn-reset">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+          </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Student Levels Table -->
-  <div class="panel mb-3">
-    <div class="panel-banner">
-      <div>
-        <h2>Student Levels</h2>
-        <p>All recorded student classifications and academic levels.</p>
-      </div>
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 6 — STUDENT LEVELS DIRECTORY TABLE
+       backend: GET /api/instructor/levels?page=1&limit=10&level=&status=&q=
+  ══════════════════════════════════════════════════════════ -->
+  <div class="panel">
+    <div class="panel-header">
+      <h5><i class="bi bi-table"></i> Student Levels Directory</h5>
+      <span style="font-size:.74rem;color:var(--text-muted);">All recorded student classifications and academic levels</span>
     </div>
     <div class="panel-body">
+
+      <!-- Search & Filter Bar -->
+      <!-- backend: Laravel route example: Route::get('/instructor/levels', [StudentLevelController::class, 'index'])->name('instructor.levels.index'); -->
+      <form class="filter-bar mb-3" id="levelFilterForm" name="levelFilterForm" action="/instructor/levels" method="GET">
+        <label for="searchStudentId">Search:</label>
+        <input
+          type="text"
+          id="searchStudentId"
+          name="search_id"
+          class="form-control"
+          placeholder="Student ID…"
+          style="width:140px;"
+          aria-label="Search by Student ID"
+          maxlength="20"
+        />
+        <input
+          type="text"
+          id="searchStudentName"
+          name="search_name"
+          class="form-control"
+          placeholder="Student name…"
+          style="width:165px;"
+          aria-label="Search by Student Name"
+          maxlength="120"
+        />
+        <label for="filterLevel">Level:</label>
+        <select id="filterLevel" name="filter_level" class="form-select" style="width:auto;" aria-label="Filter by Level">
+          <option value="">All Levels</option>
+          <option value="1">Level 1</option>
+          <option value="2">Level 2</option>
+          <option value="3">Level 3</option>
+          <option value="4">Level 4</option>
+          <option value="5">Level 5</option>
+        </select>
+        <label for="filterStatus">Status:</label>
+        <select id="filterStatus" name="filter_status" class="form-select" style="width:auto;" aria-label="Filter by Status">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="pending_review">Pending Review</option>
+          <option value="needs_reassessment">Needs Review</option>
+        </select>
+        <button type="submit" class="btn btn-sm" style="background:var(--red);color:#fff;font-size:.78rem;border-radius:7px;height:32px;padding:.2rem .85rem;border:none;" aria-label="Search students">
+          <i class="bi bi-search me-1"></i>Search
+        </button>
+      </form>
+
+      <!-- Student Levels Table -->
       <div class="table-responsive">
-        <table class="table">
-          <thead>
+        <!-- backend: data-endpoint="/api/instructor/levels" data-page="1" -->
+        <table class="table table-hover progress-table align-middle mb-0" id="studentLevelsTable">
+          <thead class="table-light">
             <tr>
               <th>Student ID</th>
-              <th>Student Name</th>
-              <th>Subject</th>
+              <th>Full Name</th>
+              <th class="d-none d-lg-table-cell">Subject</th>
               <th>Level</th>
-              <th>Classification</th>
+              <th class="d-none d-md-table-cell">Classification</th>
               <th>Status</th>
-              <th>Last Updated</th>
+              <th class="d-none d-sm-table-cell">Last Updated</th>
+              <th class="d-none d-xl-table-cell">Instructor</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
+            <!-- backend: foreach ($students as $student) — Row 1 -->
             <tr>
-              <td>2026-0145</td>
-              <td>Juan Dela Cruz</td>
-              <td>FIRE102 — Assembly</td>
-              <td><span class="access-badge badge-beginner">Beginner</span></td>
-              <td>Newly Enrolled</td>
-              <td><span class="access-badge badge-status-active">Active</span></td>
-              <td>June 15, 2026</td>
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0145</span></td>
               <td>
-                <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
-                <a href="#" class="table-action-btn danger ms-1" title="Delete"><i class="bi bi-trash3"></i></a>
+                <div class="student-name">Dela Cruz, Juan A.</div>
+                <div class="student-id">Juan A. Dela Cruz</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE102 — Assembly</td>
+              <td><span class="level-pill level-1">Level 1</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Newly Enrolled</td>
+              <td><span class="status-pill status-active">Active</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 15, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. R. Bautista</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-145" class="table-action-btn" title="View student level details" aria-label="View level details for Juan A. Dela Cruz"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0145/edit" class="table-action-btn" title="Edit classification" aria-label="Edit classification for Juan A. Dela Cruz"><i class="bi bi-pencil"></i></a>
+                  <!-- backend: DELETE /instructor/levels/STU-2025-0145 -->
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0145" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <!-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
+                    <button type="submit" class="table-action-btn danger" title="Remove classification" aria-label="Remove classification for Juan A. Dela Cruz"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
+            <!-- Row 2 -->
             <tr>
-              <td>2026-0098</td>
-              <td>Maria Santos</td>
-              <td>FIRE110 — Hazard Response</td>
-              <td><span class="access-badge badge-intermediate">Intermediate</span></td>
-              <td>Reassessed</td>
-              <td><span class="access-badge badge-status-pending">Pending Review</span></td>
-              <td>June 14, 2026</td>
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0098</span></td>
               <td>
-                <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
-                <a href="#" class="table-action-btn danger ms-1" title="Delete"><i class="bi bi-trash3"></i></a>
+                <div class="student-name">Santos, Maria B.</div>
+                <div class="student-id">Maria B. Santos</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE110 — Hazard Response</td>
+              <td><span class="level-pill level-2">Level 2</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Reassessed</td>
+              <td><span class="status-pill status-pending">Pending Review</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 14, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. A. Reyes</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-098" class="table-action-btn" title="View level details" aria-label="View level details for Maria B. Santos"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0098/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0098" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
+            <!-- Row 3 -->
             <tr>
-              <td>2026-0072</td>
-              <td>Carlo Ramirez</td>
-              <td>FIRE115 — Equipment Handling</td>
-              <td><span class="access-badge badge-advanced">Advanced</span></td>
-              <td>Verified</td>
-              <td><span class="access-badge badge-status-active">Active</span></td>
-              <td>June 12, 2026</td>
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0072</span></td>
               <td>
-                <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
-                <a href="#" class="table-action-btn danger ms-1" title="Delete"><i class="bi bi-trash3"></i></a>
+                <div class="student-name">Ramirez, Carlo L.</div>
+                <div class="student-id">Carlo L. Ramirez</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE115 — Equipment Handling</td>
+              <td><span class="level-pill level-3">Level 3</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Verified</td>
+              <td><span class="status-pill status-active">Active</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 12, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. M. Dela Rosa</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-072" class="table-action-btn" title="View level details" aria-label="View level details for Carlo L. Ramirez"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0072/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0072" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
+            <!-- Row 4 -->
             <tr>
-              <td>2026-0033</td>
-              <td>Angela Reyes</td>
-              <td>FIRE120 — Rescue Operations</td>
-              <td><span class="access-badge badge-completed">Completed</span></td>
-              <td>Certified</td>
-              <td><span class="access-badge badge-status-active">Active</span></td>
-              <td>June 10, 2026</td>
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0033</span></td>
               <td>
-                <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
-                <a href="#" class="table-action-btn danger ms-1" title="Delete"><i class="bi bi-trash3"></i></a>
+                <div class="student-name">Reyes, Angela F.</div>
+                <div class="student-id">Angela F. Reyes</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE120 — Rescue Operations</td>
+              <td><span class="level-pill level-4">Level 4</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Certified</td>
+              <td><span class="status-pill status-active">Active</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 10, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. R. Bautista</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-033" class="table-action-btn" title="View level details" aria-label="View level details for Angela F. Reyes"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0033/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0033" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
-            <tr>
-              <td>2026-0151</td>
-              <td>Mark Villanueva</td>
-              <td>FIRE102 — Assembly</td>
-              <td><span class="access-badge badge-beginner">Beginner</span></td>
-              <td>Needs Reassessment</td>
-              <td><span class="access-badge badge-status-review">Needs Review</span></td>
-              <td>June 9, 2026</td>
+            <!-- Row 5 -->
+            <tr class="table-warning">
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0151</span></td>
               <td>
-                <a href="#" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
-                <a href="#" class="table-action-btn danger ms-1" title="Delete"><i class="bi bi-trash3"></i></a>
+                <div class="student-name">Villanueva, Mark R.</div>
+                <div class="student-id">Mark R. Villanueva</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE102 — Assembly</td>
+              <td><span class="level-pill level-1">Level 1</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Needs Reassessment</td>
+              <td><span class="status-pill status-review">Needs Review</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 9, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. R. Bautista</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-151" class="table-action-btn" title="View level details" aria-label="View level details for Mark R. Villanueva"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0151/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0151" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <!-- Row 6 -->
+            <tr>
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0041</span></td>
+              <td>
+                <div class="student-name">Dela Cruz, Maria A.</div>
+                <div class="student-id">Maria A. Dela Cruz</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE102 — Assembly</td>
+              <td><span class="level-pill level-4">Level 4</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Top Performer</td>
+              <td><span class="status-pill status-active">Active</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 8, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. R. Bautista</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-041" class="table-action-btn" title="View level details" aria-label="View level details for Maria A. Dela Cruz"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0041/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0041" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <!-- Row 7 -->
+            <tr class="table-warning">
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0019</span></td>
+              <td>
+                <div class="student-name">Garcia, Liza M.</div>
+                <div class="student-id">Liza M. Garcia</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE102 — Assembly</td>
+              <td><span class="level-pill level-1">Level 1</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">At Risk</td>
+              <td><span class="status-pill status-review">Needs Review</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 7, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. R. Bautista</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-019" class="table-action-btn" title="View level details" aria-label="View level details for Liza M. Garcia"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0019/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0019" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <!-- Row 8 -->
+            <tr>
+              <td><span class="student-id" style="font-weight:600;">STU-2025-0063</span></td>
+              <td>
+                <div class="student-name">Torres, Miguel R.</div>
+                <div class="student-id">Miguel R. Torres</div>
+              </td>
+              <td class="d-none d-lg-table-cell" style="font-size:.77rem;">FIRE102 — Assembly</td>
+              <td><span class="level-pill level-3">Level 3</span></td>
+              <td class="d-none d-md-table-cell" style="font-size:.77rem;">Verified</td>
+              <td><span class="status-pill status-active">Active</span></td>
+              <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 6, 2026</td>
+              <td class="d-none d-xl-table-cell" style="font-size:.77rem;">Instr. R. Bautista</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="#level-detail-063" class="table-action-btn" title="View level details" aria-label="View level details for Miguel R. Torres"><i class="bi bi-eye"></i></a>
+                  <a href="/instructor/levels/STU-2025-0063/edit" class="table-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form class="inline-action-form" action="/instructor/levels/STU-2025-0063" method="POST" onsubmit="return confirm('Remove this classification record?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="table-action-btn danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination -->
+      <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+        <!-- backend: total_count=48, page=1, limit=8 -->
+        <div style="font-size:.76rem;color:var(--text-muted);">Showing 1–8 of 48 students</div>
+        <nav aria-label="Student levels pagination">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item disabled"><a class="page-link" href="/instructor/levels?page=0" aria-label="Previous page">‹</a></li>
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" href="/instructor/levels?page=1" style="background:var(--red);border-color:var(--red);">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="/instructor/levels?page=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="/instructor/levels?page=3">3</a></li>
+            <li class="page-item"><a class="page-link" href="/instructor/levels?page=4">4</a></li>
+            <li class="page-item"><a class="page-link" href="/instructor/levels?page=5">5</a></li>
+            <li class="page-item"><a class="page-link" href="/instructor/levels?page=2" aria-label="Next page">›</a></li>
+          </ul>
+        </nav>
+      </div>
+
     </div>
   </div>
 
-  <!-- Level Distribution Overview -->
-  <div class="panel mb-3">
-    <div class="panel-body">
-      <div class="section-heading">
-        <i class="bi bi-pie-chart-fill"></i> Level Distribution Overview
-      </div>
-      <div class="row g-3">
-        <div class="col-6 col-lg-3">
-          <div class="dist-card">
-            <div class="dist-icon" style="background:#eaf3fb;color:#2980b9;"><i class="bi bi-seedling"></i></div>
-            <div class="dist-number">18</div>
-            <div class="dist-label">Beginner Students</div>
-          </div>
-        </div>
-        <div class="col-6 col-lg-3">
-          <div class="dist-card">
-            <div class="dist-icon" style="background:#fef5e7;color:#e67e22;"><i class="bi bi-bar-chart-steps"></i></div>
-            <div class="dist-number">14</div>
-            <div class="dist-label">Intermediate Students</div>
-          </div>
-        </div>
-        <div class="col-6 col-lg-3">
-          <div class="dist-card">
-            <div class="dist-icon" style="background:#f4eafb;color:#8e44ad;"><i class="bi bi-award"></i></div>
-            <div class="dist-number">9</div>
-            <div class="dist-label">Advanced Students</div>
-          </div>
-        </div>
-        <div class="col-6 col-lg-3">
-          <div class="dist-card">
-            <div class="dist-icon" style="background:#eafaf1;color:#27ae60;"><i class="bi bi-patch-check"></i></div>
-            <div class="dist-number">7</div>
-            <div class="dist-label">Completed Students</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recent Updates -->
-  <div class="panel mb-3">
-    <div class="panel-banner">
-      <div>
-        <h2>Recent Updates</h2>
-        <p>Most recently modified student level records.</p>
-      </div>
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 7 — RECENT LEVEL UPDATES
+       backend: GET /api/instructor/levels/recent?limit=5
+  ══════════════════════════════════════════════════════════ -->
+  <div class="panel">
+    <div class="panel-header">
+      <h5><i class="bi bi-clock-history"></i> Recent Level Updates</h5>
+      <span style="font-size:.74rem;color:var(--text-muted);">Most recently modified student level records</span>
     </div>
     <div class="panel-body">
-      <div class="list-group list-group-flush">
-        <div class="list-group-item">
-          <div class="update-icon" style="background:#eaf3fb;color:#2980b9;"><i class="bi bi-arrow-up-right"></i></div>
-          <div class="update-text">
-            <div class="uname">Juan Dela Cruz <span class="text-muted">— FIRE102</span></div>
-            <div class="udesc">Classified as Beginner upon enrollment.</div>
-          </div>
-          <div class="update-time">2 hours ago</div>
+      <div class="update-item">
+        <div class="update-icon" style="background:#eaf3fb;color:#2980b9;"><i class="bi bi-arrow-up-right"></i></div>
+        <div class="update-text flex-grow-1">
+          <div class="uname">Juan A. Dela Cruz <span class="text-muted fw-normal">— FIRE102</span></div>
+          <div class="udesc">Classified as Level 1 upon enrollment. Assigned to Instr. R. Bautista.</div>
         </div>
-        <div class="list-group-item">
-          <div class="update-icon" style="background:#fef5e7;color:#e67e22;"><i class="bi bi-arrow-repeat"></i></div>
-          <div class="update-text">
-            <div class="uname">Maria Santos <span class="text-muted">— FIRE110</span></div>
-            <div class="udesc">Moved from Beginner to Intermediate, pending review.</div>
-          </div>
-          <div class="update-time">Yesterday</div>
+        <div class="update-time">2 hours ago</div>
+      </div>
+      <div class="update-item">
+        <div class="update-icon" style="background:#fef5e7;color:#e67e22;"><i class="bi bi-arrow-repeat"></i></div>
+        <div class="update-text flex-grow-1">
+          <div class="uname">Maria B. Santos <span class="text-muted fw-normal">— FIRE110</span></div>
+          <div class="udesc">Moved from Level 1 to Level 2 after reassessment. Pending review.</div>
         </div>
-        <div class="list-group-item">
-          <div class="update-icon" style="background:#f4eafb;color:#8e44ad;"><i class="bi bi-check2-circle"></i></div>
-          <div class="update-text">
-            <div class="uname">Carlo Ramirez <span class="text-muted">— FIRE115</span></div>
-            <div class="udesc">Advanced level verified after practical assessment.</div>
-          </div>
-          <div class="update-time">2 days ago</div>
+        <div class="update-time">Yesterday</div>
+      </div>
+      <div class="update-item">
+        <div class="update-icon" style="background:#f4eafb;color:#8e44ad;"><i class="bi bi-check2-circle"></i></div>
+        <div class="update-text flex-grow-1">
+          <div class="uname">Carlo L. Ramirez <span class="text-muted fw-normal">— FIRE115</span></div>
+          <div class="udesc">Level 3 verified after practical scenario assessment.</div>
         </div>
-        <div class="list-group-item">
-          <div class="update-icon" style="background:#eafaf1;color:#27ae60;"><i class="bi bi-patch-check"></i></div>
-          <div class="update-text">
-            <div class="uname">Angela Reyes <span class="text-muted">— FIRE120</span></div>
-            <div class="udesc">Marked Completed and certified for rescue operations.</div>
-          </div>
-          <div class="update-time">5 days ago</div>
+        <div class="update-time">2 days ago</div>
+      </div>
+      <div class="update-item">
+        <div class="update-icon" style="background:#eafaf1;color:#27ae60;"><i class="bi bi-patch-check"></i></div>
+        <div class="update-text flex-grow-1">
+          <div class="uname">Angela F. Reyes <span class="text-muted fw-normal">— FIRE120</span></div>
+          <div class="udesc">Marked Level 4 and certified for rescue operations by Instr. R. Bautista.</div>
         </div>
+        <div class="update-time">5 days ago</div>
+      </div>
+      <div class="update-item">
+        <div class="update-icon" style="background:#fdedec;color:#c0392b;"><i class="bi bi-exclamation-triangle"></i></div>
+        <div class="update-text flex-grow-1">
+          <div class="uname">Mark R. Villanueva <span class="text-muted fw-normal">— FIRE102</span></div>
+          <div class="udesc">Flagged for reassessment due to low assessment scores. Needs instructor review.</div>
+        </div>
+        <div class="update-time">1 week ago</div>
       </div>
 
       <!-- Notice Bar -->
@@ -588,17 +1326,465 @@
         <i class="bi bi-exclamation-circle-fill"></i>
         <div>
           <span class="notice-label">Classification Notice —</span>
-          Level changes affect a student's assigned modules and assessments. Double-check the subject and level before saving.
+          Level changes affect a student's assigned modules and assessments. Double-check the subject and level before saving. All changes are logged for audit purposes.
         </div>
       </div>
+
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 8 — CSS :TARGET DETAIL VIEWS (no JS)
+       Each section shown when its anchor is targeted via View link
+  ══════════════════════════════════════════════════════════ -->
+
+  <!-- ── Level Group: Level 1 ── -->
+  <section class="student-level-detail" id="level-1-detail">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-seedling" style="color:#2980b9;"></i> Level 1 — Student List</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back</a>
+      </div>
+      <div class="panel-body">
+        <div class="alert" style="background:#eaf3fb;border:1px solid #aed6f1;border-radius:8px;font-size:.8rem;color:#1a5276;padding:.65rem .9rem;">
+          <i class="bi bi-info-circle me-1"></i> <strong>18 students</strong> are currently classified at Level 1 in FIRE102.
+          <!-- backend: GET /api/instructor/levels?level=1 -->
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Student ID</th><th>Full Name</th><th class="d-none d-md-table-cell">Subject</th><th>Status</th><th class="d-none d-sm-table-cell">Date Assigned</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="student-id fw-bold">STU-2025-0145</span></td>
+                <td><div class="student-name">Dela Cruz, Juan A.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE102</td>
+                <td><span class="status-pill status-active">Active</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 15, 2026</td>
+                <td><a href="#level-detail-145" class="btn-view">View</a></td>
+              </tr>
+              <tr class="table-warning">
+                <td><span class="student-id fw-bold">STU-2025-0151</span></td>
+                <td><div class="student-name">Villanueva, Mark R.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE102</td>
+                <td><span class="status-pill status-review">Needs Review</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 9, 2026</td>
+                <td><a href="#level-detail-151" class="btn-view">View</a></td>
+              </tr>
+              <tr class="table-warning">
+                <td><span class="student-id fw-bold">STU-2025-0019</span></td>
+                <td><div class="student-name">Garcia, Liza M.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE102</td>
+                <td><span class="status-pill status-review">Needs Review</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 7, 2026</td>
+                <td><a href="#level-detail-019" class="btn-view">View</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:.74rem;color:var(--text-muted);margin-top:.75rem;">Showing 3 of 18 Level 1 students. Backend integration will paginate full list.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Level Group: Level 2 ── -->
+  <section class="student-level-detail" id="level-2-detail">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-bar-chart-steps" style="color:#e67e22;"></i> Level 2 — Student List</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back</a>
+      </div>
+      <div class="panel-body">
+        <div class="alert" style="background:#fef5e7;border:1px solid #f9ca7a;border-radius:8px;font-size:.8rem;color:#7d6608;padding:.65rem .9rem;">
+          <i class="bi bi-info-circle me-1"></i> <strong>14 students</strong> are currently classified at Level 2.
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Student ID</th><th>Full Name</th><th class="d-none d-md-table-cell">Subject</th><th>Status</th><th class="d-none d-sm-table-cell">Date Assigned</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="student-id fw-bold">STU-2025-0098</span></td>
+                <td><div class="student-name">Santos, Maria B.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE110</td>
+                <td><span class="status-pill status-pending">Pending Review</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 14, 2026</td>
+                <td><a href="#level-detail-098" class="btn-view">View</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:.74rem;color:var(--text-muted);margin-top:.75rem;">Showing 1 of 14 Level 2 students. Backend integration will paginate full list.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Level Group: Level 3 ── -->
+  <section class="student-level-detail" id="level-3-detail">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-award" style="color:#8e44ad;"></i> Level 3 — Student List</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back</a>
+      </div>
+      <div class="panel-body">
+        <div class="alert" style="background:#f4eafb;border:1px solid #d7bde2;border-radius:8px;font-size:.8rem;color:#5b2c6f;padding:.65rem .9rem;">
+          <i class="bi bi-info-circle me-1"></i> <strong>9 students</strong> are currently classified at Level 3.
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Student ID</th><th>Full Name</th><th class="d-none d-md-table-cell">Subject</th><th>Status</th><th class="d-none d-sm-table-cell">Date Assigned</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="student-id fw-bold">STU-2025-0072</span></td>
+                <td><div class="student-name">Ramirez, Carlo L.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE115</td>
+                <td><span class="status-pill status-active">Active</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 12, 2026</td>
+                <td><a href="#level-detail-072" class="btn-view">View</a></td>
+              </tr>
+              <tr>
+                <td><span class="student-id fw-bold">STU-2025-0063</span></td>
+                <td><div class="student-name">Torres, Miguel R.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE102</td>
+                <td><span class="status-pill status-active">Active</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 6, 2026</td>
+                <td><a href="#level-detail-063" class="btn-view">View</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:.74rem;color:var(--text-muted);margin-top:.75rem;">Showing 2 of 9 Level 3 students. Backend integration will paginate full list.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Level Group: Level 4 ── -->
+  <section class="student-level-detail" id="level-4-detail">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-patch-check-fill" style="color:#27ae60;"></i> Level 4 — Student List</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back</a>
+      </div>
+      <div class="panel-body">
+        <div class="alert" style="background:#eafaf1;border:1px solid #a9dfbf;border-radius:8px;font-size:.8rem;color:#1e8449;padding:.65rem .9rem;">
+          <i class="bi bi-info-circle me-1"></i> <strong>7 students</strong> have completed all assessments and are certified at Level 4.
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover progress-table align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Student ID</th><th>Full Name</th><th class="d-none d-md-table-cell">Subject</th><th>Status</th><th class="d-none d-sm-table-cell">Date Certified</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="student-id fw-bold">STU-2025-0033</span></td>
+                <td><div class="student-name">Reyes, Angela F.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE120</td>
+                <td><span class="status-pill status-active">Active</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 10, 2026</td>
+                <td><a href="#level-detail-033" class="btn-view">View</a></td>
+              </tr>
+              <tr>
+                <td><span class="student-id fw-bold">STU-2025-0041</span></td>
+                <td><div class="student-name">Dela Cruz, Maria A.</div></td>
+                <td class="d-none d-md-table-cell" style="font-size:.77rem;">FIRE102</td>
+                <td><span class="status-pill status-active">Active</span></td>
+                <td class="d-none d-sm-table-cell" style="font-size:.77rem;">June 8, 2026</td>
+                <td><a href="#level-detail-041" class="btn-view">View</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:.74rem;color:var(--text-muted);margin-top:.75rem;">Showing 2 of 7 Level 4 students. Backend integration will paginate full list.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 9 — INDIVIDUAL STUDENT LEVEL DETAIL VIEWS
+       CSS :target, no JS — shown when anchor targeted
+       backend: GET /api/instructor/levels/{student_id}
+  ══════════════════════════════════════════════════════════ -->
+
+  <!-- STU-2025-0145 -->
+  <section class="student-level-detail" id="level-detail-145">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Level Detail — Juan A. Dela Cruz</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="section-label mb-2">Student Information</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0145</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Juan</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Andres</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Dela Cruz</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-1">Level 1</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">juan.adelacruz@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 912 345 6789</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. R. Bautista</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE102 — Assembly</div></div></div>
+          <div class="col-12"><div class="student-detail-card"><div class="detail-label">Classification Remarks</div><div class="detail-value">Newly enrolled student. Assigned to Level 1 upon initial assessment. No prior firearm training background.</div></div></div>
+        </div>
+        <div class="section-label mb-2">Level Summary</div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:var(--red);">1</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#e67e22;">Level 1</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Active</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 15, 2026</div><div class="mini-lbl">Date Classified</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0098 -->
+  <section class="student-level-detail" id="level-detail-098">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Level Detail — Maria B. Santos</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="section-label mb-2">Student Information</div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0098</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Maria</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Bautista</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Santos</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-2">Level 2</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">maria.bsantos@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 917 234 5678</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. A. Reyes</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE110 — Hazard Response</div></div></div>
+        </div>
+        <div class="alert" style="background:#fef5e7;border:1px solid #f9ca7a;border-radius:8px;font-size:.8rem;color:#7d6608;padding:.65rem .9rem;">
+          <i class="bi bi-exclamation-circle me-1"></i> Classification is <strong>Pending Review</strong>. Instructor must confirm the Level 2 upgrade.
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#e67e22;">2</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#e67e22;">Level 2</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#b7770d;">Pending</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 14, 2026</div><div class="mini-lbl">Date Updated</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0072 -->
+  <section class="student-level-detail" id="level-detail-072">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Level Detail — Carlo L. Ramirez</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0072</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Carlo</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Luis</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Ramirez</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-3">Level 3</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">carlo.lramirez@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 920 987 6543</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. M. Dela Rosa</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE115 — Equipment Handling</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#8e44ad;">3</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#8e44ad;">Level 3</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Active</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 12, 2026</div><div class="mini-lbl">Date Verified</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0033 -->
+  <section class="student-level-detail" id="level-detail-033">
+    <div class="panel" style="border-top:3px solid #27ae60;">
+      <div class="panel-header">
+        <h5>
+          <i class="bi bi-person-badge-fill"></i> Level Detail — Angela F. Reyes
+          <span class="badge bg-success-subtle text-success border border-success-subtle ms-2" style="font-size:.68rem;">Certified</span>
+        </h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0033</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Angela</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Flores</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Reyes</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-4">Level 4</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">angela.freyes@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 916 321 0987</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. R. Bautista</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE120 — Rescue Operations</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">4</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Level 4</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Certified</div><div class="mini-lbl">Certification Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 10, 2026</div><div class="mini-lbl">Date Certified</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0151 -->
+  <section class="student-level-detail" id="level-detail-151">
+    <div class="panel" style="border-top:3px solid #e74c3c;">
+      <div class="panel-header">
+        <h5>
+          <i class="bi bi-person-badge-fill"></i> Level Detail — Mark R. Villanueva
+          <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-2" style="font-size:.68rem;">⚠ Needs Review</span>
+        </h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 mb-4" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+          <div>This student requires <strong>reassessment</strong>. Low assessment scores indicate the Level 1 classification may need to be reviewed or restructured.</div>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card" style="border-color:#fadbd8;"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0151</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Mark</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Ramos</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Villanueva</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-1">Level 1</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">mark.rvillanueva@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 913 789 0123</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. R. Bautista</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE102 — Assembly</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat" style="border-color:#fadbd8;"><div class="mini-val" style="color:#c0392b;">1</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;">Level 1</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;">Needs Review</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 9, 2026</div><div class="mini-lbl">Date Classified</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0041 -->
+  <section class="student-level-detail" id="level-detail-041">
+    <div class="panel" style="border-top:3px solid #27ae60;">
+      <div class="panel-header">
+        <h5>
+          <i class="bi bi-person-badge-fill"></i> Level Detail — Maria A. Dela Cruz
+          <span class="badge bg-success-subtle text-success border border-success-subtle ms-2" style="font-size:.68rem;">Top Performer</span>
+        </h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0041</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Maria</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Aurora</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Dela Cruz</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-4">Level 4</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">m.adelacruz@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 912 345 6789</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. R. Bautista</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE102 — Assembly</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">5</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Level 4</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Active</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 8, 2026</div><div class="mini-lbl">Date Completed</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0019 -->
+  <section class="student-level-detail" id="level-detail-019">
+    <div class="panel" style="border-top:3px solid #e74c3c;">
+      <div class="panel-header">
+        <h5>
+          <i class="bi bi-person-badge-fill"></i> Level Detail — Liza M. Garcia
+          <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-2" style="font-size:.68rem;">⚠ Needs Review</span>
+        </h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 mb-4" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+          <div>This student is <strong>at risk</strong> with critically low scores. Immediate instructor intervention is recommended to determine if level reassignment is needed.</div>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card" style="border-color:#fadbd8;"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0019</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Liza</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Marquez</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Garcia</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-1">Level 1</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">liza.mgarcia@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 915 654 3210</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. R. Bautista</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE102 — Assembly</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat" style="border-color:#fadbd8;"><div class="mini-val" style="color:#c0392b;">1</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;">Level 1</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#c0392b;">Needs Review</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 7, 2026</div><div class="mini-lbl">Date Classified</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STU-2025-0063 -->
+  <section class="student-level-detail" id="level-detail-063">
+    <div class="panel">
+      <div class="panel-header">
+        <h5><i class="bi bi-person-badge-fill"></i> Level Detail — Miguel R. Torres</h5>
+        <a href="#" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Directory</a>
+      </div>
+      <div class="panel-body">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Student ID</div><div class="detail-value">STU-2025-0063</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">First Name</div><div class="detail-value">Miguel</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Middle Name</div><div class="detail-value">Ramirez</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Last Name</div><div class="detail-value">Torres</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Suffix</div><div class="detail-value" style="color:var(--text-muted);">—</div></div></div>
+          <div class="col-6 col-md-4 col-lg-2"><div class="student-detail-card"><div class="detail-label">Current Level</div><div class="detail-value"><span class="level-pill level-3">Level 3</span></div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Gmail</div><div class="detail-value">miguel.rtorres@gmail.com</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Phone Number</div><div class="detail-value">+63 916 321 0987</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Assigned Instructor</div><div class="detail-value">Instr. R. Bautista</div></div></div>
+          <div class="col-6 col-md-6"><div class="student-detail-card"><div class="detail-label">Subject</div><div class="detail-value">FIRE102 — Assembly</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#8e44ad;">3</div><div class="mini-lbl">Level Assignments</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#8e44ad;">Level 3</div><div class="mini-lbl">Current Level</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="color:#27ae60;">Active</div><div class="mini-lbl">Status</div></div></div>
+          <div class="col-6 col-md-3"><div class="mini-stat"><div class="mini-val" style="font-size:1rem;color:var(--text-main);">June 6, 2026</div><div class="mini-lbl">Date Updated</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════ -->
   <div class="portal-footer">
     Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
   </div>
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
