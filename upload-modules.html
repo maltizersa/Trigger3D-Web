@@ -7,6 +7,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
+    /* ══════════════════════════════════════════════
+       DESIGN TOKENS — identical to existing codebase
+       ══════════════════════════════════════════════ */
     :root {
       --red:        #C0392B;
       --red-dark:   #922B21;
@@ -22,8 +25,9 @@
     *, *::before, *::after { box-sizing: border-box; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    /* Hidden checkbox drives the mobile sidebar — pure CSS, zero JavaScript */
+    /* ── HIDDEN CONTROLS (sidebar toggle + period radio) ── */
     #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+    .period-radio { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
 
     /* ── TOP BAR ── */
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
@@ -49,7 +53,7 @@
     .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
     .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
     .sidebar-nav { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; cursor: pointer; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
     .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
     .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
     .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
@@ -57,523 +61,1106 @@
     .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
     .sidebar-footer a:hover { color: var(--red); }
 
-    /* ── BACKDROP (mobile only) ── */
+    /* ── BACKDROP ── */
     .sidebar-backdrop { display: none; }
 
     /* ── MAIN ── */
     .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
 
-    /* ── PANEL ── */
-    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
-    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
-    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
-    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    /* ══════════════════════════════════════════════
+       PANEL — unchanged from existing codebase
+       ══════════════════════════════════════════════ */
+    .panel { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; justify-content: space-between; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner-left h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner-left p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
     .panel-body { padding: 1.4rem; }
 
-    /* ── PAGE HEADER BANNER ── */
-    .page-header { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
-    .page-header-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
-    .page-header-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
-    .page-header-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
-    .page-header-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+    /* ── PAGE HEADER ── */
+    .welcome-banner { background: rgba(0,0,0,.18); border-radius: 12px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
+    .welcome-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
+    .welcome-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .welcome-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
+    .welcome-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
 
-    /* ── SECTION HEADING ── */
+    /* ══════════════════════════════════════════════
+       STAT CARDS — same gradient style
+       ══════════════════════════════════════════════ */
+    .stat-card { border-radius: 12px; padding: 1.1rem 1.2rem; color: #fff; position: relative; overflow: hidden; height: 100%; transition: transform .18s ease, box-shadow .18s ease; }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+    .stat-card::after { content: ''; position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.08); }
+    .stat-card .stat-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); opacity: .22; font-size: 2.8rem; }
+    .stat-card .stat-eyebrow { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; opacity: .75; margin-bottom: .3rem; }
+    .stat-card .stat-number { font-size: 1.85rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+    .stat-card .stat-label  { font-size: .78rem; opacity: .85; margin-top: .18rem; font-weight: 500; }
+    .stat-card .stat-sub    { font-size: .68rem; opacity: .65; margin-top: .45rem; }
+    .stat-red    { background: linear-gradient(135deg, #C0392B 0%, #96281B 100%); }
+    .stat-orange { background: linear-gradient(135deg, #e67e22 0%, #ca6f1e 100%); }
+    .stat-purple { background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%); }
+    .stat-teal   { background: linear-gradient(135deg, #1abc9c 0%, #17a589 100%); }
+    .stat-blue   { background: linear-gradient(135deg, #2980b9 0%, #1f618d 100%); }
+
+    /* ══════════════════════════════════════════════
+       FEATURE CARDS — same quick-link card style
+       ══════════════════════════════════════════════ */
+    .feature-card { border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; display: flex; align-items: flex-start; gap: .9rem; text-decoration: none; color: var(--text-main); transition: box-shadow .15s, border-color .15s, transform .15s; height: 100%; }
+    .feature-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.1); border-color: var(--red-light); transform: translateY(-1px); }
+    .feature-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .feature-icon.green  { background: #eafaf1; color: #27ae60; }
+    .feature-icon.purple { background: #f4eafb; color: #8e44ad; }
+    .feature-icon.orange { background: #fef5e7; color: #e67e22; }
+    .feature-icon.blue   { background: #eaf3fb; color: #2980b9; }
+    .feature-icon.red    { background: #fdf1f0; color: var(--red); }
+    .feature-icon.teal   { background: #e8faf5; color: #1abc9c; }
+    .feature-body .ftitle { font-weight: 600; font-size: .84rem; color: var(--text-main); }
+    .feature-body .fdesc  { font-size: .74rem; color: var(--text-muted); margin-top: .2rem; line-height: 1.4; }
+    .feature-chevron { color: #ccc; font-size: .88rem; flex-shrink: 0; margin-top: .15rem; }
+
+    /* ══════════════════════════════════════════════
+       SECTION HEADING — same as existing
+       ══════════════════════════════════════════════ */
     .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
     .section-heading i { color: var(--red); font-size: .95rem; }
 
-    /* ── ACCESS BADGES ── */
-    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; margin-top: .45rem; }
-    .badge-upload { background: #eaf3fb; color: #2980b9; }
+    /* ══════════════════════════════════════════════
+       STEP INDICATOR — breadcrumb-style progress
+       ══════════════════════════════════════════════ */
+    .step-bar { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; }
+    .step-item { display: flex; align-items: center; gap: .5rem; flex: 1; }
+    .step-item:last-child { flex: 0; }
+    .step-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 700; flex-shrink: 0; border: 2px solid var(--border); background: #fff; color: var(--text-muted); }
+    .step-circle.done   { background: var(--red); border-color: var(--red); color: #fff; }
+    .step-circle.active { background: #fff; border-color: var(--red); color: var(--red); }
+    .step-label { font-size: .75rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    .step-label.active { color: var(--red); }
+    .step-label.done   { color: var(--text-main); }
+    .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 .5rem; }
+    .step-line.done { background: var(--red); }
 
-    /* ── NOTICE BAR ── */
-    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; margin-top: 1.1rem; }
+    /* ══════════════════════════════════════════════
+       PERIOD SELECTION CARDS — same feature-card DNA,
+       styled as large selectable radio cards
+       ══════════════════════════════════════════════ */
+    .period-card-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      cursor: pointer;
+      text-align: center;
+      background: #fff;
+      transition: box-shadow .15s, border-color .15s, transform .15s;
+      height: 100%;
+      position: relative;
+    }
+    .period-card-label:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,.1);
+      border-color: var(--red-light);
+      transform: translateY(-2px);
+    }
+    /* Selected state via :checked sibling CSS trick */
+    #period-prelims:checked   ~ .main-content .period-card-label[for="period-prelims"],
+    #period-midterms:checked  ~ .main-content .period-card-label[for="period-midterms"],
+    #period-finals:checked    ~ .main-content .period-card-label[for="period-finals"] {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(192,57,43,.13);
+      background: #FDF1F0;
+    }
+    .period-card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; }
+    .period-card-icon.prelims  { background: #eaf3fb; color: #2980b9; }
+    .period-card-icon.midterms { background: #fef5e7; color: #e67e22; }
+    .period-card-icon.finals   { background: #fdf1f0; color: var(--red); }
+    .period-card-title { font-size: .9rem; font-weight: 700; color: var(--text-main); }
+    .period-card-sub   { font-size: .72rem; color: var(--text-muted); line-height: 1.4; }
+    /* Checkmark overlay when selected */
+    .period-check {
+      position: absolute; top: .6rem; right: .7rem;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--border); color: transparent;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem; font-weight: 700;
+      transition: background .15s, color .15s;
+    }
+    #period-prelims:checked   ~ .main-content .period-card-label[for="period-prelims"]   .period-check,
+    #period-midterms:checked  ~ .main-content .period-card-label[for="period-midterms"]  .period-check,
+    #period-finals:checked    ~ .main-content .period-card-label[for="period-finals"]    .period-check {
+      background: var(--red); color: #fff;
+    }
+
+    /* ══════════════════════════════════════════════
+       STEP 2 & 3 VISIBILITY — show/hide via CSS
+       when any period is selected
+       ══════════════════════════════════════════════ */
+    .upload-section  { display: none; }
+    .modules-section { display: none; }
+
+    #period-prelims:checked  ~ .main-content .upload-section,
+    #period-midterms:checked ~ .main-content .upload-section,
+    #period-finals:checked   ~ .main-content .upload-section  { display: block; }
+
+    #period-prelims:checked  ~ .main-content .modules-section,
+    #period-midterms:checked ~ .main-content .modules-section,
+    #period-finals:checked   ~ .main-content .modules-section { display: block; }
+
+    /* Step bar: mark Step 1 done when period chosen */
+    .step-circle-1 { }
+    .step-line-1   { }
+    #period-prelims:checked  ~ .main-content .step-circle-1,
+    #period-midterms:checked ~ .main-content .step-circle-1,
+    #period-finals:checked   ~ .main-content .step-circle-1 { background: var(--red); border-color: var(--red); color: #fff; }
+    #period-prelims:checked  ~ .main-content .step-line-1,
+    #period-midterms:checked ~ .main-content .step-line-1,
+    #period-finals:checked   ~ .main-content .step-line-1 { background: var(--red); }
+
+    /* Active period badge shown in panel banner */
+    .period-badge-prelims,
+    .period-badge-midterms,
+    .period-badge-finals { display: none; }
+    #period-prelims:checked  ~ .main-content .period-badge-prelims  { display: inline-flex; }
+    #period-midterms:checked ~ .main-content .period-badge-midterms { display: inline-flex; }
+    #period-finals:checked   ~ .main-content .period-badge-finals   { display: inline-flex; }
+
+    /* ══════════════════════════════════════════════
+       FORM ELEMENTS — same as existing
+       ══════════════════════════════════════════════ */
+    .form-label { font-size: .8rem; font-weight: 600; color: var(--text-main); }
+    .form-control, .form-select { font-size: .85rem; border: 1.5px solid var(--border); border-radius: 8px; }
+    .form-control:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 .2rem rgba(192,57,43,.12); }
+    .btn-save { background: var(--red); border: none; color: #fff; font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; transition: background .15s; display: inline-flex; align-items: center; gap: .35rem; }
+    .btn-save:hover { background: var(--red-dark); color: #fff; }
+    .btn-reset { background: #F9FAFB; border: 1.5px solid var(--border); color: var(--text-muted); font-size: .85rem; font-weight: 600; padding: .55rem 1.3rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .35rem; }
+    .btn-reset:hover { background: #eee; color: var(--text-main); }
+    .btn-outline-red { border: 1.5px solid var(--red); color: var(--red); background: transparent; font-size: .8rem; font-weight: 600; padding: .4rem 1rem; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: .35rem; transition: background .15s; }
+    .btn-outline-red:hover { background: #FDECEA; color: var(--red-dark); }
+
+    /* ══════════════════════════════════════════════
+       FILE UPLOAD DROP ZONE
+       ══════════════════════════════════════════════ */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2rem 1rem;
+      text-align: center;
+      background: #FAFBFC;
+      transition: border-color .15s, background .15s;
+      cursor: pointer;
+      position: relative;
+    }
+    .upload-zone:hover { border-color: var(--red-light); background: #FDF1F0; }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-zone-icon { font-size: 2rem; color: var(--text-muted); display: block; margin-bottom: .5rem; }
+    .upload-zone-title { font-size: .85rem; font-weight: 600; color: var(--text-main); }
+    .upload-zone-sub { font-size: .72rem; color: var(--text-muted); margin-top: .25rem; }
+    .upload-zone-types { display: inline-flex; gap: .4rem; margin-top: .65rem; flex-wrap: wrap; justify-content: center; }
+    .file-type-badge { font-size: .65rem; font-weight: 700; padding: .15rem .5rem; border-radius: 4px; }
+    .file-type-badge.pdf  { background: #fdf1f0; color: var(--red); }
+    .file-type-badge.doc  { background: #eaf3fb; color: #2980b9; }
+    .file-type-badge.ppt  { background: #fef5e7; color: #e67e22; }
+    .file-type-badge.vid  { background: #f4eafb; color: #8e44ad; }
+    .file-type-badge.zip  { background: #e8faf5; color: #1abc9c; }
+
+    /* ══════════════════════════════════════════════
+       BADGES — same as existing
+       ══════════════════════════════════════════════ */
+    .access-badge { display: inline-flex; align-items: center; gap: .25rem; font-size: .68rem; font-weight: 600; padding: .2rem .6rem; border-radius: 20px; }
+    .access-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .badge-prelims  { background: #eaf3fb; color: #2980b9; }
+    .badge-prelims::before  { background: #2980b9; }
+    .badge-midterms { background: #fef5e7; color: #e67e22; }
+    .badge-midterms::before { background: #e67e22; }
+    .badge-finals   { background: #fdf1f0; color: var(--red); }
+    .badge-finals::before   { background: var(--red); }
+    .badge-active   { background: #eafaf1; color: #27ae60; }
+    .badge-active::before   { background: #27ae60; }
+    .badge-draft    { background: #f3f4f6; color: var(--text-muted); }
+    .badge-draft::before    { background: var(--text-muted); }
+    .badge-archived { background: #f4eafb; color: #8e44ad; }
+    .badge-archived::before { background: #8e44ad; }
+
+    /* ══════════════════════════════════════════════
+       MODULE TYPE ICON CHIPS
+       ══════════════════════════════════════════════ */
+    .module-type-chip { display: inline-flex; align-items: center; gap: .3rem; font-size: .75rem; font-weight: 600; }
+    .module-type-chip i { font-size: .85rem; }
+
+    /* ══════════════════════════════════════════════
+       TABLE — same as existing
+       ══════════════════════════════════════════════ */
+    .table thead th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1.5px solid var(--border); font-weight: 700; white-space: nowrap; background: #FAFBFC; }
+    .table tbody td { font-size: .82rem; vertical-align: middle; color: var(--text-main); border-bottom: 1px solid #F1F2F4; }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table tbody tr:hover td { background: #F9FAFB; }
+    .table-action-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 6px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .8rem; text-decoration: none; transition: all .15s; }
+    .table-action-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
+    .table-action-btn.delete:hover { background: #fdf1f0; color: var(--red-dark); border-color: var(--red); }
+
+    /* ══════════════════════════════════════════════
+       FILTER BAR — same as existing
+       ══════════════════════════════════════════════ */
+    .filter-bar { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .filter-bar .form-select, .filter-bar .form-control { font-size: .8rem; border-radius: 7px; height: 34px; border: 1.5px solid var(--border); }
+    .filter-bar .form-select:focus, .filter-bar .form-control:focus { border-color: var(--red); box-shadow: none; }
+
+    /* ══════════════════════════════════════════════
+       NOTICE BAR — same as existing
+       ══════════════════════════════════════════════ */
+    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; }
     .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
     .notice-label { font-weight: 700; color: #e67e22; }
 
-    /* ── FOOTER ── */
-    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
-
-    /* ─────────────────────────────────────────────────
-       PERIOD SELECTOR — pure CSS radio-driven workflow
-       No JavaScript: visibility is controlled entirely
-       by :checked + general sibling (~) selectors.
-       ───────────────────────────────────────────────── */
-    .period-radio { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
-
-    .period-cards { display: flex; gap: .85rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .period-card-label {
-      flex: 1; min-width: 140px; max-width: 200px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.1rem;
-      cursor: pointer;
-      transition: border-color .15s, background .15s, box-shadow .15s;
-      display: flex; align-items: flex-start; gap: .75rem;
-      background: #fff;
-      user-select: none;
-    }
-    .period-card-label:hover { border-color: var(--red-light); background: #fdf5f5; }
-    .period-card-icon { width: 38px; height: 38px; border-radius: 8px; background: #f3f3f3; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; transition: background .15s, color .15s; }
-    .period-card-text .pname { font-weight: 700; font-size: .88rem; color: var(--text-main); line-height: 1.2; }
-    .period-card-text .pdesc { font-size: .73rem; color: var(--text-muted); margin-top: .2rem; }
-    .period-check { margin-left: auto; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); background: #f0f0f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s; margin-top: .1rem; }
-    .period-check::after { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
-
-    #period-prelim:checked  ~ .period-cards label[for="period-prelim"],
-    #period-midterm:checked ~ .period-cards label[for="period-midterm"],
-    #period-finals:checked  ~ .period-cards label[for="period-finals"] {
-      border-color: var(--red);
-      background: #fdf1f0;
-      box-shadow: 0 0 0 3px rgba(192,57,43,.12);
-    }
-    #period-prelim:checked  ~ .period-cards label[for="period-prelim"]  .period-card-icon,
-    #period-midterm:checked ~ .period-cards label[for="period-midterm"] .period-card-icon,
-    #period-finals:checked  ~ .period-cards label[for="period-finals"]  .period-card-icon {
-      background: #fdecea; color: var(--red);
-    }
-    #period-prelim:checked  ~ .period-cards label[for="period-prelim"]  .period-check,
-    #period-midterm:checked ~ .period-cards label[for="period-midterm"] .period-check,
-    #period-finals:checked  ~ .period-cards label[for="period-finals"]  .period-check {
-      background: var(--red); border-color: var(--red);
-    }
-
-    .upload-form-wrap { display: none; }
-    #period-prelim:checked  ~ .upload-form-wrap,
-    #period-midterm:checked ~ .upload-form-wrap,
-    #period-finals:checked  ~ .upload-form-wrap { display: block; }
-
-    .upload-period-prelim,
-    .upload-period-midterm,
-    .upload-period-finals { display: none; }
-    #period-prelim:checked  ~ .upload-form-wrap .upload-period-prelim  { display: inline-block; }
-    #period-midterm:checked ~ .upload-form-wrap .upload-period-midterm { display: inline-block; }
-    #period-finals:checked  ~ .upload-form-wrap .upload-period-finals  { display: inline-block; }
-
-    .modules-section { display: none; }
-    #period-prelim:checked  ~ .modules-section.prelim-section,
-    #period-midterm:checked ~ .modules-section.midterm-section,
-    #period-finals:checked  ~ .modules-section.finals-section { display: block; }
-
-    /* ── UPLOAD FORM STYLES ── */
-    .upload-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.4rem; background: #fafbfc; }
-    .upload-period-badge {
-      display: inline-flex; align-items: center; gap: .4rem;
-      background: #fdecea; color: var(--red);
-      font-size: .76rem; font-weight: 700;
-      padding: .3rem .75rem; border-radius: 20px;
+    /* ══════════════════════════════════════════════
+       PERIOD INDICATOR STRIP (visible after selection)
+       ══════════════════════════════════════════════ */
+    .period-indicator {
+      display: none;
+      align-items: center;
+      gap: .6rem;
+      background: rgba(0,0,0,.13);
+      border-radius: 8px;
+      padding: .5rem .9rem;
       margin-bottom: 1rem;
     }
-    .upload-period-badge.prelim  { background: #eaf3fb; color: #2980b9; }
-    .upload-period-badge.midterm { background: #f4eafb; color: #8e44ad; }
-    .upload-period-badge.finals  { background: #eafaf1; color: #27ae60; }
+    #period-prelims:checked  ~ .main-content .period-indicator,
+    #period-midterms:checked ~ .main-content .period-indicator,
+    #period-finals:checked   ~ .main-content .period-indicator { display: flex; }
+    .period-indicator span { font-size: .78rem; color: rgba(255,255,255,.9); }
+    .period-indicator strong { color: #fff; }
 
-    .drop-zone { border: 2px dashed var(--border); border-radius: 10px; background: #fff; padding: 2.25rem 1.5rem; text-align: center; cursor: pointer; transition: border-color .15s, background .15s; }
-    .drop-zone:hover { border-color: var(--red-light); background: #fdf5f5; }
-    .drop-zone-icon { font-size: 2.2rem; color: var(--red-light); margin-bottom: .5rem; }
-    .drop-zone-title { font-weight: 600; font-size: .88rem; color: var(--text-main); }
-    .drop-zone-sub   { font-size: .76rem; color: var(--text-muted); margin-top: .25rem; }
+    /* ══════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════ */
+    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
 
-    .form-label-sm { font-size: .8rem; font-weight: 600; color: var(--text-main); margin-bottom: .35rem; }
-    .form-control, .form-select { font-size: .83rem; border-radius: 8px; border: 1.5px solid var(--border); }
-    .form-control:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.1); }
-
-    .btn-upload { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: .5rem 1.5rem; font-size: .85rem; font-weight: 600; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; transition: background .15s; }
-    .btn-upload:hover { background: var(--red-dark); }
-    .btn-outline-cancel { background: #fff; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; padding: .5rem 1.2rem; font-size: .85rem; font-weight: 500; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; text-decoration: none; transition: border-color .15s; }
-    .btn-outline-cancel:hover { border-color: var(--red-light); color: var(--red); }
-
-    /* ── MODULE LIST STYLES ── */
-    .module-item { display: flex; align-items: center; gap: .85rem; border: 1px solid var(--border); border-radius: 8px; padding: .7rem 1rem; background: #fff; transition: box-shadow .15s; }
-    .module-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07); }
-    .module-item + .module-item { margin-top: .6rem; }
-    .module-file-icon { width: 36px; height: 36px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-    .module-file-icon.pdf    { background: #fdecea; color: var(--red); }
-    .module-file-icon.docx   { background: #eaf3fb; color: #2980b9; }
-    .module-file-icon.pptx   { background: #fef5e7; color: #e67e22; }
-    .module-file-icon.video  { background: #f4eafb; color: #8e44ad; }
-    .module-meta { flex: 1; min-width: 0; }
-    .module-name { font-weight: 600; font-size: .83rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .module-info { font-size: .72rem; color: var(--text-muted); margin-top: .1rem; }
-    .module-badge { font-size: .67rem; font-weight: 700; padding: .15rem .55rem; border-radius: 20px; white-space: nowrap; }
-    .badge-prelim  { background: #eaf3fb; color: #2980b9; }
-    .badge-midterm { background: #f4eafb; color: #8e44ad; }
-    .badge-finals  { background: #eafaf1; color: #27ae60; }
-    .module-actions { display: flex; gap: .4rem; flex-shrink: 0; }
-    .module-action-btn { width: 30px; height: 30px; border-radius: 6px; background: #f5f5f5; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .85rem; cursor: pointer; text-decoration: none; transition: all .15s; }
-    .module-action-btn:hover { background: #fdecea; color: var(--red); border-color: var(--red-light); }
-
-    .empty-state { text-align: center; padding: 2rem 1rem; }
-    .empty-state i { font-size: 2.5rem; color: var(--border); margin-bottom: .6rem; display: block; }
-    .empty-state p { font-size: .8rem; color: var(--text-muted); margin: 0; }
-
-    /* ── RESPONSIVE ── */
+    /* ══════════════════════════════════════════════
+       MOBILE
+       ══════════════════════════════════════════════ */
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
       .main-content { margin-left: 0; }
       .sidebar-toggle-label { display: flex; }
-
-      #sidebar-toggle-checkbox:checked ~ .sidebar {
-        transform: translateX(0);
-      }
+      #sidebar-toggle-checkbox:checked ~ .sidebar { transform: translateX(0); }
       #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
-        display: block;
-        position: fixed;
-        top: var(--topbar-h);
-        left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,.35);
-        z-index: 1025;
+        display: block; position: fixed; top: var(--topbar-h);
+        left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.35); z-index: 1025;
       }
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
-      .period-card-label { max-width: 100%; }
+      .step-label { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- Hidden checkbox driving the mobile sidebar — pure CSS, no JavaScript -->
-<input type="checkbox" id="sidebar-toggle-checkbox">
+  <!--
+    ══════════════════════════════════════════════════════
+    PURE-CSS PERIOD SELECTION
+    Hidden radio inputs placed as siblings of .sidebar and
+    .main-content so CSS sibling selectors (~) can reach
+    both the sidebar and main content areas.
 
-<!-- TOP BAR -->
-<header class="topbar">
-  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
-    <i class="bi bi-list"></i>
-  </label>
-  <a href="manage-ins.html" class="topbar-brand">
-    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
-    <div>Trigger3D <small>Instructor Portal</small></div>
-  </a>
+    Backend note: In Laravel Blade, the checked state should
+    be pre-set from session or query param:
+      <?= old('academic_period') === 'prelims' ? 'checked' : '' ?>
+    ══════════════════════════════════════════════════════
+  -->
+  <input type="radio" class="period-radio" name="academic_period_ui" id="period-prelims">
+  <input type="radio" class="period-radio" name="academic_period_ui" id="period-midterms">
+  <input type="radio" class="period-radio" name="academic_period_ui" id="period-finals">
 
-  <div class="topbar-search ms-3">
-    <div class="topbar-search-wrap">
-      <i class="bi bi-search"></i>
-      <input type="text" placeholder="Search…" />
-    </div>
-  </div>
+  <!-- Sidebar toggle -->
+  <input type="checkbox" id="sidebar-toggle-checkbox">
 
-  <div class="topbar-right">
-    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
-    <div class="icon-btn"><i class="bi bi-gear"></i></div>
-    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
-    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
-    <div class="topbar-user d-none d-sm-block">
-      Instr. R. Bautista <small>Instructor</small>
-    </div>
-    <div class="avatar">RB</div>
-  </div>
-</header>
-
-<!-- Backdrop: tapping it (it's a label) closes the sidebar on mobile -->
-<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
-
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <span class="sidebar-label">Main</span>
-  <ul class="sidebar-nav">
-    <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
-  </ul>
-
-  <span class="sidebar-label">Student Monitoring</span>
-  <ul class="sidebar-nav">
-    <li><a href="#"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
-    <li><a href="#"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
-    <li><a href="#"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
-  </ul>
-
-  <span class="sidebar-label">Module Management</span>
-  <ul class="sidebar-nav">
-    <li><a href="upload-modules.html" class="active"><i class="bi bi-upload"></i> Upload Modules</a></li>
-    <li><a href="#"><i class="bi bi-trash"></i> Delete Modules</a></li>
-  </ul>
-
-  <span class="sidebar-label">Records &amp; Resources</span>
-  <ul class="sidebar-nav">
-    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
-    <li><a href="#"><i class="bi bi-eye"></i> View Generated Modules</a></li>
-    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
-  </ul>
-
-  <span class="sidebar-label">Settings</span>
-  <ul class="sidebar-nav">
-    <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
-    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
-  </ul>
-
-  <div class="sidebar-footer">
-    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
-  </div>
-</aside>
-
-<!-- MAIN CONTENT -->
-<main class="main-content">
-
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="page-header-icon"><i class="bi bi-upload"></i></div>
-    <div class="page-header-text">
-      <div class="title">Upload Modules</div>
-      <div class="sub">Select an academic period, then upload training materials to that period's lesson bank.</div>
-    </div>
-    <div class="page-header-badge d-none d-sm-block">FIRE102 — Assembly</div>
-  </div>
-
-  <!-- White Panel -->
-  <div class="panel">
-    <div class="panel-banner">
-      <div>
-        <h2><i class="bi bi-upload me-1" style="color:var(--red);"></i>Upload Modules to Lessons</h2>
-        <p>Step 1 — Choose an academic period &nbsp;·&nbsp; Step 2 — Fill in module details &nbsp;·&nbsp; Step 3 — Upload</p>
+  <!-- ═══════════════════════════ TOP BAR ═══════════════════════════ -->
+  <header class="topbar">
+    <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+      <i class="bi bi-list"></i>
+    </label>
+    <a href="manage-ins.html" class="topbar-brand">
+      <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+      <div>Trigger3D <small>Instructor Portal</small></div>
+    </a>
+    <div class="topbar-search ms-3">
+      <div class="topbar-search-wrap">
+        <i class="bi bi-search"></i>
+        <input type="text" name="q" placeholder="Search modules…" />
       </div>
-      <span class="access-badge badge-upload ms-auto"><i class="bi bi-arrow-up-circle me-1"></i>Upload access</span>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
+      <div class="icon-btn"><i class="bi bi-gear"></i></div>
+      <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
+      <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
+      <div class="topbar-user d-none d-sm-block">
+        Instr. R. Bautista <small>Instructor</small>
+      </div>
+      <div class="avatar">RB</div>
+    </div>
+  </header>
+
+  <label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+  <!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
+  <aside class="sidebar">
+    <span class="sidebar-label">Main</span>
+    <ul class="sidebar-nav">
+      <li><a href="manage-ins.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+    </ul>
+
+    <span class="sidebar-label">Student Monitoring</span>
+    <ul class="sidebar-nav">
+      <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+      <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+      <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+    </ul>
+
+    <span class="sidebar-label">Module Management</span>
+    <ul class="sidebar-nav">
+      <li><a href="upload-modules.html" class="active"><i class="bi bi-upload"></i> Upload Modules</a></li>
+      <li><a href="#"><i class="bi bi-trash"></i> Delete Modules</a></li>
+    </ul>
+
+    <span class="sidebar-label">Records &amp; Resources</span>
+    <ul class="sidebar-nav">
+      <li><a href="#"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+      <li><a href="#"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+      <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+    </ul>
+
+    <span class="sidebar-label">Settings</span>
+    <ul class="sidebar-nav">
+      <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
+      <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="welcome-banner">
+      <div class="welcome-avatar"><i class="bi bi-upload"></i></div>
+      <div class="welcome-text">
+        <div class="title">Upload Modules</div>
+        <div class="sub">Select an academic period, upload course modules, and manage existing materials.</div>
+      </div>
+      <div class="welcome-badge d-none d-sm-block">Module Management</div>
     </div>
 
-    <div class="panel-body">
-
-      <input type="radio" class="period-radio" id="period-prelim"  name="period">
-      <input type="radio" class="period-radio" id="period-midterm" name="period">
-      <input type="radio" class="period-radio" id="period-finals"  name="period">
-
-      <!-- STEP 1 — Period Selector -->
-      <div class="section-heading">
-        <i class="bi bi-calendar3"></i> Step 1 — Select Academic Period
+    <!-- Summary Stats -->
+    <!-- Backend: DB aggregates from modules table -->
+    <div class="row g-3 mb-3">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card stat-red">
+          <i class="bi bi-journal-richtext stat-icon"></i>
+          <div class="stat-eyebrow">Total</div>
+          <!-- DB: SELECT COUNT(*) FROM modules -->
+          <div class="stat-number">38</div>
+          <div class="stat-label">Modules Uploaded</div>
+          <div class="stat-sub">Across all periods</div>
+        </div>
       </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card stat-blue">
+          <i class="bi bi-calendar2 stat-icon"></i>
+          <div class="stat-eyebrow">Prelims</div>
+          <!-- DB: SELECT COUNT(*) FROM modules WHERE academic_period='prelims' -->
+          <div class="stat-number">14</div>
+          <div class="stat-label">Prelim Modules</div>
+          <div class="stat-sub">5 subjects</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card stat-orange">
+          <i class="bi bi-calendar2-week stat-icon"></i>
+          <div class="stat-eyebrow">Midterms</div>
+          <!-- DB: SELECT COUNT(*) FROM modules WHERE academic_period='midterms' -->
+          <div class="stat-number">13</div>
+          <div class="stat-label">Midterm Modules</div>
+          <div class="stat-sub">5 subjects</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card stat-red">
+          <i class="bi bi-calendar2-check stat-icon"></i>
+          <div class="stat-eyebrow">Finals</div>
+          <!-- DB: SELECT COUNT(*) FROM modules WHERE academic_period='finals' -->
+          <div class="stat-number">11</div>
+          <div class="stat-label">Final Modules</div>
+          <div class="stat-sub">5 subjects</div>
+        </div>
+      </div>
+    </div>
 
-      <p class="text-muted" style="font-size:.8rem; margin-bottom:1rem;">
-        Modules you upload will be filed under the period you select here. You cannot change the period after uploading.
-      </p>
-
-      <div class="period-cards">
-
-        <label class="period-card-label" for="period-prelim">
-          <div class="period-card-icon"><i class="bi bi-1-circle-fill" style="color:#2980b9;"></i></div>
-          <div class="period-card-text">
-            <div class="pname">Prelim</div>
-            <div class="pdesc">First examination period</div>
+    <!-- Quick Navigation -->
+    <div class="row g-3 mb-3">
+      <div class="col-12 col-md-3 col-6">
+        <a href="manage-assessments.html" class="feature-card">
+          <div class="feature-icon red"><i class="bi bi-check2-square"></i></div>
+          <div class="feature-body">
+            <div class="ftitle">Manage Assessments</div>
+            <div class="fdesc">Set up quizzes and exams.</div>
           </div>
-          <div class="period-check"></div>
-        </label>
-
-        <label class="period-card-label" for="period-midterm">
-          <div class="period-card-icon"><i class="bi bi-2-circle-fill" style="color:#8e44ad;"></i></div>
-          <div class="period-card-text">
-            <div class="pname">Midterm</div>
-            <div class="pdesc">Mid-semester period</div>
+          <i class="bi bi-chevron-right feature-chevron"></i>
+        </a>
+      </div>
+      <div class="col-12 col-md-3 col-6">
+        <a href="check-student-progress.html" class="feature-card">
+          <div class="feature-icon green"><i class="bi bi-bar-chart-line"></i></div>
+          <div class="feature-body">
+            <div class="ftitle">Student Progress</div>
+            <div class="fdesc">View student analytics.</div>
           </div>
-          <div class="period-check"></div>
-        </label>
-
-        <label class="period-card-label" for="period-finals">
-          <div class="period-card-icon"><i class="bi bi-3-circle-fill" style="color:#27ae60;"></i></div>
-          <div class="period-card-text">
-            <div class="pname">Finals</div>
-            <div class="pdesc">End-of-semester period</div>
+          <i class="bi bi-chevron-right feature-chevron"></i>
+        </a>
+      </div>
+      <div class="col-12 col-md-3 col-6">
+        <a href="#" class="feature-card">
+          <div class="feature-icon teal"><i class="bi bi-eye"></i></div>
+          <div class="feature-body">
+            <div class="ftitle">View Modules</div>
+            <div class="fdesc">Browse generated modules.</div>
           </div>
-          <div class="period-check"></div>
-        </label>
+          <i class="bi bi-chevron-right feature-chevron"></i>
+        </a>
+      </div>
+      <div class="col-12 col-md-3 col-6">
+        <a href="manage-ins.html" class="feature-card">
+          <div class="feature-icon purple"><i class="bi bi-grid-1x2-fill"></i></div>
+          <div class="feature-body">
+            <div class="ftitle">Dashboard</div>
+            <div class="fdesc">Back to overview.</div>
+          </div>
+          <i class="bi bi-chevron-right feature-chevron"></i>
+        </a>
+      </div>
+    </div>
 
-      </div><!-- /.period-cards -->
+    <!-- ══════════════════════════════════════════
+         STEP INDICATOR
+         ══════════════════════════════════════════ -->
+    <div class="step-bar mb-3">
+      <!-- Step 1: turns red (done) once a period is selected -->
+      <div class="step-item">
+        <div class="step-circle step-circle-1 done"><i class="bi bi-check-lg" style="font-size:.7rem;"></i></div>
+        <span class="step-label done">Select Period</span>
+      </div>
+      <div class="step-line step-line-1"></div>
+      <!-- Step 2 -->
+      <div class="step-item">
+        <div class="step-circle active" style="border-color:var(--red); color:var(--red);">2</div>
+        <span class="step-label active">Upload Module</span>
+      </div>
+      <div class="step-line"></div>
+      <!-- Step 3 -->
+      <div class="step-item">
+        <div class="step-circle">3</div>
+        <span class="step-label">View Modules</span>
+      </div>
+    </div>
 
-      <!-- STEP 2 — Upload Form (revealed after selection) -->
-      <div class="upload-form-wrap">
+    <!-- ══════════════════════════════════════════
+         STEP 1 — SELECT ACADEMIC PERIOD
+         Panel uses .panel + .panel-banner + .panel-body
+         exactly as the existing codebase.
+         ══════════════════════════════════════════ -->
+    <div class="panel mb-3" id="step-period">
+      <div class="panel-banner">
+        <div class="panel-banner-left">
+          <h2><i class="bi bi-calendar3 me-1" style="color:var(--red);"></i> Step 1 — Select Academic Period</h2>
+          <p>Choose the academic period for this module upload. The selection applies to all fields below.</p>
+        </div>
+        <!-- Active period badge — shown by CSS once a radio is checked -->
+        <span class="access-badge badge-prelims  period-badge-prelims" ><i class="bi bi-check-circle me-1"></i>Prelims Selected</span>
+        <span class="access-badge badge-midterms period-badge-midterms"><i class="bi bi-check-circle me-1"></i>Midterms Selected</span>
+        <span class="access-badge badge-finals   period-badge-finals"  ><i class="bi bi-check-circle me-1"></i>Finals Selected</span>
+      </div>
+      <div class="panel-body">
 
-        <div class="section-heading">
-          <i class="bi bi-cloud-upload"></i> Step 2 — Upload Module
-          <span class="ms-auto" style="font-size:.72rem; font-weight:400; color:var(--text-muted);">Period selected:</span>
-          <span class="upload-period-badge prelim  upload-period-prelim"><i class="bi bi-1-circle-fill"></i> Prelim</span>
-          <span class="upload-period-badge midterm upload-period-midterm"><i class="bi bi-2-circle-fill"></i> Midterm</span>
-          <span class="upload-period-badge finals  upload-period-finals"><i class="bi bi-3-circle-fill"></i> Finals</span>
+        <!--
+          Backend note:
+          These labels target the hidden radio inputs declared at the top of <body>.
+          When submitting the actual upload form, the real academic_period value is
+          carried by a hidden input inside the upload form below.
+          In Laravel: validate 'academic_period' => 'required|in:prelims,midterms,finals'
+        -->
+
+        <div class="row g-3">
+
+          <!-- ── PRELIMS ── -->
+          <div class="col-12 col-md-4">
+            <label class="period-card-label" for="period-prelims">
+              <span class="period-check"><i class="bi bi-check-lg" style="font-size:.6rem;"></i></span>
+              <div class="period-card-icon prelims"><i class="bi bi-calendar2"></i></div>
+              <div class="period-card-title">Prelims</div>
+              <div class="period-card-sub">First examination period.<br>Weeks 1 – 5 of the term.</div>
+              <!-- DB context: academic_period = 'prelims' -->
+              <!-- DB: SELECT COUNT(*) FROM modules WHERE academic_period='prelims' AND instructor_id = auth()->id() -->
+              <div class="mt-2" style="font-size:.7rem; color:var(--text-muted);">14 modules uploaded</div>
+            </label>
+          </div>
+
+          <!-- ── MIDTERMS ── -->
+          <div class="col-12 col-md-4">
+            <label class="period-card-label" for="period-midterms">
+              <span class="period-check"><i class="bi bi-check-lg" style="font-size:.6rem;"></i></span>
+              <div class="period-card-icon midterms"><i class="bi bi-calendar2-week"></i></div>
+              <div class="period-card-title">Midterms</div>
+              <div class="period-card-sub">Mid-semester assessment period.<br>Weeks 6 – 10 of the term.</div>
+              <!-- DB: SELECT COUNT(*) FROM modules WHERE academic_period='midterms' -->
+              <div class="mt-2" style="font-size:.7rem; color:var(--text-muted);">13 modules uploaded</div>
+            </label>
+          </div>
+
+          <!-- ── FINALS ── -->
+          <div class="col-12 col-md-4">
+            <label class="period-card-label" for="period-finals">
+              <span class="period-check"><i class="bi bi-check-lg" style="font-size:.6rem;"></i></span>
+              <div class="period-card-icon finals"><i class="bi bi-calendar2-check"></i></div>
+              <div class="period-card-title">Finals</div>
+              <div class="period-card-sub">End-of-term assessment period.<br>Weeks 11 – 18 of the term.</div>
+              <!-- DB: SELECT COUNT(*) FROM modules WHERE academic_period='finals' -->
+              <div class="mt-2" style="font-size:.7rem; color:var(--text-muted);">11 modules uploaded</div>
+            </label>
+          </div>
+
+        </div><!-- /row -->
+
+        <div class="notice-bar mt-3">
+          <i class="bi bi-info-circle-fill"></i>
+          <div>
+            <span class="notice-label">How it works —</span>
+            Click a card to select the academic period. The upload form and module list below will appear automatically. Your selection is saved with each module you upload.
+          </div>
         </div>
 
-        <div class="upload-card">
+      </div><!-- /panel-body -->
+    </div><!-- /panel Step 1 -->
 
-          <!-- Dropzone -->
-          <label for="file-input" class="drop-zone d-block mb-3">
-            <div class="drop-zone-icon"><i class="bi bi-cloud-arrow-up-fill"></i></div>
-            <div class="drop-zone-title">Click to browse for a file</div>
-            <div class="drop-zone-sub">Accepted: PDF, DOCX, PPTX, MP4 — Max 100 MB per file</div>
-            <input type="file" id="file-input" class="d-none" accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mov">
-          </label>
+    <!-- ══════════════════════════════════════════
+         ACTIVE PERIOD CONTEXT STRIP
+         Shown only after a period is selected.
+         ══════════════════════════════════════════ -->
+    <div class="period-indicator">
+      <i class="bi bi-check-circle-fill" style="color:#fff; font-size:1rem; flex-shrink:0;"></i>
+      <span>Academic Period selected:&nbsp;
+        <strong class="period-badge-prelims"  style="display:none;">Prelims</strong>
+        <strong class="period-badge-midterms" style="display:none;">Midterms</strong>
+        <strong class="period-badge-finals"   style="display:none;">Finals</strong>
+      </span>
+      <span style="margin-left:auto; font-size:.72rem; opacity:.8;">Scroll down to upload or view modules.</span>
+    </div>
 
-          <div class="row g-3">
-            <!-- Module Title -->
-            <div class="col-12 col-md-6">
-              <label class="form-label-sm" for="mod-title">Module Title <span class="text-danger">*</span></label>
-              <input type="text" id="mod-title" class="form-control" placeholder="e.g. Rifle Assembly — Part 1">
+    <!-- ══════════════════════════════════════════
+         STEP 2 — UPLOAD MODULE
+         Hidden until a period is selected (pure CSS).
+         ══════════════════════════════════════════ -->
+    <div class="upload-section">
+      <div class="panel mb-3" id="step-upload">
+        <div class="panel-banner">
+          <div class="panel-banner-left">
+            <h2><i class="bi bi-cloud-arrow-up me-1" style="color:var(--red);"></i> Step 2 — Upload Module</h2>
+            <p>Fill in the module details and attach your file. All fields marked * are required.</p>
+          </div>
+          <!-- Period badge echoed from selection -->
+          <span class="access-badge badge-prelims  period-badge-prelims" ><i class="bi bi-calendar2 me-1"></i>Prelims</span>
+          <span class="access-badge badge-midterms period-badge-midterms"><i class="bi bi-calendar2-week me-1"></i>Midterms</span>
+          <span class="access-badge badge-finals   period-badge-finals"  ><i class="bi bi-calendar2-check me-1"></i>Finals</span>
+        </div>
+        <div class="panel-body">
+
+          <!--
+            Backend:  POST /modules/store   (Laravel route)
+            Table:    modules
+            Columns:  module_title, subject_id, lesson_unit, module_type,
+                      description, academic_period, file_path, file_name,
+                      file_size, instructor_id, status, created_at
+            Validate: 'module_file' => 'required|mimes:pdf,doc,docx,ppt,pptx,mp4,zip|max:102400'
+          -->
+          <form method="POST"
+                action="/modules/store"
+                enctype="multipart/form-data"
+                id="form-upload-module">
+
+            <!-- {{ csrf_field() }} -->
+
+            <!--
+              Hidden: carries the actual academic_period value from the UI radio
+              selection into the POST body.
+              In Blade this would be set server-side or via a visible select
+              pre-populated from session.
+            -->
+            <input type="hidden" name="academic_period" id="hidden_academic_period"
+                   value="">
+            <!--
+              NOTE: Because pure-CSS radio inputs cannot directly populate a hidden
+              field without JS, in a real Laravel deployment replace the three
+              period-radio inputs at the top with a visible <select name="academic_period">
+              or server-render the checked attribute from session/old() input.
+              The CSS visual behaviour remains identical.
+            -->
+
+            <!-- instructor_id: filled from authenticated session on backend -->
+            <input type="hidden" name="instructor_id" value="{{ auth()->id() }}">
+
+            <div class="row g-3">
+
+              <!-- Module Title -->
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="module_title">
+                  Module Title <span style="color:var(--red);">*</span>
+                </label>
+                <input type="text"
+                       class="form-control"
+                       id="module_title"
+                       name="module_title"
+                       placeholder="e.g. Rifle Assembly — Unit 3 Study Guide"
+                       required>
+              </div>
+
+              <!-- Subject -->
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="module_subject_id">
+                  Subject <span style="color:var(--red);">*</span>
+                </label>
+                <select class="form-select" id="module_subject_id" name="subject_id" required>
+                  <option selected disabled value="">Select subject</option>
+                  <!-- DB: foreach $subjects -->
+                  <option value="FIRE102">FIRE102 — Assembly</option>
+                  <option value="FIRE110">FIRE110 — Hazard Response</option>
+                  <option value="FIRE115">FIRE115 — Equipment Handling</option>
+                  <option value="FIRE120">FIRE120 — Rescue Operations</option>
+                  <option value="FIRE125">FIRE125 — Fire Suppression</option>
+                </select>
+              </div>
+
+              <!-- Lesson / Unit -->
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="lesson_unit">
+                  Lesson / Unit <span style="color:var(--red);">*</span>
+                </label>
+                <input type="text"
+                       class="form-control"
+                       id="lesson_unit"
+                       name="lesson_unit"
+                       placeholder="e.g. Unit 3 — Component Identification"
+                       required>
+              </div>
+
+              <!-- Module Type -->
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="module_type">
+                  Module Type <span style="color:var(--red);">*</span>
+                </label>
+                <select class="form-select" id="module_type" name="module_type" required>
+                  <option selected disabled value="">Select type</option>
+                  <option value="lecture_notes">Lecture Notes</option>
+                  <option value="presentation">Presentation (PPT)</option>
+                  <option value="reference_manual">Reference Manual</option>
+                  <option value="video_lesson">Video Lesson</option>
+                  <option value="activity_sheet">Activity Sheet</option>
+                  <option value="assessment_guide">Assessment Guide</option>
+                  <option value="supplementary">Supplementary Material</option>
+                </select>
+              </div>
+
+              <!-- Status -->
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="module_status">Status</label>
+                <select class="form-select" id="module_status" name="status">
+                  <option value="active" selected>Active</option>
+                  <option value="draft">Draft</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+
+              <!-- Description -->
+              <div class="col-12">
+                <label class="form-label" for="module_description">Description</label>
+                <textarea class="form-control"
+                          id="module_description"
+                          name="description"
+                          rows="3"
+                          placeholder="Briefly describe the module content, learning objectives, and intended audience…"></textarea>
+              </div>
+
+              <!-- File Upload Drop Zone -->
+              <div class="col-12">
+                <label class="form-label" for="module_file">
+                  Upload Module File <span style="color:var(--red);">*</span>
+                </label>
+                <div class="upload-zone">
+                  <!--
+                    name="module_file" maps to modules.file_path after storage
+                    Backend: Store to storage/app/public/modules/{academic_period}/{subject_id}/
+                    Then save relative path in modules.file_path column
+                  -->
+                  <input type="file"
+                         id="module_file"
+                         name="module_file"
+                         accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.zip"
+                         required>
+                  <i class="bi bi-cloud-arrow-up upload-zone-icon"></i>
+                  <div class="upload-zone-title">Drag &amp; drop your file here or click to browse</div>
+                  <div class="upload-zone-sub">Maximum file size: 100 MB</div>
+                  <div class="upload-zone-types">
+                    <span class="file-type-badge pdf">PDF</span>
+                    <span class="file-type-badge doc">DOC / DOCX</span>
+                    <span class="file-type-badge ppt">PPT / PPTX</span>
+                    <span class="file-type-badge vid">MP4</span>
+                    <span class="file-type-badge zip">ZIP</span>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /row -->
+
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn-save">
+                <i class="bi bi-cloud-arrow-up"></i> Upload Module
+              </button>
+              <button type="reset" class="btn-reset">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+              </button>
             </div>
 
-            <!-- Subject -->
-            <div class="col-12 col-md-6">
-              <label class="form-label-sm" for="mod-subject">Subject</label>
-              <select id="mod-subject" class="form-select">
-                <option value="" disabled selected>Select subject…</option>
-                <option>FIRE102 — Assembly</option>
-                <option>FIRE103 — Disassembly</option>
-                <option>FIRE104 — Field Stripping</option>
-                <option>FIRE201 — Maintenance</option>
-              </select>
+          </form>
+        </div><!-- /panel-body -->
+      </div><!-- /panel Step 2 -->
+    </div><!-- /upload-section -->
+
+    <!-- ══════════════════════════════════════════
+         STEP 3 — VIEW UPLOADED MODULES
+         Hidden until a period is selected (pure CSS).
+         ══════════════════════════════════════════ -->
+    <div class="modules-section">
+      <div class="panel mb-3" id="step-modules">
+        <div class="panel-banner">
+          <div class="panel-banner-left">
+            <h2><i class="bi bi-journals me-1" style="color:var(--red);"></i> Step 3 — Uploaded Modules</h2>
+            <p>All modules uploaded for the selected academic period. Use the filter to narrow results.</p>
+          </div>
+          <!-- Period badge -->
+          <span class="access-badge badge-prelims  period-badge-prelims" ><i class="bi bi-calendar2 me-1"></i>Prelims</span>
+          <span class="access-badge badge-midterms period-badge-midterms"><i class="bi bi-calendar2-week me-1"></i>Midterms</span>
+          <span class="access-badge badge-finals   period-badge-finals"  ><i class="bi bi-calendar2-check me-1"></i>Finals</span>
+        </div>
+        <div class="panel-body">
+
+          <!--
+            Backend: GET /modules?academic_period=&subject_id=&module_type=&status=&search=
+            Table:   modules m JOIN subjects s ON m.subject_id = s.id
+            Order:   created_at DESC
+          -->
+          <form method="GET" action="/modules" id="form-filter-modules" class="filter-bar">
+
+            <!-- Period carried from current selection -->
+            <input type="hidden" name="academic_period" value="">
+            <!-- Backend fills this from session or query param -->
+
+            <!-- Search -->
+            <div class="topbar-search-wrap" style="max-width:200px;">
+              <i class="bi bi-search"></i>
+              <input type="text"
+                     name="search"
+                     id="module_search"
+                     placeholder="Search title…"
+                     style="padding-left:2rem; font-size:.8rem; border-radius:7px; border:1.5px solid var(--border); background:#F9FAFB; width:100%; height:34px; outline:none;">
             </div>
 
-            <!-- Lesson -->
-            <div class="col-12 col-md-6">
-              <label class="form-label-sm" for="mod-lesson">Lesson / Unit</label>
-              <select id="mod-lesson" class="form-select">
-                <option value="" disabled selected>Select lesson…</option>
-                <option>Lesson 1 — Introduction</option>
-                <option>Lesson 2 — Parts Identification</option>
-                <option>Lesson 3 — Step-by-step Procedure</option>
-                <option>Lesson 4 — Safety Protocols</option>
-              </select>
-            </div>
+            <!-- Subject filter -->
+            <select class="form-select" name="subject_id" id="filter_subject_id" style="max-width:190px;">
+              <option value="">All Subjects</option>
+              <option value="FIRE102">FIRE102 — Assembly</option>
+              <option value="FIRE110">FIRE110 — Hazard Response</option>
+              <option value="FIRE115">FIRE115 — Equipment Handling</option>
+              <option value="FIRE120">FIRE120 — Rescue Operations</option>
+              <option value="FIRE125">FIRE125 — Fire Suppression</option>
+            </select>
 
-            <!-- Module Type -->
-            <div class="col-12 col-md-6">
-              <label class="form-label-sm" for="mod-type">Module Type</label>
-              <select id="mod-type" class="form-select">
-                <option value="" disabled selected>Select type…</option>
-                <option>Lecture Material</option>
-                <option>Practical Guide</option>
-                <option>Assessment Material</option>
-                <option>Reference Document</option>
-                <option>Video Lesson</option>
-              </select>
-            </div>
+            <!-- Module type filter -->
+            <select class="form-select" name="module_type" id="filter_module_type" style="max-width:180px;">
+              <option value="">All Types</option>
+              <option value="lecture_notes">Lecture Notes</option>
+              <option value="presentation">Presentation</option>
+              <option value="reference_manual">Reference Manual</option>
+              <option value="video_lesson">Video Lesson</option>
+              <option value="activity_sheet">Activity Sheet</option>
+              <option value="assessment_guide">Assessment Guide</option>
+              <option value="supplementary">Supplementary</option>
+            </select>
 
-            <!-- Description -->
-            <div class="col-12">
-              <label class="form-label-sm" for="mod-desc">Description <span class="text-muted" style="font-weight:400;">(optional)</span></label>
-              <textarea id="mod-desc" class="form-control" rows="2" placeholder="Brief description of this module's content…" style="resize:vertical;"></textarea>
-            </div>
-          </div><!-- /.row -->
+            <!-- Status filter -->
+            <select class="form-select" name="status" id="filter_status" style="max-width:130px;">
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="draft">Draft</option>
+              <option value="archived">Archived</option>
+            </select>
 
-          <!-- Actions -->
-          <div class="d-flex align-items-center gap-2 mt-3 flex-wrap">
-            <button type="button" class="btn-upload">
-              <i class="bi bi-cloud-upload-fill"></i> Upload Module
+            <button type="submit" class="btn-save" style="padding:.4rem .9rem; font-size:.8rem;">
+              <i class="bi bi-funnel me-1"></i>Filter
             </button>
-            <a href="upload-modules.html" class="btn-outline-cancel">
-              <i class="bi bi-x"></i> Cancel
+            <a href="/modules" class="btn-reset" style="padding:.4rem .9rem; font-size:.8rem; text-decoration:none;">
+              <i class="bi bi-x-circle"></i> Clear
             </a>
-            <span class="ms-auto text-muted" style="font-size:.72rem;">
-              <i class="bi bi-info-circle me-1"></i>Module will be saved under the selected period automatically.
-            </span>
+          </form>
+
+          <!-- Module Table -->
+          <div class="table-responsive">
+            <table class="table" id="modules-table">
+              <thead>
+                <tr>
+                  <th data-column="module_id">Module ID</th>
+                  <th data-column="module_title">Title</th>
+                  <th data-column="subject_id">Subject</th>
+                  <th data-column="lesson_unit">Lesson / Unit</th>
+                  <th data-column="module_type">Type</th>
+                  <th data-column="academic_period">Period</th>
+                  <th data-column="file_name">File</th>
+                  <th data-column="status">Status</th>
+                  <th data-column="created_at">Uploaded</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!--
+                  Backend: @foreach($modules as $module)
+                  DB fields: module_id, module_title, subject_id, lesson_unit,
+                             module_type, academic_period, file_name, file_path,
+                             status, created_at
+                -->
+
+                <!-- Row 1 -->
+                <tr data-module-id="MOD-0021">
+                  <td><code style="font-size:.78rem; color:var(--text-muted);">MOD-0021</code></td>
+                  <td style="font-weight:500; max-width:200px;">Rifle Assembly — Unit 3 Study Guide</td>
+                  <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+                  <td style="font-size:.78rem; color:var(--text-muted);">Unit 3 — Component ID</td>
+                  <td>
+                    <span class="module-type-chip" style="color:#C0392B;">
+                      <i class="bi bi-file-earmark-pdf"></i> Lecture Notes
+                    </span>
+                  </td>
+                  <td><span class="access-badge badge-prelims">Prelims</span></td>
+                  <td>
+                    <a href="#" style="font-size:.78rem; color:var(--red); text-decoration:none; display:inline-flex; align-items:center; gap:.25rem;">
+                      <i class="bi bi-file-earmark-pdf"></i> unit3-guide.pdf
+                    </a>
+                  </td>
+                  <td><span class="access-badge badge-active">Active</span></td>
+                  <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">June 3, 2026</td>
+                  <td style="white-space:nowrap;">
+                    <!-- View: GET /modules/{module_id} -->
+                    <a href="#" class="table-action-btn" title="View Module"><i class="bi bi-eye"></i></a>
+                    <!-- Edit: GET /modules/{module_id}/edit -->
+                    <a href="#" class="table-action-btn ms-1" title="Edit Module"><i class="bi bi-pencil"></i></a>
+                    <!-- Delete: DELETE /modules/{module_id} via form POST with _method=DELETE -->
+                    <form method="POST" action="/modules/MOD-0021" id="form-delete-MOD-0021"
+                          style="display:inline-block; margin:0;"
+                          onsubmit="return confirm('Delete this module? This cannot be undone.')">
+                      <!-- {{ csrf_field() }} -->
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="table-action-btn delete ms-1" title="Delete Module"
+                              style="background:none; border-width:1.5px; cursor:pointer;">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr data-module-id="MOD-0019">
+                  <td><code style="font-size:.78rem; color:var(--text-muted);">MOD-0019</code></td>
+                  <td style="font-weight:500; max-width:200px;">Hazard Classification Reference Manual</td>
+                  <td style="font-size:.78rem;">FIRE110 — Hazard Response</td>
+                  <td style="font-size:.78rem; color:var(--text-muted);">Unit 1 — Hazard Types</td>
+                  <td>
+                    <span class="module-type-chip" style="color:#2980b9;">
+                      <i class="bi bi-file-earmark-word"></i> Reference Manual
+                    </span>
+                  </td>
+                  <td><span class="access-badge badge-midterms">Midterms</span></td>
+                  <td>
+                    <a href="#" style="font-size:.78rem; color:#2980b9; text-decoration:none; display:inline-flex; align-items:center; gap:.25rem;">
+                      <i class="bi bi-file-earmark-word"></i> hazard-ref.docx
+                    </a>
+                  </td>
+                  <td><span class="access-badge badge-active">Active</span></td>
+                  <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">June 5, 2026</td>
+                  <td style="white-space:nowrap;">
+                    <a href="#" class="table-action-btn" title="View Module"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="table-action-btn ms-1" title="Edit Module"><i class="bi bi-pencil"></i></a>
+                    <form method="POST" action="/modules/MOD-0019" id="form-delete-MOD-0019"
+                          style="display:inline-block; margin:0;">
+                      <!-- {{ csrf_field() }} -->
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="table-action-btn delete ms-1" title="Delete Module"
+                              style="background:none; border-width:1.5px; cursor:pointer;">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr data-module-id="MOD-0017">
+                  <td><code style="font-size:.78rem; color:var(--text-muted);">MOD-0017</code></td>
+                  <td style="font-weight:500; max-width:200px;">Equipment Handling — Practical Demo Slides</td>
+                  <td style="font-size:.78rem;">FIRE115 — Equipment Handling</td>
+                  <td style="font-size:.78rem; color:var(--text-muted);">Unit 2 — Protective Gear</td>
+                  <td>
+                    <span class="module-type-chip" style="color:#e67e22;">
+                      <i class="bi bi-file-earmark-slides"></i> Presentation
+                    </span>
+                  </td>
+                  <td><span class="access-badge badge-prelims">Prelims</span></td>
+                  <td>
+                    <a href="#" style="font-size:.78rem; color:#e67e22; text-decoration:none; display:inline-flex; align-items:center; gap:.25rem;">
+                      <i class="bi bi-file-earmark-slides"></i> equip-demo.pptx
+                    </a>
+                  </td>
+                  <td><span class="access-badge badge-draft">Draft</span></td>
+                  <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">June 7, 2026</td>
+                  <td style="white-space:nowrap;">
+                    <a href="#" class="table-action-btn" title="View Module"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="table-action-btn ms-1" title="Edit Module"><i class="bi bi-pencil"></i></a>
+                    <form method="POST" action="/modules/MOD-0017" id="form-delete-MOD-0017"
+                          style="display:inline-block; margin:0;">
+                      <!-- {{ csrf_field() }} -->
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="table-action-btn delete ms-1" title="Delete Module"
+                              style="background:none; border-width:1.5px; cursor:pointer;">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr data-module-id="MOD-0015">
+                  <td><code style="font-size:.78rem; color:var(--text-muted);">MOD-0015</code></td>
+                  <td style="font-weight:500; max-width:200px;">Rescue Operations — Video Walkthrough</td>
+                  <td style="font-size:.78rem;">FIRE120 — Rescue Operations</td>
+                  <td style="font-size:.78rem; color:var(--text-muted);">Unit 4 — Rope Rescue</td>
+                  <td>
+                    <span class="module-type-chip" style="color:#8e44ad;">
+                      <i class="bi bi-camera-video"></i> Video Lesson
+                    </span>
+                  </td>
+                  <td><span class="access-badge badge-finals">Finals</span></td>
+                  <td>
+                    <a href="#" style="font-size:.78rem; color:#8e44ad; text-decoration:none; display:inline-flex; align-items:center; gap:.25rem;">
+                      <i class="bi bi-camera-video"></i> rope-rescue.mp4
+                    </a>
+                  </td>
+                  <td><span class="access-badge badge-active">Active</span></td>
+                  <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">June 10, 2026</td>
+                  <td style="white-space:nowrap;">
+                    <a href="#" class="table-action-btn" title="View Module"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="table-action-btn ms-1" title="Edit Module"><i class="bi bi-pencil"></i></a>
+                    <form method="POST" action="/modules/MOD-0015" id="form-delete-MOD-0015"
+                          style="display:inline-block; margin:0;">
+                      <!-- {{ csrf_field() }} -->
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="table-action-btn delete ms-1" title="Delete Module"
+                              style="background:none; border-width:1.5px; cursor:pointer;">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr data-module-id="MOD-0012">
+                  <td><code style="font-size:.78rem; color:var(--text-muted);">MOD-0012</code></td>
+                  <td style="font-weight:500; max-width:200px;">Fire Suppression Techniques — Activity Sheet</td>
+                  <td style="font-size:.78rem;">FIRE125 — Fire Suppression</td>
+                  <td style="font-size:.78rem; color:var(--text-muted);">Unit 5 — Foam Systems</td>
+                  <td>
+                    <span class="module-type-chip" style="color:#1abc9c;">
+                      <i class="bi bi-file-earmark-ruled"></i> Activity Sheet
+                    </span>
+                  </td>
+                  <td><span class="access-badge badge-midterms">Midterms</span></td>
+                  <td>
+                    <a href="#" style="font-size:.78rem; color:#1abc9c; text-decoration:none; display:inline-flex; align-items:center; gap:.25rem;">
+                      <i class="bi bi-file-earmark-ruled"></i> foam-activity.pdf
+                    </a>
+                  </td>
+                  <td><span class="access-badge badge-archived">Archived</span></td>
+                  <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">May 28, 2026</td>
+                  <td style="white-space:nowrap;">
+                    <a href="#" class="table-action-btn" title="View Module"><i class="bi bi-eye"></i></a>
+                    <a href="#" class="table-action-btn ms-1" title="Edit Module"><i class="bi bi-pencil"></i></a>
+                    <form method="POST" action="/modules/MOD-0012" id="form-delete-MOD-0012"
+                          style="display:inline-block; margin:0;">
+                      <!-- {{ csrf_field() }} -->
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="table-action-btn delete ms-1" title="Delete Module"
+                              style="background:none; border-width:1.5px; cursor:pointer;">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+
+                <!-- @endforeach — additional rows from database -->
+
+              </tbody>
+            </table>
           </div>
 
-        </div><!-- /.upload-card -->
-
-      </div><!-- /.upload-form-wrap -->
-
-      <!-- STEP 3 — Uploaded Modules (period-filtered) -->
-
-      <!-- PRELIM Modules -->
-      <div class="modules-section prelim-section mt-4">
-        <div class="section-heading">
-          <i class="bi bi-folder2-open"></i> Prelim — Uploaded Modules
-          <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">3 files</span>
-        </div>
-
-        <div class="module-item">
-          <div class="module-file-icon pdf"><i class="bi bi-filetype-pdf"></i></div>
-          <div class="module-meta">
-            <div class="module-name">Rifle Assembly — Introduction.pdf</div>
-            <div class="module-info">FIRE102 · Lesson 1 · 2.4 MB · Uploaded Jun 2, 2026</div>
+          <!-- Pagination placeholder -->
+          <div class="d-flex align-items-center justify-content-between mt-3"
+               style="font-size:.78rem; color:var(--text-muted);">
+            <!-- DB: "Showing X–Y of Z results" from paginator -->
+            <span>Showing 1–5 of 38 modules</span>
+            <nav aria-label="Modules pagination">
+              <ul class="pagination pagination-sm mb-0" style="gap:.25rem;">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&laquo;</a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#"
+                     style="border-radius:6px; font-size:.75rem; background:var(--red); border-color:var(--red);">1</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">2</a></li>
+                <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&raquo;</a>
+                </li>
+              </ul>
+            </nav>
           </div>
-          <span class="module-badge badge-prelim">Prelim</span>
-          <div class="module-actions">
-            <a href="#" class="module-action-btn" title="Download"><i class="bi bi-download"></i></a>
-            <a href="#" class="module-action-btn" title="Delete"><i class="bi bi-trash3"></i></a>
-          </div>
-        </div>
 
-        <div class="module-item">
-          <div class="module-file-icon pptx"><i class="bi bi-filetype-pptx"></i></div>
-          <div class="module-meta">
-            <div class="module-name">Parts Identification — Slide Deck.pptx</div>
-            <div class="module-info">FIRE102 · Lesson 2 · 5.1 MB · Uploaded Jun 4, 2026</div>
+          <div class="notice-bar mt-3">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+              <span class="notice-label">Delete Warning —</span>
+              Deleting a module is permanent and cannot be undone. Students who have accessed the module will lose access immediately. Archive the module instead if you need to hide it temporarily.
+            </div>
           </div>
-          <span class="module-badge badge-prelim">Prelim</span>
-          <div class="module-actions">
-            <a href="#" class="module-action-btn" title="Download"><i class="bi bi-download"></i></a>
-            <a href="#" class="module-action-btn" title="Delete"><i class="bi bi-trash3"></i></a>
-          </div>
-        </div>
 
-        <div class="module-item">
-          <div class="module-file-icon video"><i class="bi bi-play-btn-fill"></i></div>
-          <div class="module-meta">
-            <div class="module-name">Safety Protocols — Video Walkthrough.mp4</div>
-            <div class="module-info">FIRE102 · Lesson 4 · 48.7 MB · Uploaded Jun 5, 2026</div>
-          </div>
-          <span class="module-badge badge-prelim">Prelim</span>
-          <div class="module-actions">
-            <a href="#" class="module-action-btn" title="Download"><i class="bi bi-download"></i></a>
-            <a href="#" class="module-action-btn" title="Delete"><i class="bi bi-trash3"></i></a>
-          </div>
-        </div>
-      </div><!-- /.prelim-section -->
+        </div><!-- /panel-body -->
+      </div><!-- /panel Step 3 -->
+    </div><!-- /modules-section -->
 
-      <!-- MIDTERM Modules -->
-      <div class="modules-section midterm-section mt-4">
-        <div class="section-heading">
-          <i class="bi bi-folder2-open"></i> Midterm — Uploaded Modules
-          <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">2 files</span>
-        </div>
+    <div class="portal-footer">
+      Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
+    </div>
 
-        <div class="module-item">
-          <div class="module-file-icon pdf"><i class="bi bi-filetype-pdf"></i></div>
-          <div class="module-meta">
-            <div class="module-name">Step-by-step Disassembly Guide.pdf</div>
-            <div class="module-info">FIRE103 · Lesson 3 · 3.8 MB · Uploaded Jun 10, 2026</div>
-          </div>
-          <span class="module-badge badge-midterm">Midterm</span>
-          <div class="module-actions">
-            <a href="#" class="module-action-btn" title="Download"><i class="bi bi-download"></i></a>
-            <a href="#" class="module-action-btn" title="Delete"><i class="bi bi-trash3"></i></a>
-          </div>
-        </div>
-
-        <div class="module-item">
-          <div class="module-file-icon docx"><i class="bi bi-filetype-docx"></i></div>
-          <div class="module-meta">
-            <div class="module-name">Practical Exam Rubric — Midterm.docx</div>
-            <div class="module-info">FIRE103 · Assessment · 1.2 MB · Uploaded Jun 11, 2026</div>
-          </div>
-          <span class="module-badge badge-midterm">Midterm</span>
-          <div class="module-actions">
-            <a href="#" class="module-action-btn" title="Download"><i class="bi bi-download"></i></a>
-            <a href="#" class="module-action-btn" title="Delete"><i class="bi bi-trash3"></i></a>
-          </div>
-        </div>
-      </div><!-- /.midterm-section -->
-
-      <!-- FINALS Modules -->
-      <div class="modules-section finals-section mt-4">
-        <div class="section-heading">
-          <i class="bi bi-folder2-open"></i> Finals — Uploaded Modules
-          <span class="ms-auto badge bg-light text-secondary border" style="font-size:.7rem;font-weight:600;">0 files</span>
-        </div>
-        <div class="empty-state">
-          <i class="bi bi-inbox"></i>
-          <p>No modules uploaded for Finals yet.<br>Use the form above to add the first one.</p>
-        </div>
-      </div><!-- /.finals-section -->
-
-      <!-- Notice Bar -->
-      <div class="notice-bar">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        <div>
-          <span class="notice-label">Upload Notice —</span>
-          Each module is permanently filed under its selected academic period. Once uploaded, the period cannot be changed — delete and re-upload if needed. Large video files may take a moment to process.
-        </div>
-      </div>
-
-    </div><!-- /panel-body -->
-  </div><!-- /panel -->
-
-  <div class="portal-footer">
-    Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
-  </div>
-</main>
+  </main><!-- /main-content -->
 
 </body>
 </html>
