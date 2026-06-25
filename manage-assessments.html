@@ -1859,6 +1859,991 @@
     </div>
   </div>
 
+  <!-- ════════════════════════════════════════════════════════════
+       ASSESSMENT REVIEW & STUDENT PERFORMANCE MONITORING
+       Global filter bar + two review panels:
+         1. Assembly and Disassembly Activity Review
+         2. Firearm Familiarization Review
+       ════════════════════════════════════════════════════════════ -->
+
+  <!-- ── SECTION DIVIDER ── -->
+  <div class="d-flex align-items-center gap-2 mb-3 mt-1">
+    <div style="height:2px; flex:1; background:rgba(255,255,255,.18); border-radius:2px;"></div>
+    <span style="font-size:.72rem; font-weight:700; color:rgba(255,255,255,.65); letter-spacing:.1em; text-transform:uppercase; white-space:nowrap;">
+      <i class="bi bi-clipboard2-pulse me-1"></i>Assessment Review &amp; Performance Monitoring
+    </span>
+    <div style="height:2px; flex:1; background:rgba(255,255,255,.18); border-radius:2px;"></div>
+  </div>
+
+  <!-- ── GLOBAL FILTER BAR ── -->
+  <!--
+    Backend: GET /assessments/review?subject=&academic_year=&student_id=&status=
+    Applies to both review panels below. Laravel can read these from $request->query().
+  -->
+  <div class="panel mb-3">
+    <div class="panel-banner">
+      <div class="panel-banner-left">
+        <h2><i class="bi bi-funnel-fill me-1" style="color:var(--red);"></i> Review Filters</h2>
+        <p>Filter assessment review results by subject, academic year, or student.</p>
+      </div>
+      <!-- Report export form — Backend: POST /assessments/review/export -->
+      <form method="POST" action="/assessments/review/export" id="form-review-export">
+        <!-- {{ csrf_field() }} -->
+        <input type="hidden" name="report_type" value="assessment_review">
+        <div class="d-flex gap-2">
+          <button type="submit" name="format" value="pdf" class="btn-outline-red" style="font-size:.78rem; padding:.35rem .85rem;">
+            <i class="bi bi-file-pdf"></i> PDF
+          </button>
+          <button type="submit" name="format" value="excel" class="btn-reset" style="font-size:.78rem; padding:.35rem .85rem; display:inline-flex; align-items:center; gap:.35rem;">
+            <i class="bi bi-file-excel"></i> Excel
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="panel-body">
+      <form method="GET" action="/assessments/review" id="form-global-filter">
+        <div class="row g-3">
+
+          <!-- Student Subject -->
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="filter_subject">Student Subject</label>
+            <!--
+              DB: SELECT id, subject_code, subject_name FROM subjects WHERE instructor_id = auth()->id()
+              name="subject" maps to subjects.id
+            -->
+            <select class="form-select" id="filter_subject" name="subject">
+              <option value="">All Subjects</option>
+              <option value="FIRE102">FIRE102 — Assembly</option>
+              <option value="FIRE110">FIRE110 — Hazard Response</option>
+              <option value="FIRE115">FIRE115 — Equipment Handling</option>
+              <option value="FIRE120">FIRE120 — Rescue Operations</option>
+              <option value="FIRE125">FIRE125 — Fire Suppression</option>
+            </select>
+          </div>
+
+          <!-- Academic Year -->
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="filter_academic_year">Academic Year</label>
+            <!--
+              DB: SELECT DISTINCT academic_year FROM academic_periods ORDER BY academic_year DESC
+              name="academic_year" maps to academic_periods.academic_year
+            -->
+            <select class="form-select" id="filter_academic_year" name="academic_year">
+              <option value="">All Academic Years</option>
+              <option value="2025-2026" selected>2025–2026</option>
+              <option value="2024-2025">2024–2025</option>
+              <option value="2023-2024">2023–2024</option>
+            </select>
+          </div>
+
+          <!-- Student search -->
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="filter_student_id">Student</label>
+            <!--
+              DB: SELECT id, full_name, student_code FROM students
+              name="student_id" maps to students.id
+            -->
+            <select class="form-select" id="filter_student_id" name="student_id">
+              <option value="">All Students</option>
+              <option value="STU-2401">STU-2401 — Juan Reyes</option>
+              <option value="STU-2402">STU-2402 — Maria Cruz</option>
+              <option value="STU-2403">STU-2403 — Angelo Lim</option>
+              <option value="STU-2404">STU-2404 — Sofia Espiritu</option>
+              <option value="STU-2405">STU-2405 — Ben Torres</option>
+            </select>
+          </div>
+
+          <!-- Completion Status -->
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="filter_review_status">Completion Status</label>
+            <!--
+              name="status" maps to student_assessments.completion_status
+            -->
+            <select class="form-select" id="filter_review_status" name="status">
+              <option value="">All Statuses</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="not_taken">Not Taken</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="d-flex gap-2 mt-3">
+          <button type="submit" class="btn-save" style="font-size:.82rem;">
+            <i class="bi bi-search me-1"></i> Apply Filters
+          </button>
+          <a href="/assessments/review" class="btn-reset" style="font-size:.82rem; display:inline-flex; align-items:center; gap:.35rem; text-decoration:none;">
+            <i class="bi bi-x-circle"></i> Clear Filters
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── REVIEW SUMMARY STATS ── -->
+  <!--
+    Backend: Aggregates from student_assessments WHERE assessment_category IN ('assembly','familiarization')
+    Filtered by current subject/academic_year/student_id query params
+  -->
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-lg-3">
+      <div class="stat-card stat-red">
+        <i class="bi bi-tools stat-icon"></i>
+        <div class="stat-eyebrow">Assembly</div>
+        <!-- DB: COUNT(*) FROM student_assessments WHERE assessment_category='assembly' AND completion_status='completed' -->
+        <div class="stat-number">41</div>
+        <div class="stat-label">Assembly Reviews Done</div>
+        <div class="stat-sub">of 48 students</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-card stat-blue">
+        <i class="bi bi-crosshair stat-icon"></i>
+        <div class="stat-eyebrow">Familiarization</div>
+        <!-- DB: COUNT(*) FROM student_assessments WHERE assessment_category='familiarization' AND completion_status='completed' -->
+        <div class="stat-number">38</div>
+        <div class="stat-label">Familiarization Reviews Done</div>
+        <div class="stat-sub">of 48 students</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-card stat-teal">
+        <i class="bi bi-graph-up-arrow stat-icon"></i>
+        <div class="stat-eyebrow">Avg. Score</div>
+        <!-- DB: AVG(score) FROM student_assessments WHERE assessment_category IN ('assembly','familiarization') -->
+        <div class="stat-number">84%</div>
+        <div class="stat-label">Combined Average Score</div>
+        <div class="stat-sub"><span class="stat-trend"><i class="bi bi-arrow-up"></i>4%</span> vs Prelims</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-card stat-orange">
+        <i class="bi bi-exclamation-triangle stat-icon"></i>
+        <div class="stat-eyebrow">Needs Attention</div>
+        <!-- DB: COUNT(*) FROM student_assessments WHERE score < passing_score -->
+        <div class="stat-number">7</div>
+        <div class="stat-label">Students Below Passing</div>
+        <div class="stat-sub">Require follow-up</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PANEL 1 — ASSEMBLY AND DISASSEMBLY ACTIVITY REVIEW
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="panel mb-3" id="panel-assembly-review">
+    <div class="panel-banner">
+      <div class="panel-banner-left">
+        <h2><i class="bi bi-tools me-1" style="color:var(--red);"></i> Assembly and Disassembly Activity Review</h2>
+        <p>Evaluate student performance in Assembly and Disassembly activities. Review scores, completion status, and individual remarks.</p>
+      </div>
+      <!-- Backend: POST /assessments/review/assembly/export -->
+      <form method="POST" action="/assessments/review/assembly/export" id="form-assembly-export">
+        <!-- {{ csrf_field() }} -->
+        <input type="hidden" name="review_type" value="assembly_disassembly">
+        <button type="submit" class="btn-outline-red" style="font-size:.78rem; padding:.35rem .85rem;">
+          <i class="bi bi-file-earmark-arrow-down"></i> Export
+        </button>
+      </form>
+    </div>
+    <div class="panel-body">
+
+      <!-- Performance Summary Row -->
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-4">
+          <div class="progress-card">
+            <div class="pc-top">
+              <span class="pc-title">Pre-test Average — Assembly</span>
+              <!-- DB: AVG(score) FROM student_assessments WHERE assessment_category='assembly' AND test_type='pre_test' -->
+              <span class="pc-value" style="color:#2980b9;">58%</span>
+            </div>
+            <div class="progress"><div class="progress-bar pbar-blue" style="width:58%"></div></div>
+            <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">48 students · Prelims Week 1</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="progress-card">
+            <div class="pc-top">
+              <span class="pc-title">Post-test Average — Assembly</span>
+              <!-- DB: AVG(score) FROM student_assessments WHERE assessment_category='assembly' AND test_type='post_test' -->
+              <span class="pc-value" style="color:#27ae60;">88%</span>
+            </div>
+            <div class="progress"><div class="progress-bar pbar-teal" style="width:88%"></div></div>
+            <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">
+              41 students · Midterms — <strong style="color:#27ae60;">+30% gain</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="progress-card">
+            <div class="pc-top">
+              <span class="pc-title">Activity Completion Rate</span>
+              <!-- DB: (completed/total)*100 FROM student_assessments WHERE assessment_category='assembly' -->
+              <span class="pc-value" style="color:var(--red);">85%</span>
+            </div>
+            <div class="progress"><div class="progress-bar pbar-red" style="width:85%"></div></div>
+            <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">41 of 48 students completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section heading -->
+      <div class="section-heading">
+        <i class="bi bi-table"></i> Student Assembly Activity Records
+        <span style="margin-left:auto; font-size:.7rem; font-weight:400; color:var(--text-muted);">
+          <!-- DB: total rows in result set -->
+          Showing 5 of 48 records
+        </span>
+      </div>
+
+      <!--
+        Backend: GET /assessments/review/assembly?subject=&academic_year=&student_id=&status=
+        Table: student_assessments sa
+          JOIN assessments a ON sa.assessment_id = a.id
+          JOIN students s ON sa.student_id = s.id
+        WHERE a.assessment_category = 'assembly'
+        Key fields: student_id, assessment_id, score, completion_status, assessment_date,
+                    test_type, remarks, passing_score
+      -->
+      <div class="table-responsive">
+        <table class="table" id="table-assembly-review">
+          <thead>
+            <tr>
+              <th data-column="student_id">Student</th>
+              <th data-column="subject">Subject</th>
+              <th data-column="academic_year">Academic Year</th>
+              <th data-column="assessment_title">Activity</th>
+              <th data-column="test_type">Test Type</th>
+              <th data-column="assessment_date">Date</th>
+              <th data-column="score">Score</th>
+              <th data-column="passing_score">Passing</th>
+              <th data-column="completion_status">Result</th>
+              <th data-column="remarks">Instructor Remarks</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--
+              Backend: @foreach($assemblyRecords as $r)
+              Each row: $r->student, $r->subject, $r->assessment, $r->score,
+                        $r->completion_status, $r->test_type, $r->assessment_date,
+                        $r->remarks, $r->passing_score
+            -->
+
+            <!-- Row 1 -->
+            <tr data-student-id="STU-2401" data-assessment-id="ASM-1042">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#C0392B;">JR</div>
+                  <div>
+                    <div class="student-name">Juan Reyes</div>
+                    <div class="student-id">STU-2401</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Rifle Assembly — Unit 3 Activity</td>
+              <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 20, 2026</td>
+              <td><span class="score-pill score-high">92 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-passed">Passed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Excellent step sequencing; minor pause at firing pin seating.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <!-- Backend: href="/assessments/review/{student_id}/assembly/report" -->
+                <a href="#" class="table-action-btn ms-1" title="Generate Student Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr data-student-id="STU-2402" data-assessment-id="ASM-1042">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#8e44ad;">MC</div>
+                  <div>
+                    <div class="student-name">Maria Cruz</div>
+                    <div class="student-id">STU-2402</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Rifle Assembly — Unit 3 Activity</td>
+              <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 20, 2026</td>
+              <td><span class="score-pill score-high">98 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-passed">Passed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Flawless assembly; fastest completion time in the cohort.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Student Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr data-student-id="STU-2403" data-assessment-id="ASM-1042">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#e67e22;">AL</div>
+                  <div>
+                    <div class="student-name">Angelo Lim</div>
+                    <div class="student-id">STU-2403</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE110 — Hazard Response</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Disassembly Safety Check — Unit 2</td>
+              <td><span class="access-badge badge-scheduled" style="font-size:.65rem;">Pre-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 3, 2026</td>
+              <td><span class="score-pill score-mid">63 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-failed">Failed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Incorrect bolt removal sequence; must revisit Module 2.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Student Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 4 -->
+            <tr data-student-id="STU-2404" data-assessment-id="ASM-1042">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#2980b9;">SE</div>
+                  <div>
+                    <div class="student-name">Sofia Espiritu</div>
+                    <div class="student-id">STU-2404</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE115 — Equipment Handling</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Rifle Assembly — Unit 3 Activity</td>
+              <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 20, 2026</td>
+              <td><span class="score-pill score-high">81 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-passed">Passed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Satisfactory performance; needs work on barrel alignment.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Student Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 5 -->
+            <tr data-student-id="STU-2405" data-assessment-id="ASM-1042">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#1abc9c;">BT</div>
+                  <div>
+                    <div class="student-name">Ben Torres</div>
+                    <div class="student-id">STU-2405</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE120 — Rescue Operations</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Disassembly Safety Check — Unit 2</td>
+              <td><span class="access-badge badge-draft" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">—</td>
+              <td><span class="score-pill score-none">Not Taken</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-not-taken">Pending</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">—</td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Student Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+            <!-- @endforeach -->
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex align-items-center justify-content-between mt-3" style="font-size:.78rem; color:var(--text-muted);">
+        <span>Showing 1–5 of 48 records</span>
+        <nav aria-label="Assembly review pagination">
+          <ul class="pagination pagination-sm mb-0" style="gap:.25rem;">
+            <li class="page-item disabled"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&laquo;</a></li>
+            <li class="page-item active"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem; background:var(--red); border-color:var(--red);">1</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">2</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">3</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&raquo;</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Individual Performance Breakdown (collapsible via pure-CSS details/summary) -->
+      <details style="margin-top:1.1rem;">
+        <summary style="font-size:.82rem; font-weight:700; color:var(--red); cursor:pointer; padding:.5rem 0; border-top:1px solid var(--border); list-style:none; display:flex; align-items:center; gap:.5rem;">
+          <i class="bi bi-bar-chart-steps"></i> Assembly Activity — Performance Breakdown by Criteria
+          <i class="bi bi-chevron-down ms-auto" style="font-size:.75rem;"></i>
+        </summary>
+        <div class="mt-3">
+          <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Step Sequencing</span>
+                  <!-- DB: AVG(step_sequencing_score) FROM assembly_criteria_scores -->
+                  <span class="pc-value" style="color:#27ae60;">89%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-teal" style="width:89%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Class average</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Component Identification</span>
+                  <!-- DB: AVG(component_id_score) FROM assembly_criteria_scores -->
+                  <span class="pc-value" style="color:#2980b9;">91%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-blue" style="width:91%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Class average</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Safety Protocol Adherence</span>
+                  <!-- DB: AVG(safety_score) FROM assembly_criteria_scores -->
+                  <span class="pc-value" style="color:#8e44ad;">76%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-purple" style="width:76%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Class average</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Completion Time</span>
+                  <!-- DB: AVG(time_score) FROM assembly_criteria_scores -->
+                  <span class="pc-value" style="color:#e67e22;">82%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-orange" style="width:82%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Within target time</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructor remarks add form for assembly -->
+          <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+            <div class="section-heading"><i class="bi bi-plus-circle"></i> Add Assembly Activity Remark</div>
+            <!--
+              Backend: POST /assessments/review/assembly/remarks/store
+              Table: assessment_remarks
+              DB columns: student_id, assessment_id, remark_type, remarks, instructor_id,
+                          review_category (='assembly'), created_at
+            -->
+            <form method="POST" action="/assessments/review/assembly/remarks/store" id="form-assembly-remark">
+              <!-- {{ csrf_field() }} -->
+              <input type="hidden" name="review_category" value="assembly">
+              <input type="hidden" name="instructor_id" value="{{ auth()->id() }}">
+              <div class="row g-3">
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="asm_remark_student_id">Student</label>
+                  <select class="form-select" id="asm_remark_student_id" name="student_id" required>
+                    <option value="" selected disabled>Select student</option>
+                    <!-- DB: foreach $students -->
+                    <option value="STU-2401">STU-2401 — Juan Reyes</option>
+                    <option value="STU-2402">STU-2402 — Maria Cruz</option>
+                    <option value="STU-2403">STU-2403 — Angelo Lim</option>
+                    <option value="STU-2404">STU-2404 — Sofia Espiritu</option>
+                    <option value="STU-2405">STU-2405 — Ben Torres</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="asm_remark_assessment_id">Activity / Assessment</label>
+                  <select class="form-select" id="asm_remark_assessment_id" name="assessment_id" required>
+                    <option value="" selected disabled>Select activity</option>
+                    <!-- DB: foreach $assemblyAssessments -->
+                    <option value="ASM-1042">ASM-1042 — Rifle Assembly Unit 3</option>
+                    <option value="ASM-1043">ASM-1043 — Disassembly Safety Check Unit 2</option>
+                    <option value="ASM-1044">ASM-1044 — Timed Assembly Drill</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="asm_remark_type">Remark Type</label>
+                  <select class="form-select" id="asm_remark_type" name="remark_type" required>
+                    <option value="" selected disabled>Select type</option>
+                    <option value="strength">Strength</option>
+                    <option value="improvement">Area for Improvement</option>
+                    <option value="general">General Feedback</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="asm_remark_score">Recorded Score</label>
+                  <input type="number" class="form-control" id="asm_remark_score" name="score"
+                         min="0" max="100" placeholder="e.g. 88">
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="asm_remark_text">Remarks</label>
+                  <textarea class="form-control" id="asm_remark_text" name="remarks" rows="2"
+                            placeholder="Describe the student's assembly/disassembly performance, technique, speed, and safety compliance…"
+                            required></textarea>
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn-save"><i class="bi bi-check-circle me-1"></i> Save Remark</button>
+                <button type="reset" class="btn-reset"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </details>
+
+      <!-- Report generation bar -->
+      <div class="report-action-bar mt-3">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i>
+        <span>Generate a full Assembly and Disassembly performance report for the selected students and subject.</span>
+        <!-- Backend: POST /assessments/review/assembly/report -->
+        <form method="POST" action="/assessments/review/assembly/report" id="form-assembly-report" class="d-flex gap-2">
+          <!-- {{ csrf_field() }} -->
+          <input type="hidden" name="review_type" value="assembly">
+          <button type="submit" name="format" value="pdf" class="btn-save" style="padding:.38rem .85rem; font-size:.78rem;">
+            <i class="bi bi-file-pdf me-1"></i>PDF
+          </button>
+          <button type="submit" name="format" value="excel" class="btn-reset" style="padding:.38rem .85rem; font-size:.78rem; display:inline-flex; align-items:center; gap:.35rem;">
+            <i class="bi bi-file-excel me-1"></i>Excel
+          </button>
+        </form>
+      </div>
+
+    </div><!-- /panel-body assembly -->
+  </div><!-- /panel assembly review -->
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PANEL 2 — FIREARM FAMILIARIZATION REVIEW
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="panel mb-3" id="panel-familiarization-review">
+    <div class="panel-banner">
+      <div class="panel-banner-left">
+        <h2><i class="bi bi-crosshair me-1" style="color:var(--red);"></i> Firearm Familiarization Review</h2>
+        <p>Monitor student performance in Firearm Familiarization assessments including parts identification, handling, and safety protocols.</p>
+      </div>
+      <!-- Backend: POST /assessments/review/familiarization/export -->
+      <form method="POST" action="/assessments/review/familiarization/export" id="form-fam-export">
+        <!-- {{ csrf_field() }} -->
+        <input type="hidden" name="review_type" value="familiarization">
+        <button type="submit" class="btn-outline-red" style="font-size:.78rem; padding:.35rem .85rem;">
+          <i class="bi bi-file-earmark-arrow-down"></i> Export
+        </button>
+      </form>
+    </div>
+    <div class="panel-body">
+
+      <!-- Performance Summary Row -->
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-4">
+          <div class="progress-card">
+            <div class="pc-top">
+              <span class="pc-title">Pre-test Average — Familiarization</span>
+              <!-- DB: AVG(score) FROM student_assessments WHERE assessment_category='familiarization' AND test_type='pre_test' -->
+              <span class="pc-value" style="color:#2980b9;">54%</span>
+            </div>
+            <div class="progress"><div class="progress-bar pbar-blue" style="width:54%"></div></div>
+            <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">48 students · Prelims Week 2</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="progress-card">
+            <div class="pc-top">
+              <span class="pc-title">Post-test Average — Familiarization</span>
+              <!-- DB: AVG(score) FROM student_assessments WHERE assessment_category='familiarization' AND test_type='post_test' -->
+              <span class="pc-value" style="color:#27ae60;">82%</span>
+            </div>
+            <div class="progress"><div class="progress-bar pbar-teal" style="width:82%"></div></div>
+            <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">
+              38 students · Finals — <strong style="color:#27ae60;">+28% gain</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="progress-card">
+            <div class="pc-top">
+              <span class="pc-title">Assessment Completion Rate</span>
+              <!-- DB: (completed/total)*100 FROM student_assessments WHERE assessment_category='familiarization' -->
+              <span class="pc-value" style="color:var(--red);">79%</span>
+            </div>
+            <div class="progress"><div class="progress-bar pbar-red" style="width:79%"></div></div>
+            <div class="mt-2" style="font-size:.72rem; color:var(--text-muted);">38 of 48 students completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section heading -->
+      <div class="section-heading">
+        <i class="bi bi-table"></i> Student Familiarization Assessment Records
+        <span style="margin-left:auto; font-size:.7rem; font-weight:400; color:var(--text-muted);">
+          <!-- DB: total rows -->
+          Showing 5 of 48 records
+        </span>
+      </div>
+
+      <!--
+        Backend: GET /assessments/review/familiarization?subject=&academic_year=&student_id=&status=
+        Table: student_assessments sa
+          JOIN assessments a ON sa.assessment_id = a.id
+          JOIN students s ON sa.student_id = s.id
+        WHERE a.assessment_category = 'familiarization'
+        Key fields: student_id, assessment_id, score, completion_status, assessment_date,
+                    test_type, remarks, passing_score
+      -->
+      <div class="table-responsive">
+        <table class="table" id="table-familiarization-review">
+          <thead>
+            <tr>
+              <th data-column="student_id">Student</th>
+              <th data-column="subject">Subject</th>
+              <th data-column="academic_year">Academic Year</th>
+              <th data-column="assessment_title">Assessment</th>
+              <th data-column="test_type">Test Type</th>
+              <th data-column="assessment_date">Date</th>
+              <th data-column="score">Score</th>
+              <th data-column="passing_score">Passing</th>
+              <th data-column="completion_status">Result</th>
+              <th data-column="remarks">Instructor Remarks</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--
+              Backend: @foreach($familiarizationRecords as $r)
+            -->
+
+            <!-- Row 1 -->
+            <tr data-student-id="STU-2401" data-assessment-id="ASM-2001">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#C0392B;">JR</div>
+                  <div>
+                    <div class="student-name">Juan Reyes</div>
+                    <div class="student-id">STU-2401</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Firearm Parts Identification Test</td>
+              <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 17, 2026</td>
+              <td><span class="score-pill score-high">87 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-passed">Passed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Strong parts ID; confused trigger guard with trigger housing.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr data-student-id="STU-2402" data-assessment-id="ASM-2001">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#8e44ad;">MC</div>
+                  <div>
+                    <div class="student-name">Maria Cruz</div>
+                    <div class="student-id">STU-2402</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE102 — Assembly</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Safe Handling and Carriage Assessment</td>
+              <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 17, 2026</td>
+              <td><span class="score-pill score-high">96 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-passed">Passed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Exceptional handling and safety posture throughout.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr data-student-id="STU-2403" data-assessment-id="ASM-2002">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#e67e22;">AL</div>
+                  <div>
+                    <div class="student-name">Angelo Lim</div>
+                    <div class="student-id">STU-2403</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE110 — Hazard Response</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Firearm Parts Identification Test</td>
+              <td><span class="access-badge badge-scheduled" style="font-size:.65rem;">Pre-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 4, 2026</td>
+              <td><span class="score-pill score-low">52 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-failed">Failed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Unable to identify receiver and bolt components; needs re-study.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 4 -->
+            <tr data-student-id="STU-2404" data-assessment-id="ASM-2003">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#2980b9;">SE</div>
+                  <div>
+                    <div class="student-name">Sofia Espiritu</div>
+                    <div class="student-id">STU-2404</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE115 — Equipment Handling</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Safe Handling and Carriage Assessment</td>
+              <td><span class="access-badge badge-active" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap;">June 17, 2026</td>
+              <td><span class="score-pill score-mid">78 / 100</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-passed">Passed</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                Adequate handling; muzzle discipline needs reinforcement.
+              </td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+
+            <!-- Row 5 -->
+            <tr data-student-id="STU-2405" data-assessment-id="ASM-2001">
+              <td>
+                <div class="student-chip">
+                  <div class="student-avatar" style="background:#1abc9c;">BT</div>
+                  <div>
+                    <div class="student-name">Ben Torres</div>
+                    <div class="student-id">STU-2405</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size:.78rem;">FIRE120 — Rescue Operations</td>
+              <td style="font-size:.78rem; color:var(--text-muted);">2025–2026</td>
+              <td style="font-size:.82rem; font-weight:500;">Firearm Parts Identification Test</td>
+              <td><span class="access-badge badge-draft" style="font-size:.65rem;">Post-test</span></td>
+              <td style="font-size:.78rem; white-space:nowrap; color:var(--text-muted);">—</td>
+              <td><span class="score-pill score-none">Not Taken</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">75%</td>
+              <td><span class="access-badge badge-not-taken">Pending</span></td>
+              <td style="font-size:.78rem; color:var(--text-muted);">—</td>
+              <td style="white-space:nowrap;">
+                <a href="#" class="table-action-btn" title="View Full Record"><i class="bi bi-eye"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Edit Remarks"><i class="bi bi-chat-left-text"></i></a>
+                <a href="#" class="table-action-btn ms-1" title="Generate Report"><i class="bi bi-file-earmark-text"></i></a>
+              </td>
+            </tr>
+            <!-- @endforeach -->
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex align-items-center justify-content-between mt-3" style="font-size:.78rem; color:var(--text-muted);">
+        <span>Showing 1–5 of 48 records</span>
+        <nav aria-label="Familiarization review pagination">
+          <ul class="pagination pagination-sm mb-0" style="gap:.25rem;">
+            <li class="page-item disabled"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&laquo;</a></li>
+            <li class="page-item active"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem; background:var(--red); border-color:var(--red);">1</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">2</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">3</a></li>
+            <li class="page-item"><a class="page-link" href="#" style="border-radius:6px; font-size:.75rem;">&raquo;</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Performance Breakdown — Familiarization -->
+      <details style="margin-top:1.1rem;">
+        <summary style="font-size:.82rem; font-weight:700; color:var(--red); cursor:pointer; padding:.5rem 0; border-top:1px solid var(--border); list-style:none; display:flex; align-items:center; gap:.5rem;">
+          <i class="bi bi-bar-chart-steps"></i> Familiarization — Performance Breakdown by Criteria
+          <i class="bi bi-chevron-down ms-auto" style="font-size:.75rem;"></i>
+        </summary>
+        <div class="mt-3">
+          <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Parts Identification</span>
+                  <!-- DB: AVG(parts_id_score) FROM familiarization_criteria_scores -->
+                  <span class="pc-value" style="color:#2980b9;">80%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-blue" style="width:80%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Class average</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Safe Handling</span>
+                  <!-- DB: AVG(handling_score) FROM familiarization_criteria_scores -->
+                  <span class="pc-value" style="color:#27ae60;">85%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-teal" style="width:85%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Class average</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Muzzle Discipline</span>
+                  <!-- DB: AVG(muzzle_score) FROM familiarization_criteria_scores -->
+                  <span class="pc-value" style="color:#e67e22;">72%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-orange" style="width:72%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Needs improvement</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="progress-card">
+                <div class="pc-top">
+                  <span class="pc-title">Safety Rule Knowledge</span>
+                  <!-- DB: AVG(safety_rule_score) FROM familiarization_criteria_scores -->
+                  <span class="pc-value" style="color:#8e44ad;">88%</span>
+                </div>
+                <div class="progress"><div class="progress-bar pbar-purple" style="width:88%"></div></div>
+                <div style="font-size:.7rem; color:var(--text-muted); margin-top:.4rem;">Class average</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructor remarks form for familiarization -->
+          <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+            <div class="section-heading"><i class="bi bi-plus-circle"></i> Add Familiarization Remark</div>
+            <!--
+              Backend: POST /assessments/review/familiarization/remarks/store
+              Table: assessment_remarks
+              DB columns: student_id, assessment_id, remark_type, remarks, instructor_id,
+                          review_category (='familiarization'), created_at
+            -->
+            <form method="POST" action="/assessments/review/familiarization/remarks/store" id="form-fam-remark">
+              <!-- {{ csrf_field() }} -->
+              <input type="hidden" name="review_category" value="familiarization">
+              <input type="hidden" name="instructor_id" value="{{ auth()->id() }}">
+              <div class="row g-3">
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="fam_remark_student_id">Student</label>
+                  <select class="form-select" id="fam_remark_student_id" name="student_id" required>
+                    <option value="" selected disabled>Select student</option>
+                    <!-- DB: foreach $students -->
+                    <option value="STU-2401">STU-2401 — Juan Reyes</option>
+                    <option value="STU-2402">STU-2402 — Maria Cruz</option>
+                    <option value="STU-2403">STU-2403 — Angelo Lim</option>
+                    <option value="STU-2404">STU-2404 — Sofia Espiritu</option>
+                    <option value="STU-2405">STU-2405 — Ben Torres</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="fam_remark_assessment_id">Assessment</label>
+                  <select class="form-select" id="fam_remark_assessment_id" name="assessment_id" required>
+                    <option value="" selected disabled>Select assessment</option>
+                    <!-- DB: foreach $familiarizationAssessments -->
+                    <option value="ASM-2001">ASM-2001 — Parts Identification Test</option>
+                    <option value="ASM-2002">ASM-2002 — Safe Handling Assessment</option>
+                    <option value="ASM-2003">ASM-2003 — Carriage and Posture Drill</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="fam_remark_type">Remark Type</label>
+                  <select class="form-select" id="fam_remark_type" name="remark_type" required>
+                    <option value="" selected disabled>Select type</option>
+                    <option value="strength">Strength</option>
+                    <option value="improvement">Area for Improvement</option>
+                    <option value="general">General Feedback</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label" for="fam_remark_score">Recorded Score</label>
+                  <input type="number" class="form-control" id="fam_remark_score" name="score"
+                         min="0" max="100" placeholder="e.g. 82">
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="fam_remark_text">Remarks</label>
+                  <textarea class="form-control" id="fam_remark_text" name="remarks" rows="2"
+                            placeholder="Describe the student's knowledge of firearm parts, handling posture, muzzle discipline, and safety rule compliance…"
+                            required></textarea>
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn-save"><i class="bi bi-check-circle me-1"></i> Save Remark</button>
+                <button type="reset" class="btn-reset"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </details>
+
+      <!-- Notice bar -->
+      <div class="notice-bar mt-3">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <div>
+          <span class="notice-label">Familiarization Note —</span>
+          Students who score below 75% on the Pre-test must complete remedial review sessions before proceeding to the post-test. Flag these records and coordinate with the program coordinator.
+        </div>
+      </div>
+
+      <!-- Report generation bar -->
+      <div class="report-action-bar mt-3">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i>
+        <span>Generate a full Firearm Familiarization performance report for the selected students and subject.</span>
+        <!-- Backend: POST /assessments/review/familiarization/report -->
+        <form method="POST" action="/assessments/review/familiarization/report" id="form-fam-report" class="d-flex gap-2">
+          <!-- {{ csrf_field() }} -->
+          <input type="hidden" name="review_type" value="familiarization">
+          <button type="submit" name="format" value="pdf" class="btn-save" style="padding:.38rem .85rem; font-size:.78rem;">
+            <i class="bi bi-file-pdf me-1"></i>PDF
+          </button>
+          <button type="submit" name="format" value="excel" class="btn-reset" style="padding:.38rem .85rem; font-size:.78rem; display:inline-flex; align-items:center; gap:.35rem;">
+            <i class="bi bi-file-excel me-1"></i>Excel
+          </button>
+        </form>
+      </div>
+
+    </div><!-- /panel-body familiarization -->
+  </div><!-- /panel familiarization review -->
+
   <div class="portal-footer">
     Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
   </div>
