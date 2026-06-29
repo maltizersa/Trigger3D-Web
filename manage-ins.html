@@ -72,7 +72,7 @@
     .welcome-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
     .welcome-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
 
-    /* ── STAT CARDS (copied from Program Head dashboard) ── */
+    /* ── STAT CARDS ── */
     .stat-card { border-radius: 14px; padding: 1.2rem 1.3rem; color: #fff; position: relative; overflow: hidden; height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,.12); }
     .stat-card::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.12); }
     .stat-card::after  { content: ''; position: absolute; right: 20px; top: 30px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.08); }
@@ -91,34 +91,22 @@
     .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
     .section-heading i { color: var(--red); font-size: .95rem; }
 
-    /* ── FEATURE CARDS ── */
-    .feature-card { border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; display: flex; align-items: flex-start; gap: .9rem; text-decoration: none; color: var(--text-main); transition: box-shadow .15s, border-color .15s; height: 100%; }
-    .feature-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); border-color: var(--red-light); }
-    .feature-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-    .feature-icon.green  { background: #eafaf1; color: #27ae60; }
-    .feature-icon.purple { background: #f4eafb; color: #8e44ad; }
-    .feature-icon.orange { background: #fef5e7; color: #e67e22; }
-    .feature-icon.blue   { background: #eaf3fb; color: #2980b9; }
-    .feature-icon.red    { background: #fdf1f0; color: var(--red); }
-    .feature-icon.teal   { background: #e8faf5; color: #1abc9c; }
-    .feature-body { flex: 1; min-width: 0; }
-    .feature-body .ftitle { font-weight: 600; font-size: .84rem; color: var(--text-main); }
-    .feature-body .fdesc  { font-size: .74rem; color: var(--text-muted); margin-top: .2rem; line-height: 1.4; }
-    .feature-chevron { color: #ccc; font-size: .88rem; flex-shrink: 0; margin-top: .15rem; }
+    /* ── TABLES (panel-embedded) ── */
+    .panel table { font-size: .82rem; margin-bottom: 0; }
+    .panel table thead th { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 700; padding: .8rem 1.4rem; background: #FAFBFC; }
+    .panel table tbody td { padding: .75rem 1.4rem; color: var(--text-main); vertical-align: middle; border-bottom: 1px solid var(--border); }
+    .panel table tbody tr:last-child td { border-bottom: none; }
 
-    /* ── ACCESS BADGES ── */
-    .access-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .55rem; border-radius: 20px; margin-top: .45rem; }
-    .badge-view-only { background: #eaf3fb; color: #2980b9; }
-    .badge-full      { background: #eafaf1; color: #27ae60; }
-    .badge-upload    { background: #eaf3fb; color: #2980b9; }
-    .badge-destruct  { background: #fdf1f0; color: var(--red); }
-    .badge-generate  { background: #eaf3fb; color: #2980b9; }
-    .badge-download  { background: #fef5e7; color: #e67e22; }
+    /* ── PROGRESS ── */
+    .progress-row { margin-bottom: 1.1rem; }
+    .progress-row:last-child { margin-bottom: 0; }
+    .progress-row .p-label { font-size: .82rem; font-weight: 600; color: var(--text-main); }
+    .progress-row .p-value { font-size: .8rem; color: var(--text-muted); }
+    .progress-row .progress { height: 10px; border-radius: 20px; background: #F1F2F4; }
 
-    /* ── NOTICE BAR ── */
-    .notice-bar { border: 1px solid #fde8d8; border-radius: 8px; background: #fff8f5; padding: .65rem .9rem; font-size: .76rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: .65rem; margin-top: 1.1rem; }
-    .notice-bar i { color: #e67e22; font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
-    .notice-label { font-weight: 700; color: #e67e22; }
+    /* ── STATUS BADGE ── */
+    .status-pill { display: inline-block; font-size: .68rem; font-weight: 700; padding: .25rem .65rem; border-radius: 20px; }
+    .status-active { background: #eafaf1; color: #27ae60; }
 
     /* ── FOOTER ── */
     .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
@@ -156,7 +144,7 @@
   <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
     <i class="bi bi-list"></i>
   </label>
-  <a href="manage-ins.html" class="topbar-brand">
+  <a href="instructor-dashboard.html" class="topbar-brand">
     <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
     <div>Trigger3D <small>Instructor Portal</small></div>
   </a>
@@ -180,7 +168,7 @@
 <aside class="sidebar" id="sidebar">
   <span class="sidebar-label">Main</span>
   <ul class="sidebar-nav">
-    <li><a href="manage-ins.html" class="active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+    <li><a href="instructor-dashboard.html" class="active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
   </ul>
 
   <span class="sidebar-label">Student Monitoring</span>
@@ -198,15 +186,15 @@
 
   <span class="sidebar-label">Records &amp; Resources</span>
   <ul class="sidebar-nav">
-    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
-    <li><a href="#"><i class="bi bi-eye"></i> View Generated Modules</a></li>
-    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+    <li><a href="generate-records.html"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="view-generated-modules.html"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+    <li><a href="download-modules.html"><i class="bi bi-download"></i> Download Modules</a></li>
   </ul>
 
   <span class="sidebar-label">Settings</span>
   <ul class="sidebar-nav">
-    <li><a href="#"><i class="bi bi-gear"></i> System Settings</a></li>
-    <li><a href="#"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+    <li><a href="system-settings.html"><i class="bi bi-gear"></i> System Settings</a></li>
+    <li><a href="reports.html"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
   </ul>
 
   <div class="sidebar-footer">
@@ -221,179 +209,176 @@
   <div class="welcome-banner">
     <div class="welcome-avatar"><i class="bi bi-person-circle"></i></div>
     <div class="welcome-text">
-      <div class="title">Welcome back, Instr. Bautista!</div>
-      <div class="sub">Instructor Dashboard · Academic Year 2025–2026 · Manage your students, modules, and records</div>
+      <div class="title">Dashboard</div>
+      <div class="sub">Welcome back, Instructor! Here's an overview of your students' learning progress.</div>
     </div>
-    <div class="welcome-badge d-none d-sm-block">FIRE102 — Assembly</div>
+    <div class="welcome-badge d-none d-sm-block">Academic Year 2025–2026</div>
   </div>
 
-  <!-- Stat Cards (design copied from Program Head dashboard) -->
-  <div class="row g-3 mb-3">
+  <!-- Statistics Overview -->
+  <div class="row g-3 mb-3" id="stats-overview">
     <div class="col-6 col-lg-3">
-      <div class="stat-card red">
+      <div class="stat-card red" id="stats-card-total-students">
         <i class="bi bi-people card-icon"></i>
-        <div class="stat-value">48</div>
-        <div class="stat-label">My Students</div>
-        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+3 enrolled this term</div>
+        <div class="stat-value">45</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-delta">Across all assigned subjects</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card orange">
+      <div class="stat-card orange" id="stats-card-subjects">
         <i class="bi bi-journal-bookmark card-icon"></i>
-        <div class="stat-value">6</div>
-        <div class="stat-label">Active Subjects</div>
-        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+1 this term</div>
+        <div class="stat-value">2</div>
+        <div class="stat-label">Assigned Subjects</div>
+        <div class="stat-delta">Active this term</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card purple">
-        <i class="bi bi-file-earmark card-icon"></i>
-        <div class="stat-value">34</div>
-        <div class="stat-label">Modules Uploaded</div>
-        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>+5 new uploads</div>
+      <div class="stat-card purple" id="stats-card-avg-score">
+        <i class="bi bi-graph-up-arrow card-icon"></i>
+        <div class="stat-value">87%</div>
+        <div class="stat-label">Avg. Assessment Score</div>
+        <div class="stat-delta">Across all assessments</div>
       </div>
     </div>
     <div class="col-6 col-lg-3">
-      <div class="stat-card teal">
+      <div class="stat-card teal" id="stats-card-progress">
         <i class="bi bi-check-circle card-icon"></i>
         <div class="stat-value">72%</div>
-        <div class="stat-label">Avg Completion</div>
-        <div class="stat-delta"><i class="bi bi-arrow-up-short"></i>72% rate</div>
+        <div class="stat-label">Student Progress</div>
+        <div class="stat-delta">Average module completion</div>
       </div>
     </div>
   </div>
 
-  <!-- White Panel -->
-  <div class="panel">
-    <div class="panel-banner">
-      <div>
-        <h2>Instructor Dashboard</h2>
-        <p>Manage your students, modules, and records · FIRE102 — Assembly</p>
+  <div class="row g-3 mb-3">
+
+    <!-- Student Progress Overview -->
+    <div class="col-12 col-lg-5">
+      <div class="panel h-100" id="student-progress-card">
+        <div class="panel-banner">
+          <div>
+            <h2>Student Progress Overview</h2>
+            <p>Status breakdown across all students</p>
+          </div>
+        </div>
+        <div class="panel-body">
+
+          <div class="progress-row">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="p-label">Completed</span>
+              <span class="p-value">65%</span>
+            </div>
+            <div class="progress" role="progressbar" aria-label="Completed" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-success" style="width: 65%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-row">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="p-label">In Progress</span>
+              <span class="p-value">25%</span>
+            </div>
+            <div class="progress" role="progressbar" aria-label="In Progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-warning" style="width: 25%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-row">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="p-label">Not Started</span>
+              <span class="p-value">10%</span>
+            </div>
+            <div class="progress" role="progressbar" aria-label="Not Started" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-danger" style="width: 10%;"></div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
-    <div class="panel-body">
 
-      <!-- Student Monitoring -->
-      <div class="section-heading">
-        <i class="bi bi-bar-chart-line-fill"></i> Student Monitoring
+    <!-- Assessment Overview -->
+    <div class="col-12 col-lg-7">
+      <div class="panel h-100" id="assessment-overview-card">
+        <div class="panel-banner">
+          <div>
+            <h2>Assessment Overview</h2>
+            <p>Summary of student assessment performance</p>
+          </div>
+        </div>
+        <div class="panel-body p-0">
+          <div class="table-responsive">
+            <table class="table mb-0" id="assessment-table">
+              <thead>
+                <tr>
+                  <th scope="col">Assessment Metric</th>
+                  <th scope="col">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Average Score</td>
+                  <td>87%</td>
+                </tr>
+                <tr>
+                  <td>Highest Score</td>
+                  <td>98%</td>
+                </tr>
+                <tr>
+                  <td>Lowest Score</td>
+                  <td>65%</td>
+                </tr>
+                <tr>
+                  <td>Pass Rate</td>
+                  <td>91%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="row g-3 mb-4">
-        <div class="col-12 col-md-4">
-          <a href="#" class="feature-card">
-            <div class="feature-icon green"><i class="bi bi-bar-chart-line"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Check Student Progress</div>
-              <div class="fdesc">Monitor individual and class-level student progress across subjects.</div>
-              <span class="access-badge badge-view-only"><i class="bi bi-eye me-1"></i>View only</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-        <div class="col-12 col-md-4">
-          <a href="#" class="feature-card">
-            <div class="feature-icon purple"><i class="bi bi-layers"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Manage Student Levels</div>
-              <div class="fdesc">Create, update, and organize student level classifications.</div>
-              <span class="access-badge badge-full"><i class="bi bi-check-circle me-1"></i>Full access</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-        <div class="col-12 col-md-4">
-          <a href="#" class="feature-card">
-            <div class="feature-icon orange"><i class="bi bi-check2-square"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Manage Student Assessments</div>
-              <div class="fdesc">Set up, schedule, and manage quizzes, practical exams, and evaluation criteria per subject.</div>
-              <span class="access-badge badge-full"><i class="bi bi-check-circle me-1"></i>Full access</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-      </div>
+    </div>
 
-      <!-- Module Management -->
-      <div class="section-heading">
-        <i class="bi bi-folder2-open"></i> Module Management
-      </div>
-      <div class="row g-3 mb-4">
-        <div class="col-12 col-md-6">
-          <a href="upload-modules.html" class="feature-card">
-            <div class="feature-icon blue"><i class="bi bi-upload"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Upload Modules to Lessons</div>
-              <div class="fdesc">Add new training modules, PDFs, and learning materials directly to specific lessons across your assigned subjects.</div>
-              <span class="access-badge badge-upload"><i class="bi bi-arrow-up-circle me-1"></i>Upload access</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-        <div class="col-12 col-md-6">
-          <a href="#" class="feature-card">
-            <div class="feature-icon red"><i class="bi bi-trash3"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Delete Modules from Lessons</div>
-              <div class="fdesc">Remove outdated or incorrect modules from lesson content. Deletion is permanent and cannot be undone.</div>
-              <span class="access-badge badge-destruct"><i class="bi bi-exclamation-circle me-1"></i>Destructive action</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-      </div>
+  </div>
 
-      <!-- Records & Resources -->
-      <div class="section-heading">
-        <i class="bi bi-file-earmark-text-fill"></i> Records &amp; Resources
+  <!-- Assigned Subjects -->
+  <div class="panel" id="assigned-subjects-card">
+    <div class="panel-banner">
+      <div>
+        <h2>Assigned Subjects</h2>
+        <p>Subjects currently assigned to you this term</p>
       </div>
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          <a href="#" class="feature-card">
-            <div class="feature-icon green"><i class="bi bi-file-earmark-text"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Generate Records</div>
-              <div class="fdesc">Produce official student records, enrollment certificates, and completion documents for export or printing.</div>
-              <span class="access-badge badge-generate"><i class="bi bi-arrow-up-circle me-1"></i>Generate &amp; export</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-        <div class="col-12 col-md-4">
-          <a href="#" class="feature-card">
-            <div class="feature-icon teal"><i class="bi bi-eye"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">View Generated Modules</div>
-              <div class="fdesc">Browse and inspect all generated module files, reports, and student assessment outputs.</div>
-              <span class="access-badge badge-view-only"><i class="bi bi-eye me-1"></i>View only</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
-        <div class="col-12 col-md-4">
-          <a href="#" class="feature-card">
-            <div class="feature-icon orange"><i class="bi bi-download"></i></div>
-            <div class="feature-body">
-              <div class="ftitle">Download Generated Modules</div>
-              <div class="fdesc">Download finalized module packages, PDF reports, and student record files for offline use or external submission.</div>
-              <span class="access-badge badge-download"><i class="bi bi-arrow-down-circle me-1"></i>Download access</span>
-            </div>
-            <i class="bi bi-chevron-right feature-chevron"></i>
-          </a>
-        </div>
+    </div>
+    <div class="panel-body p-0">
+      <div class="table-responsive">
+        <table class="table mb-0" id="subjects-table">
+          <thead>
+            <tr>
+              <th scope="col">Subject Code</th>
+              <th scope="col">Subject Name</th>
+              <th scope="col">Students</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CRIM101</td>
+              <td>Firearm Identification</td>
+              <td>42</td>
+              <td><span class="status-pill status-active">Active</span></td>
+            </tr>
+            <tr>
+              <td>CRIM102</td>
+              <td>Firearm Assembly</td>
+              <td>38</td>
+              <td><span class="status-pill status-active">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <!-- Notice Bar -->
-      <div class="notice-bar">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        <div>
-          <span class="notice-label">Instructor Access Notice —</span>
-          Module deletions are permanent. Always verify before removing content.
-          Record generation may take a few seconds. Generated files are available under Records &amp; Resources.
-        </div>
-      </div>
-
-    </div><!-- /panel-body -->
-  </div><!-- /panel -->
+    </div>
+  </div>
 
   <div class="portal-footer">
     Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
