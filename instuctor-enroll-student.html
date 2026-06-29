@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enroll Students — Trigger3D</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
+
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: .9rem; }
+    .back-btn { width: 36px; height: 36px; border-radius: 9px; border: 1.5px solid var(--border); background: #F9FAFB; color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; text-decoration: none; transition: .15s; }
+    .back-btn:hover { background: #FDECEA; border-color: var(--red-light); color: var(--red); }
+    .panel-banner h2 { font-size: 1.05rem; font-weight: 700; margin: 0; }
+    .panel-banner p  { font-size: .76rem; margin: .15rem 0 0; color: var(--text-muted); }
+    .subj-pill { display: inline-block; background: var(--red); color: #fff; font-size: .68rem; font-weight: 800; letter-spacing: .06em; padding: .18rem .55rem; border-radius: 6px; margin-left: .5rem; vertical-align: middle; }
+
+    .tabs-row { display: flex; align-items: center; gap: 1.6rem; padding: 0 1.4rem; border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab-item { display: flex; align-items: center; gap: .4rem; padding: .85rem 0; font-size: .84rem; font-weight: 600; color: var(--text-muted); border-bottom: 2.5px solid transparent; cursor: pointer; white-space: nowrap; user-select: none; margin-bottom: -1px; transition: .15s; }
+    .tab-item:hover { color: var(--red); }
+    .tab-item.active { color: var(--red); border-bottom-color: var(--red); }
+    .tab-count { background: #EAECEF; color: var(--text-muted); font-size: .68rem; font-weight: 700; padding: .05rem .45rem; border-radius: 20px; }
+    .tab-item.active .tab-count { background: var(--red); color: #fff; }
+
+    .panel-body { padding: 1.2rem 1.4rem 1.4rem; display: none; }
+    .panel-body.active { display: block; }
+
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+    .toolbar .role-filter { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; height: 36px; padding: 0 .7rem; color: var(--text-main); }
+    .toolbar .role-filter:focus { outline: none; border-color: var(--red); }
+    .toolbar .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 300px; }
+    .toolbar .search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: .85rem; }
+    .toolbar .search-wrap input { padding-left: 2rem; font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); background: #F9FAFB; width: 100%; height: 36px; }
+    .toolbar .search-wrap input:focus { outline: none; border-color: var(--red); background: #fff; }
+    .toolbar-actions { margin-left: auto; display: flex; gap: .5rem; }
+
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-red:hover { background: var(--red-dark); color: #fff; }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-red:hover { background: var(--red); color: #fff; }
+
+    .mgmt-table { width: 100%; font-size: .82rem; border-collapse: collapse; }
+    .mgmt-table thead th { background: #fff; color: var(--text-muted); padding: .6rem .9rem; font-weight: 700; font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; border-bottom: 1px solid var(--border); text-align: left; }
+    .mgmt-table tbody tr { border-bottom: 1px solid var(--border); }
+    .mgmt-table tbody tr:hover { background: #FEF9F9; }
+    .mgmt-table tbody td { padding: .65rem .9rem; vertical-align: middle; }
+    .tbl-wrap { overflow-x: auto; }
+
+    .avatar-sm { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .7rem; flex-shrink: 0; }
+    .badge-active   { background: #E8F8F2; color: #1A9B59; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+    .badge-inactive { background: #FDECEA; color: #C0392B; font-size: .71rem; font-weight: 600; padding: .22rem .55rem; border-radius: 20px; display: inline-block; }
+
+    .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
+    .btn-icon.archive { background: #FEF9E7; color: #B7770D; }
+    .btn-icon:hover { filter: brightness(.88); }
+
+    .vm-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .vm-icon.pdf { background: #FDECEA; color: #C0392B; }
+    .vm-icon.vid { background: #EBF3FF; color: #2980B9; }
+    .vm-icon.doc { background: #E8F8F2; color: #1A9B59; }
+    .vm-icon.ppt { background: #FEF3E7; color: #E67E22; }
+
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-sm-custom { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); padding: .42rem .7rem; width: 100%; background: #F9FAFB; transition: border-color .15s; }
+    .form-control-sm-custom:focus { outline: none; border-color: var(--red); background: #fff; }
+    .module-upload-card { border: 1.5px dashed var(--border); border-radius: 10px; padding: 1.4rem 1rem; text-align: center; cursor: pointer; background: #F9FAFB; }
+    .module-upload-card:hover { border-color: var(--red); background: #FEF2F0; }
+    .module-upload-card i { font-size: 1.8rem; color: var(--red); display: block; margin-bottom: .4rem; }
+
+    /* ── TERM ACCESS PANEL ── */
+    .term-access-bar {
+      background: #F9FAFB;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .term-access-bar-label {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .term-toggles {
+      display: flex;
+      gap: .65rem;
+      flex-wrap: wrap;
+    }
+    .term-toggle-card {
+      flex: 1;
+      min-width: 120px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .6rem;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .term-toggle-card.unlocked {
+      border-color: var(--red);
+      background: #fff8f7;
+      box-shadow: 0 2px 8px rgba(192,57,43,.12);
+    }
+    .term-toggle-card.locked {
+      opacity: .65;
+    }
+    .term-toggle-left { display: flex; align-items: center; gap: .55rem; }
+    .term-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; flex-shrink: 0;
+      transition: background .2s, color .2s;
+    }
+    .term-icon.prelim  { background: #EBF3FF; color: #2980B9; }
+    .term-icon.midterm { background: #FEF3E7; color: #E67E22; }
+    .term-icon.finals  { background: #E8F8F2; color: #1A9B59; }
+    .term-toggle-card.unlocked .term-icon.prelim  { background: #FDECEA; color: var(--red); }
+    .term-toggle-card.unlocked .term-icon.midterm { background: #FDECEA; color: var(--red); }
+    .term-toggle-card.unlocked .term-icon.finals  { background: #FDECEA; color: var(--red); }
+    .term-name { font-size: .82rem; font-weight: 700; color: var(--text-main); }
+    .term-status { font-size: .68rem; color: var(--text-muted); margin-top: .05rem; display: flex; align-items: center; gap: .3rem; }
+    .term-status .dot { width: 6px; height: 6px; border-radius: 50%; background: #CBD5DC; display: inline-block; }
+    .term-toggle-card.unlocked .term-status .dot { background: #1A9B59; }
+    .term-toggle-card.unlocked .term-status { color: #1A9B59; }
+
+    /* Custom toggle switch */
+    .toggle-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: 20px;
+      background: #CBD5DC; cursor: pointer;
+      transition: background .2s;
+    }
+    .toggle-track::after {
+      content: ''; position: absolute;
+      top: 3px; left: 3px;
+      width: 16px; height: 16px;
+      border-radius: 50%; background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2);
+      transition: transform .2s;
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--red); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
+    .toggle-switch input:disabled + .toggle-track { cursor: not-allowed; opacity: .5; }
+
+    /* locked overlay hint */
+    .lock-hint {
+      font-size: .68rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: .3rem;
+      margin-top: .45rem;
+      padding: .35rem .65rem;
+      background: #F3F4F6;
+      border-radius: 6px;
+      border: 1px dashed #DDE0E4;
+    }
+
+    /* module rows - locked state */
+    .mgmt-table tbody tr.row-locked td { opacity: .45; pointer-events: none; }
+    .mgmt-table tbody tr.row-locked td:last-child { pointer-events: auto; }
+    .row-locked-overlay {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .72rem; color: var(--text-muted);
+      background: #F3F4F6; border-radius: 6px;
+      padding: .2rem .55rem; border: 1px solid var(--border);
+    }
+
+    /* section divider rows */
+    .term-section-row td {
+      padding: .45rem .9rem .3rem;
+      background: transparent;
+      border-bottom: none;
+    }
+    .term-section-row:hover { background: transparent !important; }
+    .term-section-label {
+      font-size: .68rem; font-weight: 800;
+      letter-spacing: .08em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .25rem .65rem;
+      border-radius: 6px;
+    }
+    .term-section-label.prelim  { background: #EBF3FF; color: #2980B9; }
+    .term-section-label.midterm { background: #FEF3E7; color: #E67E22; }
+    .term-section-label.finals  { background: #E8F8F2; color: #1A9B59; }
+    .term-section-label.locked-label { background: #F3F4F6; color: #9CA3AF; }
+
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .term-toggles { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+    <i class="bi bi-list"></i>
+  </button>
+  <a href="manage-instructor.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+  <div class="topbar-right">
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+    <div class="avatar">AR</div>
+    <div class="topbar-user d-none d-sm-block">Instr. Ana Reyes <small>Instructor</small></div>
+  </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-instructor.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-bar-chart-line-fill"></i> Check Student Progress</a></li>
+    <li><a href="#"><i class="bi bi-layers-fill"></i> Manage Student Levels</a></li>
+  </ul>
+  <span class="sidebar-label">Subject Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="Instructor-subject-management.html" class="active"><i class="bi bi-journal-text"></i> Manage Subjects</a></li>
+  </ul>
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="#"><i class="bi bi-eye-fill"></i> View Generated Modules</a></li>
+    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+    <li><a href="#"><i class="bi bi-clipboard-data-fill"></i> System Logs</a></li>
+  </ul>
+  <span class="sidebar-label">Account</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-person-fill"></i> Profile</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</aside>
+
+<main class="main-content">
+  <div class="panel">
+
+    <div class="panel-banner">
+      <a href="Instructor-subject-management.html" class="back-btn" title="Back">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <div>
+        <h2>Enroll Students <span class="subj-pill">FIRE101</span></h2>
+        <p>Firearm Fundamentals &nbsp;·&nbsp; View and manage students enrolled in this subject</p>
+      </div>
+    </div>
+
+    <div class="tabs-row">
+      <div class="tab-item active" id="tab-enrolled" onclick="switchTab('enrolled')">
+        <i class="bi bi-people-fill"></i> Enrolled Students <span class="tab-count">12</span>
+      </div>
+      <div class="tab-item" id="tab-modules" onclick="switchTab('modules')">
+        <i class="bi bi-folder2-open"></i> Modules <span class="tab-count">8</span>
+      </div>
+    </div>
+
+    <!-- ENROLLED STUDENTS -->
+    <div class="panel-body active" id="panel-enrolled">
+      <div class="toolbar">
+        <select class="role-filter">
+          <option>All Status</option>
+          <option>Active</option>
+          <option>Inactive</option>
+        </select>
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="search" placeholder="Search students…" />
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table class="mgmt-table">
+          <thead>
+            <tr>
+              <th>Student No.</th>
+              <th>Student</th>
+              <th>Gmail</th>
+              <th>Phone Number</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2024-00101</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#C0392B">JC</div><strong>John Cruz</strong></div></td><td>jcruz@gmail.com</td><td>09171234561</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00102</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#2980B9">MS</div><strong>Maria Santos</strong></div></td><td>msantos@gmail.com</td><td>09171234562</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00103</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#E67E22">PG</div><strong>Pedro Gonzales</strong></div></td><td>pgonzales@gmail.com</td><td>09171234563</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00104</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#16A085">LM</div><strong>Luisa Mendoza</strong></div></td><td>lmendoza@gmail.com</td><td>09171234564</td><td><span class="badge-inactive">Inactive</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00105</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#2C3E50">CV</div><strong>Carlo Vega</strong></div></td><td>cvega@gmail.com</td><td>09171234565</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00106</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#8E44AD">BT</div><strong>Bianca Torres</strong></div></td><td>btorres@gmail.com</td><td>09171234566</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00107</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#1A5276">RL</div><strong>Ramon Lim</strong></div></td><td>rlim@gmail.com</td><td>09171234567</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00108</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#76448A">AF</div><strong>Ana Flores</strong></div></td><td>aflores@gmail.com</td><td>09171234568</td><td><span class="badge-inactive">Inactive</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00109</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#117A65">DR</div><strong>Diego Reyes</strong></div></td><td>dreyes@gmail.com</td><td>09171234569</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00110</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#B7770D">SC</div><strong>Sofia Castro</strong></div></td><td>scastro@gmail.com</td><td>09171234570</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00111</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#1F618D">MR</div><strong>Marco Ramos</strong></div></td><td>mramos@gmail.com</td><td>09171234571</td><td><span class="badge-active">Active</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+            <tr><td>2024-00112</td><td><div class="d-flex align-items-center gap-2"><div class="avatar-sm" style="background:#922B21">IE</div><strong>Isabel Evangelista</strong></div></td><td>ievangelista@gmail.com</td><td>09171234572</td><td><span class="badge-inactive">Inactive</span></td><td><button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+        <span style="font-size:.77rem;color:var(--text-muted)">Showing 1–12 of 12 enrolled students</span>
+        <nav><ul class="pagination pagination-sm mb-0" style="gap:.2rem">
+          <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+          <li class="page-item active"><a class="page-link" href="#" style="background:var(--red);border-color:var(--red)">1</a></li>
+          <li class="page-item disabled"><a class="page-link" href="#">»</a></li>
+        </ul></nav>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="panel-body" id="panel-modules">
+
+      <!-- TERM ACCESS TOGGLES -->
+      <div class="term-access-bar">
+        <div class="term-access-bar-label">
+          <i class="bi bi-unlock-fill"></i> Term Access Control
+          <span style="font-weight:400;font-size:.68rem;color:var(--text-muted);margin-left:.3rem">— Toggle terms to unlock module access for enrolled students</span>
+        </div>
+        <div class="term-toggles">
+
+          <div class="term-toggle-card unlocked" id="card-prelim">
+            <div class="term-toggle-left">
+              <div class="term-icon prelim" id="icon-prelim"><i class="bi bi-1-circle-fill"></i></div>
+              <div>
+                <div class="term-name">Prelim</div>
+                <div class="term-status" id="status-prelim"><span class="dot"></span> Unlocked</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-prelim" checked onchange="handleTermToggle('prelim')">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+          <div class="term-toggle-card locked" id="card-midterm">
+            <div class="term-toggle-left">
+              <div class="term-icon midterm" id="icon-midterm"><i class="bi bi-2-circle-fill"></i></div>
+              <div>
+                <div class="term-name">Midterm</div>
+                <div class="term-status" id="status-midterm"><span class="dot"></span> Locked</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-midterm" onchange="handleTermToggle('midterm')">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+          <div class="term-toggle-card locked" id="card-finals">
+            <div class="term-toggle-left">
+              <div class="term-icon finals" id="icon-finals"><i class="bi bi-3-circle-fill"></i></div>
+              <div>
+                <div class="term-name">Finals</div>
+                <div class="term-status" id="status-finals"><span class="dot"></span> Locked</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-finals" onchange="handleTermToggle('finals')">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+        </div>
+        <div class="lock-hint mt-2" id="lock-hint-bar">
+          <i class="bi bi-info-circle"></i>
+          Midterm and Finals are locked. Unlock Prelim first to progress through terms.
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <select class="role-filter" id="term-filter" onchange="renderModuleTable()">
+          <option value="all">All Terms</option>
+          <option value="Prelim">Prelim</option>
+          <option value="Midterm">Midterm</option>
+          <option value="Finals">Finals</option>
+        </select>
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="search" placeholder="Search modules…" oninput="renderModuleTable()" id="module-search" />
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn-red" data-bs-toggle="modal" data-bs-target="#uploadModuleModal">
+            <i class="bi bi-cloud-upload-fill"></i> Upload Module
+          </button>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="mgmt-table" id="module-table">
+          <thead>
+            <tr><th>#</th><th>Module Name</th><th>Term</th><th>Date Uploaded</th><th>Size</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="module-tbody"></tbody>
+        </table>
+      </div>
+      <div class="mt-3" id="module-count-label"><span style="font-size:.77rem;color:var(--text-muted)">Showing 1–8 of 8 modules</span></div>
+    </div>
+
+  </div>
+
+  <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
+    Trigger3D Subject Management &nbsp;·&nbsp; Instructor Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+  </div>
+</main>
+
+<!-- MODAL: UPLOAD MODULE -->
+<div class="modal fade" id="uploadModuleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content" style="border-radius:14px;border:none;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:.9rem 1.3rem;">
+        <h5 class="modal-title" style="font-size:.95rem;font-weight:700;">
+          <i class="bi bi-cloud-upload-fill me-2" style="color:var(--red)"></i>Upload Module
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1.3rem;">
+        <div class="mb-3">
+          <label class="form-label-sm">Module Title <span class="text-danger">*</span></label>
+          <input type="text" class="form-control-sm-custom" placeholder="e.g. Disassembly Quiz Module" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label-sm">Term</label>
+          <select class="form-control-sm-custom">
+            <option>Prelim</option>
+            <option>Midterm</option>
+            <option>Finals</option>
+          </select>
+        </div>
+        <div class="module-upload-card">
+          <i class="bi bi-cloud-upload"></i>
+          <p style="font-size:.86rem;font-weight:600;color:var(--text-main);margin-bottom:.2rem">Click to upload or drag &amp; drop</p>
+          <p style="font-size:.76rem;color:var(--text-muted);margin:0">Supports PDF, DOCX, PPTX, and MP4 files</p>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:.85rem 1.3rem;gap:.5rem;">
+        <button type="button" class="btn-outline-red" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-red" data-bs-dismiss="modal"><i class="bi bi-check-lg"></i> Upload Module</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ── Tab switching ──
+  function switchTab(name) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel-body').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  // ── Module data ──
+  const modules = [
+    { num:'01', name:'Intro to Firearm Safety.pdf',       type:'pdf', term:'Prelim',  date:'Jun 1, 2026',  size:'2.4 MB' },
+    { num:'02', name:'Firearm Parts Diagram.pdf',          type:'pdf', term:'Prelim',  date:'Jun 2, 2026',  size:'1.8 MB' },
+    { num:'03', name:'Basic Handling Procedures.docx',     type:'doc', term:'Prelim',  date:'Jun 3, 2026',  size:'1.1 MB' },
+    { num:'04', name:'Range Safety Briefing.mp4',          type:'vid', term:'Midterm', date:'Jun 4, 2026',  size:'98 MB'  },
+    { num:'05', name:'Fundamentals Quiz Guide.pdf',        type:'pdf', term:'Midterm', date:'Jun 5, 2026',  size:'0.7 MB' },
+    { num:'06', name:'Storage &amp; Transport Rules.pdf',  type:'pdf', term:'Midterm', date:'Jun 6, 2026',  size:'1.3 MB' },
+    { num:'07', name:'Orientation Slides.pptx',            type:'ppt', term:'Finals',  date:'Jun 7, 2026',  size:'4.2 MB' },
+    { num:'08', name:'Fundamentals Recap Video.mp4',       type:'vid', term:'Finals',  date:'Jun 8, 2026',  size:'120 MB' },
+  ];
+
+  const typeIcon = { pdf:'bi-file-earmark-pdf-fill', vid:'bi-play-btn-fill', doc:'bi-file-earmark-word-fill', ppt:'bi-file-earmark-ppt-fill' };
+  const termOrder = ['Prelim','Midterm','Finals'];
+
+  // ── Term state (tracks which are unlocked) ──
+  const termState = { Prelim: true, Midterm: false, Finals: false };
+
+  function isTermUnlocked(term) { return termState[term]; }
+
+  function handleTermToggle(term) {
+    const chk = document.getElementById('toggle-' + term.toLowerCase());
+    const newVal = chk.checked;
+
+    if (newVal) {
+      // Unlock this term and all preceding terms
+      const idx = termOrder.indexOf(term);
+      for (let i = 0; i <= idx; i++) termState[termOrder[i]] = true;
+    } else {
+      // Lock this term and all subsequent terms
+      const idx = termOrder.indexOf(term);
+      for (let i = idx; i < termOrder.length; i++) termState[termOrder[i]] = false;
+    }
+
+    syncToggleUI();
+    renderModuleTable();
+  }
+
+  function syncToggleUI() {
+    termOrder.forEach(term => {
+      const key = term.toLowerCase();
+      const card   = document.getElementById('card-' + key);
+      const toggle = document.getElementById('toggle-' + key);
+      const status = document.getElementById('status-' + key);
+      const unlocked = termState[term];
+
+      toggle.checked = unlocked;
+      card.classList.toggle('unlocked', unlocked);
+      card.classList.toggle('locked', !unlocked);
+
+      status.innerHTML = unlocked
+        ? '<span class="dot"></span> Unlocked'
+        : '<span class="dot"></span> Locked';
+    });
+
+    // Update hint bar
+    const hint = document.getElementById('lock-hint-bar');
+    const allUnlocked = termOrder.every(t => termState[t]);
+    const allLocked   = termOrder.every(t => !termState[t]);
+
+    if (allUnlocked) {
+      hint.innerHTML = '<i class="bi bi-check-circle-fill" style="color:#1A9B59"></i> All terms are unlocked — students have full module access.';
+      hint.style.borderColor = '#A7E8C7'; hint.style.background = '#F0FBF5'; hint.style.color = '#1A9B59';
+    } else if (allLocked) {
+      hint.innerHTML = '<i class="bi bi-lock-fill" style="color:#C0392B"></i> All terms are locked. Toggle Prelim to grant access.';
+      hint.style.borderColor = '#F1948A'; hint.style.background = '#FEF2F0'; hint.style.color = '#C0392B';
+    } else {
+      const locked = termOrder.filter(t => !termState[t]);
+      hint.innerHTML = `<i class="bi bi-info-circle"></i> <strong>${locked.join(' and ')}</strong> ${locked.length > 1 ? 'are' : 'is'} still locked for students.`;
+      hint.style.borderColor = '#DDE0E4'; hint.style.background = '#F3F4F6'; hint.style.color = '#6B7280';
+    }
+  }
+
+  function renderModuleTable() {
+    const filterTerm  = document.getElementById('term-filter').value;
+    const searchQuery = document.getElementById('module-search').value.toLowerCase();
+    const tbody = document.getElementById('module-tbody');
+    tbody.innerHTML = '';
+
+    const grouped = { Prelim: [], Midterm: [], Finals: [] };
+    modules.forEach(m => {
+      if (filterTerm !== 'all' && m.term !== filterTerm) return;
+      if (searchQuery && !m.name.toLowerCase().includes(searchQuery)) return;
+      grouped[m.term].push(m);
+    });
+
+    let total = 0;
+    termOrder.forEach(term => {
+      const rows = grouped[term];
+      if (!rows.length) return;
+
+      const unlocked = isTermUnlocked(term);
+      const termKey = term.toLowerCase();
+
+      // Section header row
+      const hdr = document.createElement('tr');
+      hdr.className = 'term-section-row';
+      hdr.innerHTML = `<td colspan="6">
+        <span class="term-section-label ${unlocked ? termKey : 'locked-label'}">
+          ${unlocked
+            ? `<i class="bi bi-unlock-fill"></i> ${term}`
+            : `<i class="bi bi-lock-fill"></i> ${term} — Locked`}
+        </span>
+      </td>`;
+      tbody.appendChild(hdr);
+
+      rows.forEach(m => {
+        total++;
+        const tr = document.createElement('tr');
+        if (!unlocked) tr.classList.add('row-locked');
+        tr.innerHTML = `
+          <td>${m.num}</td>
+          <td><div class="d-flex align-items-center gap-2">
+            <div class="vm-icon ${m.type}"><i class="bi ${typeIcon[m.type]}"></i></div>
+            <strong>${m.name}</strong>
+          </div></td>
+          <td>${m.term}</td>
+          <td>${m.date}</td>
+          <td>${m.size}</td>
+          <td>${unlocked
+            ? `<button class="btn-icon archive" title="Archive"><i class="bi bi-archive-fill"></i></button>`
+            : `<span class="row-locked-overlay"><i class="bi bi-lock-fill"></i> Locked</span>`
+          }</td>`;
+        tbody.appendChild(tr);
+      });
+    });
+
+    document.getElementById('module-count-label').innerHTML =
+      `<span style="font-size:.77rem;color:var(--text-muted)">Showing ${total} module${total !== 1 ? 's' : ''}</span>`;
+  }
+
+  // init
+  renderModuleTable();
+</script>
+</body>
+</html>
