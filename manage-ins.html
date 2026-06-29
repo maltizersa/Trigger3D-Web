@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
+    /* ── Design Tokens ── */
     :root {
       --red:        #C0392B;
       --red-dark:   #922B21;
@@ -19,99 +20,480 @@
       --sidebar-w:  220px;
       --topbar-h:   60px;
     }
+
     *, *::before, *::after { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    /* Hidden checkbox drives the mobile sidebar — pure CSS, zero JavaScript */
-    #sidebar-toggle-checkbox { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
 
-    /* ── TOP BAR ── */
-    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
-    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
-    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
-    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
-    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
-    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
-    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
-    .icon-btn { background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .9rem; cursor: pointer; }
-    .icon-btn:hover { background: #FDECEA; color: var(--red); border-color: var(--red-light); }
-    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
-    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
-    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
-    .sidebar-toggle-label { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; align-items: center; }
+    /* ── Sidebar Toggle (CSS-only) ── */
+    #sidebar-toggle-checkbox {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
 
-    /* ── SIDEBAR ── */
-    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
-    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
-    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; cursor: pointer; }
-    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
-    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
-    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
-    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
-    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    /* ── Top Bar ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1040;
+      height: var(--topbar-h);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+      gap: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      color: var(--red);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .topbar-brand .icon-box {
+      width: 32px;
+      height: 32px;
+      background: #FDECEA;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--red);
+    }
+
+    .topbar-brand small {
+      display: block;
+      font-size: .62rem;
+      font-weight: 400;
+      opacity: .7;
+      color: var(--text-muted);
+    }
+
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+
+    .notif-btn {
+      background: #FDECEA;
+      border: none;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red);
+      font-size: 1rem;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 5px; right: 6px;
+      width: 7px;
+      height: 7px;
+      background: #F9CA24;
+      border-radius: 50%;
+      border: 1px solid #fff;
+    }
+
+    .icon-btn {
+      background: #F9FAFB;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: .9rem;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover {
+      background: #FDECEA;
+      color: var(--red);
+      border-color: var(--red-light);
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: .8rem;
+      border: 2px solid #F1948A;
+    }
+
+    .topbar-user {
+      color: var(--text-main);
+      font-size: .8rem;
+      line-height: 1.3;
+    }
+
+    .topbar-user small {
+      opacity: .6;
+      font-size: .68rem;
+      display: block;
+      color: var(--text-muted);
+    }
+
+    .sidebar-toggle-label {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--red);
+      font-size: 1.3rem;
+      cursor: pointer;
+      align-items: center;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      bottom: 0;
+      z-index: 1030;
+      width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: transform .25s ease;
+    }
+
+    .sidebar-label {
+      font-size: .62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 1.1rem 1.1rem .3rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .6rem 1.1rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: .85rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all .15s;
+    }
+
+    .sidebar-nav a:hover {
+      background: #F9FAFB;
+      color: var(--red);
+      border-left-color: var(--red-light);
+    }
+
+    .sidebar-nav a.active {
+      background: #fff;
+      color: var(--red);
+      border-left-color: var(--red);
+      font-weight: 600;
+    }
+
+    .sidebar-nav a i {
+      font-size: .95rem;
+      width: 18px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem 1.1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-footer a {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      color: var(--text-muted);
+      font-size: .82rem;
+      text-decoration: none;
+    }
+
     .sidebar-footer a:hover { color: var(--red); }
 
-    /* ── BACKDROP (mobile only) ── */
     .sidebar-backdrop { display: none; }
 
-    /* ── MAIN ── */
-    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; }
+    /* ── Main Content ── */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem;
+    }
 
-    /* ── PANEL ── */
-    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
-    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
-    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
-    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
-    .panel-body { padding: 1.4rem; }
+    /* ── Welcome Banner ── */
+    .welcome-banner {
+      background: rgba(0, 0, 0, .18);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      margin-bottom: 1.25rem;
+    }
 
-    /* ── WELCOME BANNER ── */
-    .welcome-banner { background: rgba(0,0,0,.18); border-radius: 10px; padding: 1.1rem 1.2rem; display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem; }
-    .welcome-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; flex-shrink: 0; }
-    .welcome-text .title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
-    .welcome-text .sub   { font-size: .75rem; color: rgba(255,255,255,.75); margin-top: .15rem; }
-    .welcome-badge { margin-left: auto; background: rgba(0,0,0,.25); border-radius: 6px; padding: .4rem .9rem; color: #fff; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+    .welcome-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .25);
+      border: 2px solid rgba(255, 255, 255, .5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
 
-    /* ── STAT CARDS ── */
-    .stat-card { border-radius: 14px; padding: 1.2rem 1.3rem; color: #fff; position: relative; overflow: hidden; height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,.12); }
-    .stat-card::before { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.12); }
-    .stat-card::after  { content: ''; position: absolute; right: 20px; top: 30px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.08); }
-    .stat-card .card-icon { position: absolute; top: 1rem; right: 1rem; font-size: 1.4rem; opacity: .7; }
-    .stat-card .stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
-    .stat-card .stat-label { font-size: .75rem; opacity: .85; margin-top: .3rem; }
-    .stat-card .stat-delta { font-size: .7rem; opacity: .8; margin-top: .25rem; }
+    .welcome-text .title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .welcome-text .sub {
+      font-size: .75rem;
+      color: rgba(255, 255, 255, .75);
+      margin-top: .15rem;
+    }
+
+    .welcome-badge {
+      margin-left: auto;
+      background: rgba(0, 0, 0, .25);
+      border-radius: 6px;
+      padding: .4rem .9rem;
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ── Stat Cards ── */
+    .stat-card {
+      border-radius: 14px;
+      padding: 1.2rem 1.3rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .12);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      right: -20px; top: -20px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      right: 20px; top: 30px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .stat-card .card-icon {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 1.4rem;
+      opacity: .7;
+    }
+
+    .stat-card .stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-card .stat-label {
+      font-size: .75rem;
+      opacity: .85;
+      margin-top: .3rem;
+    }
+
+    .stat-card .stat-delta {
+      font-size: .7rem;
+      opacity: .8;
+      margin-top: .25rem;
+    }
+
     .stat-card.red    { background: linear-gradient(135deg, #E74C3C, #C0392B); }
     .stat-card.orange { background: linear-gradient(135deg, #E67E22, #D35400); }
-    .stat-card.blue   { background: linear-gradient(135deg, #2980B9, #1A5276); }
-    .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
-    .stat-card.green  { background: linear-gradient(135deg, #27AE60, #1A7A43); }
     .stat-card.purple { background: linear-gradient(135deg, #8E44AD, #6C3483); }
+    .stat-card.teal   { background: linear-gradient(135deg, #1ABC9C, #0E8F7A); }
 
-    /* ── SECTION HEADING ── */
-    .section-heading { font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); }
-    .section-heading i { color: var(--red); font-size: .95rem; }
+    /* ── Panels ── */
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+      overflow: hidden;
+    }
 
-    /* ── TABLES (panel-embedded) ── */
-    .panel table { font-size: .82rem; margin-bottom: 0; }
-    .panel table thead th { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 700; padding: .8rem 1.4rem; background: #FAFBFC; }
-    .panel table tbody td { padding: .75rem 1.4rem; color: var(--text-main); vertical-align: middle; border-bottom: 1px solid var(--border); }
-    .panel table tbody tr:last-child td { border-bottom: none; }
+    .panel-header {
+      padding: 1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
 
-    /* ── PROGRESS ── */
+    .panel-header-text h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .panel-header-text p {
+      font-size: .75rem;
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .panel-filter {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .panel-filter label {
+      font-size: .75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    .panel-filter select {
+      font-size: .78rem;
+      color: var(--text-main);
+      background: #F9FAFB;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: .3rem .65rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .panel-body { padding: 1.4rem; }
+
+    /* ── Progress Rows ── */
     .progress-row { margin-bottom: 1.1rem; }
     .progress-row:last-child { margin-bottom: 0; }
-    .progress-row .p-label { font-size: .82rem; font-weight: 600; color: var(--text-main); }
-    .progress-row .p-value { font-size: .8rem; color: var(--text-muted); }
-    .progress-row .progress { height: 10px; border-radius: 20px; background: #F1F2F4; }
 
-    /* ── STATUS BADGE ── */
-    .status-pill { display: inline-block; font-size: .68rem; font-weight: 700; padding: .25rem .65rem; border-radius: 20px; }
-    .status-active { background: #eafaf1; color: #27ae60; }
+    .progress-row .p-label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
 
-    /* ── FOOTER ── */
-    .portal-footer { text-align: center; font-size: .7rem; color: rgba(255,255,255,.6); padding: .9rem 0 0; margin-top: .25rem; }
+    .progress-row .p-value {
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
 
-    /* ── MOBILE SIDEBAR TOGGLE (pure CSS via checkbox sibling selectors) ── */
+    .progress-row .progress {
+      height: 10px;
+      border-radius: 20px;
+      background: #F1F2F4;
+    }
+
+    /* ── Tables ── */
+    .panel table { font-size: .82rem; margin-bottom: 0; }
+
+    .panel table thead th {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      padding: .8rem 1.4rem;
+      background: #FAFBFC;
+    }
+
+    .panel table tbody td {
+      padding: .75rem 1.4rem;
+      color: var(--text-main);
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel table tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Status Badge ── */
+    .status-pill {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .25rem .65rem;
+      border-radius: 20px;
+    }
+
+    .status-active {
+      background: #eafaf1;
+      color: #27ae60;
+    }
+
+    /* ── Footer ── */
+    .portal-footer {
+      text-align: center;
+      font-size: .7rem;
+      color: rgba(255, 255, 255, .6);
+      padding: .9rem 0 0;
+      margin-top: .25rem;
+    }
+
+    /* ── Mobile ── */
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
       .main-content { margin-left: 0; }
@@ -120,196 +502,227 @@
       #sidebar-toggle-checkbox:checked ~ .sidebar {
         transform: translateX(0);
       }
+
       #sidebar-toggle-checkbox:checked ~ .sidebar-backdrop {
         display: block;
         position: fixed;
         top: var(--topbar-h);
         left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,.35);
+        background: rgba(0, 0, 0, .35);
         z-index: 1025;
       }
     }
+
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
+      .panel-filter { margin-left: 0; margin-top: .4rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Hidden checkbox driving the mobile sidebar — pure CSS, no JavaScript -->
-<input type="checkbox" id="sidebar-toggle-checkbox">
+  <input type="checkbox" id="sidebar-toggle-checkbox" />
 
-<!-- TOP BAR -->
-<header class="topbar">
-  <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
-    <i class="bi bi-list"></i>
-  </label>
-  <a href="instructor-dashboard.html" class="topbar-brand">
-    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
-    <div>Trigger3D <small>Instructor Portal</small></div>
-  </a>
+  <!-- ══ TOP BAR ══ -->
+  <header class="topbar">
+    <label class="sidebar-toggle-label" for="sidebar-toggle-checkbox" aria-label="Toggle menu">
+      <i class="bi bi-list"></i>
+    </label>
 
-  <div class="topbar-right">
-    <div class="icon-btn"><i class="bi bi-grid-3x3-gap"></i></div>
-    <div class="icon-btn"><i class="bi bi-gear"></i></div>
-    <div class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></div>
-    <div class="icon-btn"><i class="bi bi-grid-3x3"></i></div>
-    <div class="topbar-user d-none d-sm-block">
-      Instr. R. Bautista <small>Instructor</small>
-    </div>
-    <div class="avatar">RB</div>
-  </div>
-</header>
-
-<!-- Backdrop: tapping it (it's a label) closes the sidebar on mobile -->
-<label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
-
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <span class="sidebar-label">Main</span>
-  <ul class="sidebar-nav">
-    <li><a href="instructor-dashboard.html" class="active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
-  </ul>
-
-  <span class="sidebar-label">Student Monitoring</span>
-  <ul class="sidebar-nav">
-    <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
-    <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
-    <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
-  </ul>
-
-  <span class="sidebar-label">Module Management</span>
-  <ul class="sidebar-nav">
-    <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
-    <li><a href="delete-modules.html"><i class="bi bi-trash"></i> Delete Modules</a></li>
-  </ul>
-
-  <span class="sidebar-label">Records &amp; Resources</span>
-  <ul class="sidebar-nav">
-    <li><a href="generate-records.html"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
-    <li><a href="view-generated-modules.html"><i class="bi bi-eye"></i> View Generated Modules</a></li>
-    <li><a href="download-modules.html"><i class="bi bi-download"></i> Download Modules</a></li>
-  </ul>
-
-  <span class="sidebar-label">Settings</span>
-  <ul class="sidebar-nav">
-    <li><a href="system-settings.html"><i class="bi bi-gear"></i> System Settings</a></li>
-    <li><a href="reports.html"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
-  </ul>
-
-  <div class="sidebar-footer">
-    <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
-  </div>
-</aside>
-
-<!-- MAIN CONTENT -->
-<main class="main-content">
-
-  <!-- Welcome Banner -->
-  <div class="welcome-banner">
-    <div class="welcome-avatar"><i class="bi bi-person-circle"></i></div>
-    <div class="welcome-text">
-      <div class="title">Dashboard</div>
-      <div class="sub">Welcome back, Instructor! Here's an overview of your students' learning progress.</div>
-    </div>
-    <div class="welcome-badge d-none d-sm-block">Academic Year 2025–2026</div>
-  </div>
-
-  <!-- Statistics Overview -->
-  <div class="row g-3 mb-3" id="stats-overview">
-    <div class="col-6 col-lg-3">
-      <div class="stat-card red" id="stats-card-total-students">
-        <i class="bi bi-people card-icon"></i>
-        <div class="stat-value">45</div>
-        <div class="stat-label">Total Students</div>
-        <div class="stat-delta">Across all assigned subjects</div>
+    <a href="instructor-dashboard.html" class="topbar-brand">
+      <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+      <div>
+        Trigger3D
+        <small>Instructor Portal</small>
       </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="stat-card orange" id="stats-card-subjects">
-        <i class="bi bi-journal-bookmark card-icon"></i>
-        <div class="stat-value">2</div>
-        <div class="stat-label">Assigned Subjects</div>
-        <div class="stat-delta">Active this term</div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="stat-card purple" id="stats-card-avg-score">
-        <i class="bi bi-graph-up-arrow card-icon"></i>
-        <div class="stat-value">87%</div>
-        <div class="stat-label">Avg. Assessment Score</div>
-        <div class="stat-delta">Across all assessments</div>
-      </div>
-    </div>
-    <div class="col-6 col-lg-3">
-      <div class="stat-card teal" id="stats-card-progress">
-        <i class="bi bi-check-circle card-icon"></i>
-        <div class="stat-value">72%</div>
-        <div class="stat-label">Student Progress</div>
-        <div class="stat-delta">Average module completion</div>
-      </div>
-    </div>
-  </div>
+    </a>
 
-  <div class="row g-3 mb-3">
+    <div class="topbar-right">
+      <div class="icon-btn" aria-label="Apps"><i class="bi bi-grid-3x3-gap"></i></div>
+      <div class="icon-btn" aria-label="Settings"><i class="bi bi-gear"></i></div>
+      <div class="notif-btn" aria-label="Notifications">
+        <i class="bi bi-bell"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn" aria-label="Grid"><i class="bi bi-grid-3x3"></i></div>
+      <div class="topbar-user d-none d-sm-block">
+        Instr. R. Bautista
+        <small>Instructor</small>
+      </div>
+      <div class="avatar" aria-label="User initials">RB</div>
+    </div>
+  </header>
 
-    <!-- Student Progress Overview -->
-    <div class="col-12 col-lg-5">
-      <div class="panel h-100" id="student-progress-card">
-        <div class="panel-banner">
-          <div>
-            <h2>Student Progress Overview</h2>
-            <p>Status breakdown across all students</p>
-          </div>
+  <!-- Sidebar backdrop (CSS-only close) -->
+  <label class="sidebar-backdrop" for="sidebar-toggle-checkbox" aria-label="Close menu"></label>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+
+    <span class="sidebar-label">Main</span>
+    <ul class="sidebar-nav">
+      <li><a href="instructor-dashboard.html" class="active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+    </ul>
+
+    <span class="sidebar-label">Student Monitoring</span>
+    <ul class="sidebar-nav">
+      <li><a href="check-student-progress.html"><i class="bi bi-bar-chart-line"></i> Check Student Progress</a></li>
+      <li><a href="manage-student-levels.html"><i class="bi bi-layers"></i> Manage Student Levels</a></li>
+      <li><a href="manage-assessments.html"><i class="bi bi-check2-square"></i> Manage Assessments</a></li>
+    </ul>
+
+    <span class="sidebar-label">Module Management</span>
+    <ul class="sidebar-nav">
+      <li><a href="upload-modules.html"><i class="bi bi-upload"></i> Upload Modules</a></li>
+      <li><a href="delete-modules.html"><i class="bi bi-trash"></i> Delete Modules</a></li>
+    </ul>
+
+    <span class="sidebar-label">Records &amp; Resources</span>
+    <ul class="sidebar-nav">
+      <li><a href="generate-records.html"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+      <li><a href="view-generated-modules.html"><i class="bi bi-eye"></i> View Generated Modules</a></li>
+      <li><a href="download-modules.html"><i class="bi bi-download"></i> Download Modules</a></li>
+    </ul>
+
+    <span class="sidebar-label">Settings</span>
+    <ul class="sidebar-nav">
+      <li><a href="system-settings.html"><i class="bi bi-gear"></i> System Settings</a></li>
+      <li><a href="reports.html"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a href="#"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="main-content">
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="welcome-text">
+        <div class="title">Dashboard</div>
+        <div class="sub">Welcome back, Instructor! Here's an overview of your students' learning progress.</div>
+      </div>
+      <div class="welcome-badge d-none d-sm-block">Academic Year 2025–2026</div>
+    </div>
+
+    <!-- ── Statistics Overview ── -->
+    <div class="row g-3 mb-3" id="stats-overview">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card red">
+          <i class="bi bi-people card-icon"></i>
+          <div class="stat-value">45</div>
+          <div class="stat-label">Total Students</div>
+          <div class="stat-delta">Across all assigned subjects</div>
         </div>
-        <div class="panel-body">
-
-          <div class="progress-row">
-            <div class="d-flex justify-content-between mb-1">
-              <span class="p-label">Completed</span>
-              <span class="p-value">65%</span>
-            </div>
-            <div class="progress" role="progressbar" aria-label="Completed" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar bg-success" style="width: 65%;"></div>
-            </div>
-          </div>
-
-          <div class="progress-row">
-            <div class="d-flex justify-content-between mb-1">
-              <span class="p-label">In Progress</span>
-              <span class="p-value">25%</span>
-            </div>
-            <div class="progress" role="progressbar" aria-label="In Progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar bg-warning" style="width: 25%;"></div>
-            </div>
-          </div>
-
-          <div class="progress-row">
-            <div class="d-flex justify-content-between mb-1">
-              <span class="p-label">Not Started</span>
-              <span class="p-value">10%</span>
-            </div>
-            <div class="progress" role="progressbar" aria-label="Not Started" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar bg-danger" style="width: 10%;"></div>
-            </div>
-          </div>
-
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card orange">
+          <i class="bi bi-journal-bookmark card-icon"></i>
+          <div class="stat-value">2</div>
+          <div class="stat-label">Assigned Subjects</div>
+          <div class="stat-delta">Active this term</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card purple">
+          <i class="bi bi-graph-up-arrow card-icon"></i>
+          <div class="stat-value">87%</div>
+          <div class="stat-label">Avg. Assessment Score</div>
+          <div class="stat-delta">Across all assessments</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card teal">
+          <i class="bi bi-check-circle card-icon"></i>
+          <div class="stat-value">72%</div>
+          <div class="stat-label">Student Progress</div>
+          <div class="stat-delta">Average module completion</div>
         </div>
       </div>
     </div>
 
-    <!-- Assessment Overview -->
-    <div class="col-12 col-lg-7">
-      <div class="panel h-100" id="assessment-overview-card">
-        <div class="panel-banner">
-          <div>
-            <h2>Assessment Overview</h2>
-            <p>Summary of student assessment performance</p>
+    <!-- ── Student Progress + Assessment Overview ── -->
+    <div class="row g-3 mb-3">
+
+      <!-- Student Progress Overview -->
+      <div class="col-12 col-lg-5">
+        <div class="panel h-100" id="student-progress-panel">
+          <div class="panel-header">
+            <div class="panel-header-text">
+              <h2>Student Progress Overview</h2>
+              <p>Status breakdown across all students</p>
+            </div>
+            <div class="panel-filter">
+              <label for="progress-year-filter"><i class="bi bi-funnel"></i> Academic Year:</label>
+              <select id="progress-year-filter" name="progress_year">
+                <option value="2025-2026" selected>2025–2026</option>
+                <option value="2024-2025">2024–2025</option>
+                <option value="2023-2024">2023–2024</option>
+                <option value="2022-2023">2022–2023</option>
+              </select>
+            </div>
+          </div>
+          <div class="panel-body">
+
+            <div class="progress-row">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="p-label">Completed</span>
+                <span class="p-value">65%</span>
+              </div>
+              <div class="progress" role="progressbar" aria-label="Completed" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-success" style="width: 65%;"></div>
+              </div>
+            </div>
+
+            <div class="progress-row">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="p-label">In Progress</span>
+                <span class="p-value">25%</span>
+              </div>
+              <div class="progress" role="progressbar" aria-label="In Progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-warning" style="width: 25%;"></div>
+              </div>
+            </div>
+
+            <div class="progress-row">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="p-label">Not Started</span>
+                <span class="p-value">10%</span>
+              </div>
+              <div class="progress" role="progressbar" aria-label="Not Started" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-danger" style="width: 10%;"></div>
+              </div>
+            </div>
+
           </div>
         </div>
-        <div class="panel-body p-0">
+      </div>
+
+      <!-- Assessment Overview -->
+      <div class="col-12 col-lg-7">
+        <div class="panel h-100" id="assessment-overview-panel">
+          <div class="panel-header">
+            <div class="panel-header-text">
+              <h2>Assessment Overview</h2>
+              <p>Summary of student assessment performance</p>
+            </div>
+            <div class="panel-filter">
+              <label for="assessment-year-filter"><i class="bi bi-funnel"></i> Academic Year:</label>
+              <select id="assessment-year-filter" name="assessment_year">
+                <option value="2025-2026" selected>2025–2026</option>
+                <option value="2024-2025">2024–2025</option>
+                <option value="2023-2024">2023–2024</option>
+                <option value="2022-2023">2022–2023</option>
+              </select>
+            </div>
+          </div>
           <div class="table-responsive">
-            <table class="table mb-0" id="assessment-table">
+            <table class="table" id="assessment-table">
               <thead>
                 <tr>
                   <th scope="col">Assessment Metric</th>
@@ -338,21 +751,19 @@
           </div>
         </div>
       </div>
+
     </div>
 
-  </div>
-
-  <!-- Assigned Subjects -->
-  <div class="panel" id="assigned-subjects-card">
-    <div class="panel-banner">
-      <div>
-        <h2>Assigned Subjects</h2>
-        <p>Subjects currently assigned to you this term</p>
+    <!-- ── Assigned Subjects ── -->
+    <div class="panel" id="assigned-subjects-panel">
+      <div class="panel-header">
+        <div class="panel-header-text">
+          <h2>Assigned Subjects</h2>
+          <p>Subjects currently assigned to you this term</p>
+        </div>      
       </div>
-    </div>
-    <div class="panel-body p-0">
       <div class="table-responsive">
-        <table class="table mb-0" id="subjects-table">
+        <table class="table" id="subjects-table">
           <thead>
             <tr>
               <th scope="col">Subject Code</th>
@@ -378,13 +789,13 @@
         </table>
       </div>
     </div>
-  </div>
 
-  <div class="portal-footer">
-    Trigger3D Instructor Portal · Academic Year 2025–2026 · v1.0 · 2026
-  </div>
+    <!-- Footer -->
+    <footer class="portal-footer">
+      Trigger3D Instructor Portal &middot; Academic Year 2025–2026 &middot; v1.0 &middot; 2026
+    </footer>
 
-</main>
+  </main>
 
 </body>
 </html>
