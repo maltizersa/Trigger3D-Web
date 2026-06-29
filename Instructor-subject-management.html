@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subject Management — Trigger3D</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --red:        #C0392B;
+      --red-dark:   #922B21;
+      --red-light:  #F1948A;
+      --bg:         #C0392B;
+      --sidebar-bg: #FFFFFF;
+      --text-main:  #1A2535;
+      --text-muted: #7F8C8D;
+      --border:     #E8EAED;
+      --sidebar-w:  220px;
+      --topbar-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text-main); min-height: 100vh; }
+
+    /* TOPBAR */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: var(--topbar-h); background: #fff; display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); border-bottom: 1px solid var(--border); }
+    .topbar-brand { display: flex; align-items: center; gap: .55rem; color: var(--red); font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .topbar-brand .icon-box { width: 32px; height: 32px; background: #FDECEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--red); }
+    .topbar-brand small { display: block; font-size: .62rem; font-weight: 400; opacity: .7; color: var(--text-muted); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .8rem; }
+    .notif-btn { background: #FDECEA; border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--red); font-size: 1rem; position: relative; cursor: pointer; }
+    .notif-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; background: #F9CA24; border-radius: 50%; border: 1px solid #fff; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
+    .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
+    .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
+    .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .sidebar-nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem 1.1rem; color: var(--text-muted); text-decoration: none; font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar-nav a:hover { background: #F9FAFB; color: var(--red); border-left-color: var(--red-light); }
+    .sidebar-nav a.active { background: #fff; color: var(--red); border-left-color: var(--red); font-weight: 600; }
+    .sidebar-nav a i { font-size: .95rem; width: 18px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.1rem; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: flex; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .82rem; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--red); }
+
+    /* MAIN */
+    .main-content { margin-left: var(--sidebar-w); padding: calc(var(--topbar-h) + 1.5rem) 1.75rem 3rem; background: transparent; }
+
+    /* PANEL */
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; }
+    .panel-banner { background: #fff; padding: 1rem 1.4rem; display: flex; align-items: center; gap: .85rem; border-bottom: 1px solid var(--border); }
+    .panel-banner h2 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+    .panel-banner p  { font-size: .75rem; margin: 0; color: var(--text-muted); }
+    .panel-body { padding: 1.2rem; }
+
+    /* SUBJECT CARDS */
+    .subject-card-link { display: block; text-decoration: none; color: inherit; height: 100%; }
+    .subject-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .45rem; height: 100%; cursor: pointer; transition: box-shadow .15s, transform .15s, border-color .15s; }
+    .subject-card:hover { box-shadow: 0 8px 24px rgba(192,57,43,.18); transform: translateY(-2px); border-color: var(--red-light); }
+    .subject-code { display: inline-block; background: var(--red); color: #fff; font-size: .7rem; font-weight: 800; letter-spacing: .07em; padding: .2rem .6rem; border-radius: 6px; }
+    .subject-title { font-size: .9rem; font-weight: 700; margin: 0; }
+    .subject-meta  { font-size: .76rem; color: var(--text-muted); }
+
+    .prog-bar-wrap { background: #EAECEF; border-radius: 99px; height: 6px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; border-radius: 99px; }
+    .prog-bar-fill.hi  { background: linear-gradient(90deg, #27AE60, #52D68A); }
+    .prog-bar-fill.mid { background: linear-gradient(90deg, #2980B9, #5DADE2); }
+    .prog-bar-fill.low { background: linear-gradient(90deg, #E67E22, #F5B842); }
+
+    /* FORM */
+    .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
+    .form-control-sm-custom { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); padding: .42rem .7rem; width: 100%; background: #F9FAFB; transition: border-color .15s, background .15s; }
+    .form-control-sm-custom:focus { outline: none; border-color: var(--red); background: #fff; }
+    textarea.form-control-sm-custom { resize: vertical; min-height: 72px; }
+    .status-toggle-wrap { display: flex; gap: .5rem; }
+    .status-btn { flex: 1; padding: .4rem; border-radius: 8px; border: 1.5px solid var(--border); font-size: .8rem; font-weight: 600; cursor: pointer; text-align: center; background: #F9FAFB; color: var(--text-muted); transition: .15s; }
+    .status-btn.selected-active { background: #E8F8F2; border-color: #27AE60; color: #1A9B59; }
+    .modal-section-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin: 1rem 0 .6rem; }
+
+    /* BUTTONS */
+    .btn-red { background: var(--red); color: #fff; border: none; font-size: .8rem; font-weight: 600; padding: .42rem .9rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-red:hover { background: var(--red-dark); color: #fff; }
+    .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+    .btn-outline-red:hover { background: var(--red); color: #fff; }
+
+    @media (max-width: 991.98px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
+    }
+    @media (max-width: 575.98px) {
+      .main-content { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+  </button>
+  <a href="manage-instructor.html" class="topbar-brand">
+    <div class="icon-box"><i class="bi bi-shield-fill"></i></div>
+    <div>Trigger3D <small>Instructor Portal</small></div>
+  </a>
+  <div class="topbar-right">
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+    <div class="avatar">AR</div>
+    <div class="topbar-user d-none d-sm-block">Instr. Ana Reyes <small>Instructor</small></div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <span class="sidebar-label">Main</span>
+  <ul class="sidebar-nav">
+    <li><a href="manage-instructor.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+  </ul>
+  <span class="sidebar-label">Student Monitoring</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-bar-chart-line-fill"></i> Check Student Progress</a></li>
+    <li><a href="#"><i class="bi bi-layers-fill"></i> Manage Student Levels</a></li>
+  </ul>
+  <span class="sidebar-label">Subject Management</span>
+  <ul class="sidebar-nav">
+    <li><a href="Instructor-subject-management.html" class="active"><i class="bi bi-journal-text"></i> Manage Subjects</a></li>
+  </ul>
+  <span class="sidebar-label">Records &amp; Resources</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-file-earmark-text"></i> Generate Records</a></li>
+    <li><a href="#"><i class="bi bi-eye-fill"></i> View Generated Modules</a></li>
+    <li><a href="#"><i class="bi bi-download"></i> Download Modules</a></li>
+    <li><a href="#"><i class="bi bi-clipboard-data-fill"></i> System Logs</a></li>
+  </ul>
+  <span class="sidebar-label">Account</span>
+  <ul class="sidebar-nav">
+    <li><a href="#"><i class="bi bi-person-fill"></i> Profile</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="#"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <div class="panel">
+    <div class="panel-banner">
+      <div>
+        <h2>Subject Management</h2>
+        <p>View and manage your assigned subjects, modules &amp; enrollments</p>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row g-3">
+
+        <!-- FIRE101 -->
+        <div class="col-12 col-sm-6 col-xl-4">
+          <a href="instuctor-enroll-student.html?code=FIRE101" class="subject-card-link">
+            <div class="subject-card">
+              <div><span class="subject-code">FIRE101</span></div>
+              <p class="subject-title">Firearm Fundamentals</p>
+              <div class="subject-meta"><i class="bi bi-people me-1"></i>32 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>8 Modules</div>
+              <div class="mt-2">
+                <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>91%</strong></div>
+                <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:91%"></div></div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- FIRE104 -->
+        <div class="col-12 col-sm-6 col-xl-4">
+          <a href="instuctor-enroll-student.html?code=FIRE104" class="subject-card-link">
+            <div class="subject-card">
+              <div><span class="subject-code">FIRE104</span></div>
+              <p class="subject-title">Firearm Safety Protocols</p>
+              <div class="subject-meta"><i class="bi bi-people me-1"></i>22 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>7 Modules</div>
+              <div class="mt-2">
+                <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>82%</strong></div>
+                <div class="prog-bar-wrap"><div class="prog-bar-fill hi" style="width:82%"></div></div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- FIRE105 -->
+        <div class="col-12 col-sm-6 col-xl-4">
+          <a href="instuctor-enroll-student.html?code=FIRE105" class="subject-card-link">
+            <div class="subject-card">
+              <div><span class="subject-code">FIRE105</span></div>
+              <p class="subject-title">Range Practice &amp; Live Fire</p>
+              <div class="subject-meta"><i class="bi bi-people me-1"></i>18 Students &nbsp;|&nbsp; <i class="bi bi-folder me-1"></i>6 Modules</div>
+              <div class="mt-2">
+                <div class="d-flex justify-content-between mb-1" style="font-size:.74rem;"><span>Avg. Completion</span><strong>44%</strong></div>
+                <div class="prog-bar-wrap"><div class="prog-bar-fill low" style="width:44%"></div></div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5 pt-3" style="border-top:1px solid rgba(255,255,255,.25);font-size:.74rem;color:rgba(255,255,255,.85);text-align:center;">
+    Trigger3D Subject Management &nbsp;·&nbsp; Instructor Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sidebar toggle only
+  document.querySelector('.sidebar-toggle').addEventListener('click', function () {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>
