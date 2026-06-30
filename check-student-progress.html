@@ -526,6 +526,37 @@
       color: var(--text-muted);
     }
 
+    /* ── Completed Levels Cell ── */
+    .levels-cell {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .3rem;
+      max-width: 220px;
+    }
+
+    .level-pill {
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .2rem .55rem;
+      border-radius: 20px;
+      background: #FDECEA;
+      color: var(--red);
+      border: 1px solid #F1948A;
+      white-space: nowrap;
+    }
+
+    .level-pill.muted {
+      background: #F4F5F6;
+      color: var(--text-muted);
+      border: 1px dashed #D7DBDF;
+    }
+
+    .levels-empty {
+      font-size: .75rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
     /* ── View Button ── */
     .btn-view {
       font-size: .75rem;
@@ -602,6 +633,87 @@
     }
 
     .modal-table tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Level Result Card (used in Student Details page/modal) ── */
+    .level-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .level-card:last-child { margin-bottom: 0; }
+
+    .level-card-header {
+      background: #FDECEA;
+      padding: .6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      border-bottom: 1px solid #F1948A;
+    }
+
+    .level-card-header .level-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .level-card-header .level-title {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .level-card-header .level-status {
+      margin-left: auto;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .2rem .55rem;
+      border-radius: 20px;
+    }
+
+    .level-card-body {
+      padding: .85rem 1rem;
+    }
+
+    .level-result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .45rem 0;
+      font-size: .82rem;
+      border-bottom: 1px solid #F4F5F6;
+    }
+
+    .level-result-row:last-child { border-bottom: none; }
+
+    .level-result-row .result-label {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .level-result-row .result-label i { color: var(--red); }
+
+    .level-result-row .result-score {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .level-result-row .result-score .score-denom {
+      font-weight: 500;
+    }
 
     /* ── Rating Stars ── */
     .stars { color: #F9CA24; letter-spacing: .05em; }
@@ -856,6 +968,7 @@
               <th scope="col" class="d-none d-md-table-cell">Pre-Test</th>
               <th scope="col" class="d-none d-md-table-cell">Post-Test</th>
               <th scope="col">Overall Score</th>
+              <th scope="col">Completed Levels</th>
               <th scope="col">Status</th>
               <th scope="col">Action</th>
             </tr>
@@ -876,6 +989,13 @@
                 <span class="score-val">19</span><span class="score-denom">/20</span>
               </td>
               <td><strong>90%</strong></td>
+              <td>
+                <div class="levels-cell">
+                  <span class="level-pill">Level 1</span>
+                  <span class="level-pill">Level 2</span>
+                  <span class="level-pill">Level 3</span>
+                </div>
+              </td>
               <td>
                 <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: .7rem;">Completed</span>
               </td>
@@ -907,6 +1027,12 @@
               </td>
               <td><strong>82%</strong></td>
               <td>
+                <div class="levels-cell">
+                  <span class="level-pill">Level 1</span>
+                  <span class="level-pill">Level 2</span>
+                </div>
+              </td>
+              <td>
                 <span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size: .7rem;">In Progress</span>
               </td>
               <td>
@@ -936,6 +1062,11 @@
                 <span class="score-val">—</span>
               </td>
               <td><strong>50%</strong></td>
+              <td>
+                <div class="levels-cell">
+                  <span class="level-pill muted">Level 1 (In Progress)</span>
+                </div>
+              </td>
               <td>
                 <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle" style="font-size: .7rem;">Not Started</span>
               </td>
@@ -967,6 +1098,13 @@
               </td>
               <td><strong>95%</strong></td>
               <td>
+                <div class="levels-cell">
+                  <span class="level-pill">Level 1</span>
+                  <span class="level-pill">Level 2</span>
+                  <span class="level-pill">Level 3</span>
+                </div>
+              </td>
+              <td>
                 <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: .7rem;">Completed</span>
               </td>
               <td>
@@ -996,6 +1134,12 @@
                 <span class="score-val">—</span>
               </td>
               <td><strong>70%</strong></td>
+              <td>
+                <div class="levels-cell">
+                  <span class="level-pill">Level 1</span>
+                  <span class="level-pill muted">Level 2 (In Progress)</span>
+                </div>
+              </td>
               <td>
                 <span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size: .7rem;">In Progress</span>
               </td>
@@ -1042,7 +1186,7 @@
 
 
   <!-- ══════════════════════════════════════════════════
-       MODALS — Student Detail Views
+       MODALS — Student Details Pages (per-level results)
   ══════════════════════════════════════════════════ -->
 
   <!-- ── Modal: Juan Dela Cruz (2023001) ── -->
@@ -1096,56 +1240,69 @@
             </div>
           </div>
 
-          <!-- Section 2: Pre-Test Results -->
+          <!-- Section 2: Completed Levels -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Pre-Test</td>
-                  <td><strong>15</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <i class="bi bi-layers-fill"></i> Completed Levels
           </div>
 
-          <!-- Section 3: Post-Test Results -->
-          <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">1</div>
+              <div class="level-title">Level 1</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">15<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">20<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><strong>19</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">2</div>
+              <div class="level-title">Level 2</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">14<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">18<span class="score-denom">/20</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">3</div>
+              <div class="level-title">Level 3</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">16<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">19<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
 
         </div>
 
         <div class="modal-footer" style="border-top: 1px solid var(--border);">
-          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>90%</strong></span>
+          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>90%</strong> &middot; 3 of 3 Levels Completed</span>
           <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" data-bs-dismiss="modal">Close</button>
         </div>
 
@@ -1204,56 +1361,51 @@
             </div>
           </div>
 
-          <!-- Section 2: Pre-Test Results -->
+          <!-- Section 2: Completed Levels -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Pre-Test</td>
-                  <td><strong>12</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <i class="bi bi-layers-fill"></i> Completed Levels
           </div>
 
-          <!-- Section 3: Post-Test Results -->
-          <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">1</div>
+              <div class="level-title">Level 1</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">12<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">18<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><strong>18</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">2</div>
+              <div class="level-title">Level 2</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">11<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">16<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
 
         </div>
 
         <div class="modal-footer" style="border-top: 1px solid var(--border);">
-          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>82%</strong></span>
+          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>82%</strong> &middot; 2 of 3 Levels Completed</span>
           <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" data-bs-dismiss="modal">Close</button>
         </div>
 
@@ -1312,56 +1464,37 @@
             </div>
           </div>
 
-          <!-- Section 2: Pre-Test Results -->
+          <!-- Section 2: Completed Levels -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Pre-Test</td>
-                  <td><strong>10</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">For Review</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <i class="bi bi-layers-fill"></i> Completed Levels
           </div>
 
-          <!-- Section 3: Post-Test Results -->
-          <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
+          <div class="level-card">
+            <div class="level-card-header" style="background: #F4F5F6; border-bottom-color: #D7DBDF;">
+              <div class="level-icon" style="background: var(--text-muted);">1</div>
+              <div class="level-title">Level 1</div>
+              <span class="level-status bg-secondary-subtle text-secondary border border-secondary-subtle">In Progress</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">10<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score" style="color: var(--text-muted);">Not Taken</span>
+              </div>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Not Taken</span></td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div class="levels-empty mt-2">
+            <i class="bi bi-info-circle me-1"></i>No levels fully completed yet.
           </div>
 
         </div>
 
         <div class="modal-footer" style="border-top: 1px solid var(--border);">
-          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>50%</strong></span>
+          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>50%</strong> &middot; 0 of 3 Levels Completed</span>
           <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" data-bs-dismiss="modal">Close</button>
         </div>
 
@@ -1420,56 +1553,69 @@
             </div>
           </div>
 
-          <!-- Section 2: Pre-Test Results -->
+          <!-- Section 2: Completed Levels -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Pre-Test</td>
-                  <td><strong>16</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <i class="bi bi-layers-fill"></i> Completed Levels
           </div>
 
-          <!-- Section 3: Post-Test Results -->
-          <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">1</div>
+              <div class="level-title">Level 1</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">16<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">19<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><strong>20</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">2</div>
+              <div class="level-title">Level 2</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">17<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">19<span class="score-denom">/20</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">3</div>
+              <div class="level-title">Level 3</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">20<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">20<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
 
         </div>
 
         <div class="modal-footer" style="border-top: 1px solid var(--border);">
-          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>95%</strong></span>
+          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>95%</strong> &middot; 3 of 3 Levels Completed</span>
           <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" data-bs-dismiss="modal">Close</button>
         </div>
 
@@ -1528,56 +1674,51 @@
             </div>
           </div>
 
-          <!-- Section 2: Pre-Test Results -->
+          <!-- Section 2: Completed Levels -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Pre-Test</td>
-                  <td><strong>13</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-              </tbody>
-            </table>
+            <i class="bi bi-layers-fill"></i> Completed Levels
           </div>
 
-          <!-- Section 3: Post-Test Results -->
-          <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
+          <div class="level-card">
+            <div class="level-card-header">
+              <div class="level-icon">1</div>
+              <div class="level-title">Level 1</div>
+              <span class="level-status bg-success-subtle text-success border border-success-subtle">Completed</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score">13<span class="score-denom">/20</span></span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score">17<span class="score-denom">/20</span></span>
+              </div>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Assessment</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending</span></td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div class="level-card">
+            <div class="level-card-header" style="background: #F4F5F6; border-bottom-color: #D7DBDF;">
+              <div class="level-icon" style="background: var(--text-muted);">2</div>
+              <div class="level-title">Level 2</div>
+              <span class="level-status bg-warning-subtle text-warning border border-warning-subtle">In Progress</span>
+            </div>
+            <div class="level-card-body">
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Pre-Test Result</span>
+                <span class="result-score" style="color: var(--text-muted);">Pending</span>
+              </div>
+              <div class="level-result-row">
+                <span class="result-label"><i class="bi bi-clipboard2-check-fill"></i> Post-Test Result</span>
+                <span class="result-score" style="color: var(--text-muted);">Not Taken</span>
+              </div>
+            </div>
           </div>
 
         </div>
 
         <div class="modal-footer" style="border-top: 1px solid var(--border);">
-          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>70%</strong></span>
+          <span style="font-size: .75rem; color: var(--text-muted);">Overall Score: <strong>70%</strong> &middot; 1 of 3 Levels Completed</span>
           <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" data-bs-dismiss="modal">Close</button>
         </div>
 
