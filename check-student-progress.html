@@ -466,6 +466,21 @@
       font-size: .85rem;
     }
 
+    /* ── Active Year Tag (Secondary Filter Bar) ── */
+    .active-year-tag {
+      font-size: .8rem;
+      color: var(--text-main);
+      background: #FDECEA;
+      border: 1.5px solid #F1948A;
+      border-radius: 8px;
+      padding: .4rem .75rem;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .active-year-tag i { color: var(--red); }
+
     /* ── Performance Table ── */
     .perf-table th {
       font-size: .7rem;
@@ -776,13 +791,14 @@
             </select>
           </div>
 
-          <!-- Assessment Filter -->
+          <!-- Academic Year Filter (Primary) -->
           <div class="filter-group">
-            <label for="filter-assessment">Assessment</label>
-            <select id="filter-assessment" name="assessment" class="form-select" aria-label="Filter by Assessment">
-              <option value="pre-test">Pre-Test</option>
-              <option value="lesson-1-quiz">Lesson 1 Quiz</option>
-              <option value="post-test">Post-Test</option>
+            <label for="filter-academic-year">Academic Year</label>
+            <select id="filter-academic-year" name="academic_year" class="form-select" aria-label="Filter by Academic Year">
+              <option value="2025-2026" selected>2025–2026</option>
+              <option value="2024-2025">2024–2025</option>
+              <option value="2023-2024">2023–2024</option>
+              <option value="2022-2023">2022–2023</option>
             </select>
           </div>
 
@@ -806,6 +822,25 @@
       </div>
     </div>
 
+    <!-- ── Secondary Filter: Assessment Type ── -->
+    <div class="panel" id="assessment-type-filter-panel">
+      <div class="panel-body py-3">
+        <div class="filter-row align-items-center">
+          <span class="active-year-tag">
+            <i class="bi bi-calendar3 me-1"></i>Academic Year: <strong>2025–2026</strong>
+          </span>
+          <div class="filter-group ms-md-auto flex-row align-items-center gap-2" style="flex-direction: row;">
+            <label for="filter-assessment-type" class="mb-0">Assessment Type</label>
+            <select id="filter-assessment-type" name="assessment_type" class="form-select" aria-label="Filter by Assessment Type" style="min-width: 180px;">
+              <option value="" selected>All Assessment Types</option>
+              <option value="pre-test">Pre-Test</option>
+              <option value="post-test">Post-Test</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── Student Performance Table ── -->
     <div class="panel" id="performance-table-panel">
       <div class="panel-header">
@@ -819,7 +854,6 @@
               <th scope="col">Student ID</th>
               <th scope="col">Student Name</th>
               <th scope="col" class="d-none d-md-table-cell">Pre-Test</th>
-              <th scope="col" class="d-none d-md-table-cell">Lesson 1</th>
               <th scope="col" class="d-none d-md-table-cell">Post-Test</th>
               <th scope="col">Overall Score</th>
               <th scope="col">Status</th>
@@ -837,9 +871,6 @@
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">15</span><span class="score-denom">/20</span>
-              </td>
-              <td class="d-none d-md-table-cell">
-                <span class="score-val">18</span><span class="score-denom">/20</span>
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">19</span><span class="score-denom">/20</span>
@@ -870,9 +901,6 @@
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">12</span><span class="score-denom">/20</span>
-              </td>
-              <td class="d-none d-md-table-cell">
-                <span class="score-val">17</span><span class="score-denom">/20</span>
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">18</span><span class="score-denom">/20</span>
@@ -907,9 +935,6 @@
               <td class="d-none d-md-table-cell">
                 <span class="score-val">—</span>
               </td>
-              <td class="d-none d-md-table-cell">
-                <span class="score-val">—</span>
-              </td>
               <td><strong>50%</strong></td>
               <td>
                 <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle" style="font-size: .7rem;">Not Started</span>
@@ -936,9 +961,6 @@
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">16</span><span class="score-denom">/20</span>
-              </td>
-              <td class="d-none d-md-table-cell">
-                <span class="score-val">19</span><span class="score-denom">/20</span>
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">20</span><span class="score-denom">/20</span>
@@ -969,9 +991,6 @@
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">13</span><span class="score-denom">/20</span>
-              </td>
-              <td class="d-none d-md-table-cell">
-                <span class="score-val">15</span><span class="score-denom">/20</span>
               </td>
               <td class="d-none d-md-table-cell">
                 <span class="score-val">—</span>
@@ -1077,9 +1096,9 @@
             </div>
           </div>
 
-          <!-- Section 2: Assessment Results -->
+          <!-- Section 2: Pre-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Assessment Results
+            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
           </div>
           <div class="table-responsive mb-4">
             <table class="table modal-table mb-0">
@@ -1096,79 +1115,28 @@
                   <td><strong>15</strong><span class="score-denom">/20</span></td>
                   <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
-                <tr>
-                  <td>Lesson 1 Quiz</td>
-                  <td><strong>18</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><strong>19</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Section 3: Assembly & Disassembly Performance -->
+          <!-- Section 3: Post-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-tools"></i> Assembly and Disassembly Performance
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Activity</th>
-                  <th scope="col">Accuracy</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Assembly</td>
-                  <td><strong>96%</strong></td>
-                  <td>2m 15s</td>
-                  <td>
-                    <span class="stars">★★★★★</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Disassembly</td>
-                  <td><strong>92%</strong></td>
-                  <td>2m 48s</td>
-                  <td>
-                    <span class="stars">★★★★</span><span class="star-empty">★</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Section 4: Firearm Familiarization -->
-          <div class="modal-section-heading">
-            <i class="bi bi-book-fill"></i> Firearm Familiarization
+            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
           </div>
           <div class="table-responsive">
             <table class="table modal-table mb-0">
               <thead>
                 <tr>
-                  <th scope="col">Learning Module</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Assessment</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Remarks</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Firearm Parts</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Safety Rules</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Firearm Identification</td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">In Progress</span></td>
+                  <td>Post-Test</td>
+                  <td><strong>19</strong><span class="score-denom">/20</span></td>
+                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1236,9 +1204,9 @@
             </div>
           </div>
 
-          <!-- Section 2 -->
+          <!-- Section 2: Pre-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Assessment Results
+            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
           </div>
           <div class="table-responsive mb-4">
             <table class="table modal-table mb-0">
@@ -1255,75 +1223,28 @@
                   <td><strong>12</strong><span class="score-denom">/20</span></td>
                   <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
-                <tr>
-                  <td>Lesson 1 Quiz</td>
-                  <td><strong>17</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><strong>18</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Section 3 -->
+          <!-- Section 3: Post-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-tools"></i> Assembly and Disassembly Performance
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Activity</th>
-                  <th scope="col">Accuracy</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Assembly</td>
-                  <td><strong>88%</strong></td>
-                  <td>2m 50s</td>
-                  <td><span class="stars">★★★★</span><span class="star-empty">★</span></td>
-                </tr>
-                <tr>
-                  <td>Disassembly</td>
-                  <td><strong>84%</strong></td>
-                  <td>3m 10s</td>
-                  <td><span class="stars">★★★★</span><span class="star-empty">★</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Section 4 -->
-          <div class="modal-section-heading">
-            <i class="bi bi-book-fill"></i> Firearm Familiarization
+            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
           </div>
           <div class="table-responsive">
             <table class="table modal-table mb-0">
               <thead>
                 <tr>
-                  <th scope="col">Learning Module</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Assessment</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Remarks</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Firearm Parts</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Safety Rules</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Firearm Identification</td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">In Progress</span></td>
+                  <td>Post-Test</td>
+                  <td><strong>18</strong><span class="score-denom">/20</span></td>
+                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1391,9 +1312,9 @@
             </div>
           </div>
 
-          <!-- Section 2 -->
+          <!-- Section 2: Pre-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Assessment Results
+            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
           </div>
           <div class="table-responsive mb-4">
             <table class="table modal-table mb-0">
@@ -1410,75 +1331,28 @@
                   <td><strong>10</strong><span class="score-denom">/20</span></td>
                   <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">For Review</span></td>
                 </tr>
-                <tr>
-                  <td>Lesson 1 Quiz</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Not Taken</span></td>
-                </tr>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Not Taken</span></td>
-                </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Section 3 -->
+          <!-- Section 3: Post-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-tools"></i> Assembly and Disassembly Performance
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Activity</th>
-                  <th scope="col">Accuracy</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Assembly</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="star-empty">★★★★★</span></td>
-                </tr>
-                <tr>
-                  <td>Disassembly</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="star-empty">★★★★★</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Section 4 -->
-          <div class="modal-section-heading">
-            <i class="bi bi-book-fill"></i> Firearm Familiarization
+            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
           </div>
           <div class="table-responsive">
             <table class="table modal-table mb-0">
               <thead>
                 <tr>
-                  <th scope="col">Learning Module</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Assessment</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Remarks</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Firearm Parts</td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">In Progress</span></td>
-                </tr>
-                <tr>
-                  <td>Safety Rules</td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Not Started</span></td>
-                </tr>
-                <tr>
-                  <td>Firearm Identification</td>
-                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Not Started</span></td>
+                  <td>Post-Test</td>
+                  <td><span style="color: var(--text-muted);">—</span></td>
+                  <td><span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Not Taken</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1546,9 +1420,9 @@
             </div>
           </div>
 
-          <!-- Section 2 -->
+          <!-- Section 2: Pre-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Assessment Results
+            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
           </div>
           <div class="table-responsive mb-4">
             <table class="table modal-table mb-0">
@@ -1565,75 +1439,28 @@
                   <td><strong>16</strong><span class="score-denom">/20</span></td>
                   <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
-                <tr>
-                  <td>Lesson 1 Quiz</td>
-                  <td><strong>19</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><strong>20</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Section 3 -->
+          <!-- Section 3: Post-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-tools"></i> Assembly and Disassembly Performance
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Activity</th>
-                  <th scope="col">Accuracy</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Assembly</td>
-                  <td><strong>99%</strong></td>
-                  <td>1m 58s</td>
-                  <td><span class="stars">★★★★★</span></td>
-                </tr>
-                <tr>
-                  <td>Disassembly</td>
-                  <td><strong>97%</strong></td>
-                  <td>2m 10s</td>
-                  <td><span class="stars">★★★★★</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Section 4 -->
-          <div class="modal-section-heading">
-            <i class="bi bi-book-fill"></i> Firearm Familiarization
+            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
           </div>
           <div class="table-responsive">
             <table class="table modal-table mb-0">
               <thead>
                 <tr>
-                  <th scope="col">Learning Module</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Assessment</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Remarks</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Firearm Parts</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Safety Rules</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Firearm Identification</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
+                  <td>Post-Test</td>
+                  <td><strong>20</strong><span class="score-denom">/20</span></td>
+                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1701,9 +1528,9 @@
             </div>
           </div>
 
-          <!-- Section 2 -->
+          <!-- Section 2: Pre-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-clipboard2-check-fill"></i> Assessment Results
+            <i class="bi bi-clipboard2-check-fill"></i> Pre-Test Results
           </div>
           <div class="table-responsive mb-4">
             <table class="table modal-table mb-0">
@@ -1720,75 +1547,28 @@
                   <td><strong>13</strong><span class="score-denom">/20</span></td>
                   <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
                 </tr>
-                <tr>
-                  <td>Lesson 1 Quiz</td>
-                  <td><strong>15</strong><span class="score-denom">/20</span></td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Passed</span></td>
-                </tr>
-                <tr>
-                  <td>Post-Test</td>
-                  <td><span style="color: var(--text-muted);">—</span></td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending</span></td>
-                </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Section 3 -->
+          <!-- Section 3: Post-Test Results -->
           <div class="modal-section-heading">
-            <i class="bi bi-tools"></i> Assembly and Disassembly Performance
-          </div>
-          <div class="table-responsive mb-4">
-            <table class="table modal-table mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Activity</th>
-                  <th scope="col">Accuracy</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Assembly</td>
-                  <td><strong>81%</strong></td>
-                  <td>3m 05s</td>
-                  <td><span class="stars">★★★★</span><span class="star-empty">★</span></td>
-                </tr>
-                <tr>
-                  <td>Disassembly</td>
-                  <td><strong>78%</strong></td>
-                  <td>3m 30s</td>
-                  <td><span class="stars">★★★</span><span class="star-empty">★★</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Section 4 -->
-          <div class="modal-section-heading">
-            <i class="bi bi-book-fill"></i> Firearm Familiarization
+            <i class="bi bi-clipboard2-check-fill"></i> Post-Test Results
           </div>
           <div class="table-responsive">
             <table class="table modal-table mb-0">
               <thead>
                 <tr>
-                  <th scope="col">Learning Module</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Assessment</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Remarks</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Firearm Parts</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Safety Rules</td>
-                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Completed</span></td>
-                </tr>
-                <tr>
-                  <td>Firearm Identification</td>
-                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">In Progress</span></td>
+                  <td>Post-Test</td>
+                  <td><span style="color: var(--text-muted);">—</span></td>
+                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending</span></td>
                 </tr>
               </tbody>
             </table>
