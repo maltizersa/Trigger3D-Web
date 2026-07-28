@@ -32,6 +32,7 @@
     .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; border: 2px solid #F1948A; }
     .topbar-user { color: var(--text-main); font-size: .8rem; line-height: 1.3; }
     .topbar-user small { opacity: .6; font-size: .68rem; display: block; color: var(--text-muted); }
+    .sidebar-toggle { display: none; background: none; border: none; color: var(--red); font-size: 1.3rem; cursor: pointer; }
 
     .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 1030; width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: transform .25s ease; }
     .sidebar-label { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); padding: 1.1rem 1.1rem .3rem; }
@@ -58,11 +59,10 @@
     .btn-outline-red { background: transparent; color: var(--red); border: 1.5px solid var(--red); font-size: .8rem; font-weight: 600; padding: .4rem .85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
     .btn-outline-red:hover { background: var(--red); color: #fff; }
 
-    .course-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1.2rem 1.3rem; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .5rem; height: 100%; transition: box-shadow .15s, transform .15s; }
+    .course-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1.2rem 1.3rem; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: .5rem; height: 100%; cursor: pointer; transition: box-shadow .15s, transform .15s; }
     .course-card:hover { box-shadow: 0 8px 22px rgba(0,0,0,.16); transform: translateY(-2px); }
-    .course-card-link { display: block; text-decoration: none; color: inherit; flex: 1; cursor: pointer; }
-    .course-title { font-size: .95rem; font-weight: 700; margin: 0; color: var(--text-main); }
-    .course-meta  { font-size: .76rem; color: var(--text-muted); display: flex; align-items: center; gap: .4rem; margin-top: .5rem; }
+    .course-title { font-size: .95rem; font-weight: 700; margin: 0; }
+    .course-meta  { font-size: .76rem; color: var(--text-muted); display: flex; align-items: center; gap: .4rem; }
     .course-stats { display: flex; gap: 1.1rem; margin-top: .4rem; padding-top: .6rem; border-top: 1px solid var(--border); }
     .course-stat  { font-size: .76rem; color: var(--text-muted); display: flex; align-items: center; gap: .35rem; }
     .course-stat strong { color: var(--text-main); font-size: .82rem; }
@@ -70,17 +70,22 @@
 
     .btn-icon { width: 29px; height: 29px; border-radius: 7px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: .82rem; }
     .btn-icon.edit { background: #EBF3FF; color: #2980B9; }
-    .btn-icon.open { background: #E8F8F2; color: #1A9B59; text-decoration: none; }
+    .btn-icon.open { background: #E8F8F2; color: #1A9B59; }
     .btn-icon:hover { filter: brightness(.88); }
 
     .form-label-sm { font-size: .77rem; font-weight: 600; margin-bottom: .3rem; display: block; }
     .form-control-sm-custom { font-size: .82rem; border-radius: 8px; border: 1.5px solid var(--border); padding: .42rem .7rem; width: 100%; background: #F9FAFB; transition: border-color .15s, background .15s; }
     .form-control-sm-custom:focus { outline: none; border-color: var(--red); background: #fff; }
 
+    .fta-toast-stack { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1200; display: flex; flex-direction: column; gap: .5rem; }
+    .fta-toast { background: #1A2535; color: #fff; font-size: .8rem; padding: .6rem 1rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.2); display: flex; align-items: center; gap: .5rem; opacity: 0; transform: translateY(8px); transition: .25s; }
+    .fta-toast.show { opacity: 1; transform: translateY(0); }
+
     @media (max-width: 991.98px) {
       .sidebar { transform: translateX(-100%); }
-      .sidebar.sidebar-open { transform: translateX(0); }
+      .sidebar.open { transform: translateX(0); }
       .main-content { margin-left: 0; }
+      .sidebar-toggle { display: flex; align-items: center; }
     }
     @media (max-width: 575.98px) {
       .main-content { padding-left: 1rem; padding-right: 1rem; }
@@ -91,7 +96,7 @@
 
 <!-- TOP BAR -->
 <header class="topbar">
-  <button class="btn d-lg-none p-0 border-0" style="color:var(--red);font-size:1.3rem;" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-label="Toggle menu">
+  <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
     <i class="bi bi-list"></i>
   </button>
   <a href="manage-program-head.html" class="topbar-brand">
@@ -99,14 +104,14 @@
     <div>Trigger3D <small>Admin</small></div>
   </a>
   <div class="topbar-right">
-    <button class="notif-btn" type="button"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+    <button class="notif-btn"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
     <div class="avatar">PH</div>
     <div class="topbar-user d-none d-sm-block">Maj. R. Santos <small>Program Head</small></div>
   </div>
 </header>
 
 <!-- SIDEBAR -->
-<aside class="sidebar collapse collapse-horizontal show d-lg-flex" id="sidebar">
+<aside class="sidebar" id="sidebar">
   <span class="sidebar-label">Main</span>
   <ul class="sidebar-nav">
     <li><a href="manage-program-head.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
@@ -135,51 +140,7 @@
       </div>
     </div>
     <div class="panel-body">
-      <div class="row g-3">
-
-        <!-- COURSE 1 -->
-        <div class="col-12 col-sm-6 col-xl-4">
-          <div class="course-card">
-            <a href="program-head-course-detail.html?course=MCS" class="course-card-link">
-              <p class="course-title" id="courseTitle-MCS">Marksmanship and Combat Shooting</p>
-              <div class="course-meta"><i class="bi bi-folder2-open"></i>8 Modules</div>
-              <div class="course-stats">
-                <div class="course-stat"><i class="bi bi-file-earmark-check"></i><strong>10</strong>&nbsp;Pre-test</div>
-                <div class="course-stat"><i class="bi bi-file-earmark-check-fill"></i><strong>10</strong>&nbsp;Post-test</div>
-              </div>
-            </a>
-            <div class="course-actions">
-              <button class="btn-icon edit" title="Edit course name" data-bs-toggle="modal" data-bs-target="#editCourseModal"
-                onclick="openEdit('MCS', 'Marksmanship and Combat Shooting')">
-                <i class="bi bi-pencil-fill"></i>
-              </button>
-              <a class="btn-icon open" title="Open course" href="program-head-course-detail.html?course=MCS"><i class="bi bi-box-arrow-up-right"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- COURSE 2 -->
-        <div class="col-12 col-sm-6 col-xl-4">
-          <div class="course-card">
-            <a href="program-head-course-detail.html?course=CRMLAB" class="course-card-link">
-              <p class="course-title" id="courseTitle-CRMLAB">Forensic Ballistic (CRMLAB)</p>
-              <div class="course-meta"><i class="bi bi-folder2-open"></i>6 Modules</div>
-              <div class="course-stats">
-                <div class="course-stat"><i class="bi bi-file-earmark-check"></i><strong>10</strong>&nbsp;Pre-test</div>
-                <div class="course-stat"><i class="bi bi-file-earmark-check-fill"></i><strong>10</strong>&nbsp;Post-test</div>
-              </div>
-            </a>
-            <div class="course-actions">
-              <button class="btn-icon edit" title="Edit course name" data-bs-toggle="modal" data-bs-target="#editCourseModal"
-                onclick="openEdit('CRMLAB', 'Forensic Ballistic (CRMLAB)')">
-                <i class="bi bi-pencil-fill"></i>
-              </button>
-              <a class="btn-icon open" title="Open course" href="program-head-course-detail.html?course=CRMLAB"><i class="bi bi-box-arrow-up-right"></i></a>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <div class="row g-3" id="courseGrid"></div>
     </div>
   </div>
 
@@ -187,6 +148,8 @@
     Trigger3D Course Management &nbsp;·&nbsp; Program Head Portal &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026
   </div>
 </main>
+
+<div class="fta-toast-stack" id="toastStack"></div>
 
 <!-- ===== MODAL: EDIT COURSE NAME ===== -->
 <div class="modal fade" id="editCourseModal" tabindex="-1" aria-hidden="true">
@@ -199,7 +162,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" style="padding:1.3rem;">
-        <input type="hidden" id="ec_id" value="" />
         <div class="mb-1">
           <label class="form-label-sm">Course Name <span class="text-danger">*</span></label>
           <input type="text" id="ec_name" class="form-control-sm-custom" placeholder="e.g. Marksmanship and Combat Shooting" />
@@ -218,34 +180,76 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script>
+  /* ── FIXED COURSE LIST (no add/remove — front-end demo only) ── */
+  let COURSES = [
+    { id:'MCS', title:'Marksmanship and Combat Shooting', modules:8, pretest:10, posttest:10 },
+    { id:'CRMLAB', title:'Forensic Ballistic (CRMLAB)', modules:6, pretest:10, posttest:10 },
+  ];
 
+  let editingId = null;
 
-  function openEdit(id, currentName) {
-    document.getElementById('ec_id').value = id;
-    document.getElementById('ec_name').value = currentName;
+  function goToCourse(id) {
+    window.location.href = `program-head-course-detail.html?course=${encodeURIComponent(id)}`;
+  }
+
+  function renderCourses() {
+    const grid = document.getElementById('courseGrid');
+    grid.innerHTML = COURSES.map(c => `
+      <div class="col-12 col-sm-6 col-xl-4">
+        <div class="course-card" onclick="goToCourse('${c.id}')">
+          <p class="course-title">${c.title}</p>
+          <div class="course-meta"><i class="bi bi-folder2-open"></i>${c.modules} Modules</div>
+          <div class="course-stats">
+            <div class="course-stat"><i class="bi bi-file-earmark-check"></i><strong>${c.pretest}</strong>&nbsp;Pre-test</div>
+            <div class="course-stat"><i class="bi bi-file-earmark-check-fill"></i><strong>${c.posttest}</strong>&nbsp;Post-test</div>
+          </div>
+          <div class="course-actions" onclick="event.stopPropagation()">
+            <button class="btn-icon edit" title="Edit course name" data-bs-toggle="modal" data-bs-target="#editCourseModal" onclick="openEdit('${c.id}')"><i class="bi bi-pencil-fill"></i></button>
+            <button class="btn-icon open" title="Open course" onclick="goToCourse('${c.id}')"><i class="bi bi-box-arrow-up-right"></i></button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openEdit(id) {
+    editingId = id;
+    const c = COURSES.find(x => x.id === id);
+    document.getElementById('ec_name').value = c.title;
     document.getElementById('ec_error').style.display = 'none';
   }
 
   function saveCourseName() {
-    const id = document.getElementById('ec_id').value;
     const name = document.getElementById('ec_name').value.trim();
     const err = document.getElementById('ec_error');
     const errMsg = document.getElementById('ec_error_msg');
 
-    if (!name) {
-      errMsg.textContent = 'Course name is required.';
-      err.style.display = 'block';
-      return;
-    }
+    if (!name) { errMsg.textContent = 'Course name is required.'; err.style.display = 'block'; return; }
 
-    document.getElementById(`courseTitle-${id}`).textContent = name;
+    const c = COURSES.find(x => x.id === editingId);
+    c.title = name;
     err.style.display = 'none';
+    renderCourses();
     bootstrap.Modal.getInstance(document.getElementById('editCourseModal')).hide();
+    showToast(`Course name updated (demo only)`, 'bi-pencil-fill');
   }
 
-  document.getElementById('ec_name').addEventListener('input', () => {
+  document.getElementById('ec_name')?.addEventListener('input', () => {
     document.getElementById('ec_error').style.display = 'none';
   });
+
+  /* ── TOAST ── */
+  function showToast(msg, icon) {
+    const stack = document.getElementById('toastStack');
+    const el = document.createElement('div');
+    el.className = 'fta-toast';
+    el.innerHTML = `<i class="bi ${icon||'bi-info-circle-fill'}"></i><span>${msg}</span>`;
+    stack.appendChild(el);
+    requestAnimationFrame(()=>el.classList.add('show'));
+    setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),250); },2400);
+  }
+
+  document.addEventListener('DOMContentLoaded', renderCourses);
 </script>
 </body>
 </html>
